@@ -3,231 +3,139 @@
  * Gestion centralisée de l'application
  */
 
-import WorkoutManager from './scripts/modules/workout-manager.js';
+import WorkoutSession from './scripts/modules/workout-session.js';
 import WorkoutRenderer from './scripts/ui/workout-renderer.js';
 import TimerManager from './scripts/modules/timer-manager.js';
+import { currentProgram } from './scripts/program-data.js';
 
 class App {
   constructor() {
-    this.workoutManager = new WorkoutManager();
-    this.workoutRenderer = new WorkoutRenderer();
-    this.timerManager = new TimerManager();
+    this.workoutSession = null;
+    this.workoutRenderer = null;
+    this.timerManager = null;
     this.currentWorkout = null;
   }
 
-  /**
-   * Initialise l'application
-   */
   async init() {
-    console.log('🚀 Initialisation de l\'application...');
+    try {
+      console.log('🚀 Initialisation de l\'application...');
 
-    // Initialiser les modules
-    this.workoutRenderer.init();
-    this.timerManager.init();
+      // Charger les données du programme depuis les JSON
+      await this.loadProgramData();
 
-    // Charger les workouts
-    await this.workoutManager.loadWorkouts();
+      // Initialiser les managers
+      this.workoutSession = new WorkoutSession();
+      this.workoutRenderer = new WorkoutRenderer();
+      this.timerManager = new TimerManager();
 
-    // Attacher les événements globaux
-    this.attachGlobalEvents();
+      // Initialiser le renderer
+      this.workoutRenderer.init();
 
-    // Charger le workout actuel (ou le dernier)
-    this.loadCurrentWorkout();
+      // Initialiser le timer
+      this.timerManager.init();
 
-    console.log('✅ Application initialisée avec succès !');
-  }
+      // Connecter workoutRenderer au timerManager
+      this.workoutRenderer.timerManager = this.timerManager;
 
-  /**
-   * Charge le workout actuel
-   */
-  loadCurrentWorkout() {
-    const workouts = this.workoutManager.getWorkouts();
-    
-    if (workouts.length === 0) {
-      console.warn('⚠️ Aucun workout disponible');
-      return;
+      // Afficher la séance
+      this.workoutRenderer.render(this.currentWorkout);
+
+      // Attacher les événements
+      this.attachEvents();
+
+      console.log('✅ Application initialisée avec succès !');
+
+    } catch (error) {
+      console.error('❌ Erreur lors de l\'initialisation:', error);
     }
-
-    // Charger le premier workout par défaut
-    this.currentWorkout = workouts[0];
-    this.workoutRenderer.render(this.currentWorkout);
-    
-    console.log('✅ Workout chargé:', this.currentWorkout.name);
   }
 
-  /**
-   * Attache les événements globaux (délégation d'événements)
-   */
-  attachGlobalEvents() {
-    const container = document.getElementById('workout-container');
-    if (!container) return;
+  async loadProgramData() {
+    try {
+      // Charger la structure du programme
+      const response = await fetch('./data/program-structure.json');
+      const programData = await response.json();
+      
+      // Créer un workout de test avec les données
+      this.currentWorkout = {
+        name: "Séance A - Push",
+        exercises: [
+          {
+            name: "Développé Couché",
+            sets: 4,
+            reps: 8,
+            weight: 80,
+            restTime: 120
+          },
+          {
+            name: "Développé Incliné",
+            sets: 3,
+            reps: 10,
+            weight: 60,
+            restTime: 90
+          },
+          {
+            name: "Dips",
+            sets: 3,
+            reps: 12,
+            weight: 0,
+            restTime: 90
+          }
+        ]
+      };
+      
+      console.log('✅ Données du programme chargées');
+    } catch (error) {
+      console.error('❌ Erreur chargement programme:', error);
+      // Données par défaut en cas d'erreur
+      this.currentWorkout = {
+        name: "Séance Test",
+        exercises: []
+      };
+    }
+  }
 
-    // Délégation d'événements sur le conteneur principal
-    container.addEventListener('click', (e) => {
-      const target = e.target;
-
-      // Bouton "Valider" une série
-      if (target.classList.contains('btn-validate-set')) {
-        this.handleValidateSet(target);
-      }
-
-      // Bouton "Ajouter une série"
-      if (target.classList.contains('btn-add-set')) {
-        this.handleAddSet(target);
+  attachEvents() {
+    // Événement pour valider une série
+    document.addEventListener('click', (e) => {
+      if (e.target.classList.contains('validate-set')) {
+        const setRow = e.target.closest('.set-row');
+        const exerciseIndex = parseInt(setRow.dataset.exerciseIndex);
+        const setIndex = parseInt(setRow.dataset.setIndex);
+        
+        this.handleSetValidation(exerciseIndex, setIndex, setRow);
       }
     });
-
-    // Écouter les changements dans les inputs (reps/weight)
-    container.addEventListener('input', (e) => {
-      if (e.target.classList.contains('input-reps') || 
-          e.target.classList.contains('input-weight')) {
-        this.handleInputChange(e.target);
-      }
-    });
   }
 
-  /**
-   * Gère la validation d'une série
-   */
-  handleValidateSet(button) {
-    const exerciseIndex = parseInt(button.dataset.exerciseIndex);
-    const setIndex = parseInt(button.dataset.setIndex);
+  handleSetValidation(exerciseIndex, setIndex, setRow) {
+    // Récupérer les valeurs
+    const repsInput = setRow.querySelector('.reps-input');
+    const weightInput = setRow.querySelector('.weight-input');
 
-    const setRow = button.closest('.set-row');
-    const repsInput = setRow.querySelector('.input-reps');
-    const weightInput = setRow.querySelector('.input-weight');
+    const actualReps = parseInt(repsInput.value) || 0;
+    const actualWeight = parseFloat(weightInput.value) || 0;
 
-    const reps = parseInt(repsInput.value) || 0;
-    const weight = parseFloat(weightInput.value) || 0;
+    // Valider visuellement
+    setRow.classList.add('completed');
+    const button = setRow.querySelector('.validate-set');
+    button.textContent = '✓';
+    button.disabled = true;
 
-    if (reps === 0) {
-      alert('⚠️ Veuillez entrer un nombre de répétitions');
-      return;
-    }
+    console.log(`✅ Série validée: Ex${exerciseIndex + 1} - Set${setIndex + 1} - ${actualReps}x${actualWeight}kg`);
 
-    // Mettre à jour les données
-    const setData = {
-      reps: reps,
-      weight: weight,
-      completed: true,
-      timestamp: new Date().toISOString()
-    };
-
-    this.workoutManager.updateSet(
-      this.currentWorkout.id,
-      exerciseIndex,
-      setIndex,
-      setData
-    );
-
-    // Mettre à jour l'affichage
-    this.workoutRenderer.updateSetDisplay(exerciseIndex, setIndex, setData);
-
-    // Sauvegarder
-    this.workoutManager.saveWorkouts();
-
-    console.log(`✅ Série validée: Ex${exerciseIndex} Set${setIndex} - ${reps}x${weight}kg`);
-
-    // DÉMARRER LE TIMER après validation
-    this.startRestTimer(exerciseIndex, setIndex);
-  }
-
-  /**
-   * Démarre le timer de repos après validation d'une série
-   */
-  startRestTimer(exerciseIndex, setIndex) {
-    if (!this.currentWorkout) return;
-
+    // Démarrer le timer automatiquement
     const exercise = this.currentWorkout.exercises[exerciseIndex];
-    if (!exercise) return;
-
-    // Temps de repos par défaut : 90 secondes (personnalisable)
     const restTime = exercise.restTime || 90;
-    
-    // Nombre total de séries
-    const totalSets = exercise.sets.length;
-    
-    // Numéro de la série qui vient d'être validée
-    const completedSetNumber = setIndex + 1;
+    const exerciseName = exercise.name;
+    const setNumber = setIndex + 1;
 
-    // Ne pas démarrer le timer si c'est la dernière série
-    if (completedSetNumber >= totalSets) {
-      console.log('🏁 Dernière série validée, pas de timer');
-      return;
-    }
-
-    // Démarrer le timer
-    this.timerManager.start(
-      restTime,
-      exercise.name,
-      completedSetNumber,
-      totalSets
-    );
-
-    console.log(`⏱️ Timer démarré: ${restTime}s après Set ${completedSetNumber}`);
-  }
-
-  /**
-   * Gère l'ajout d'une série
-   */
-  handleAddSet(button) {
-    const exerciseIndex = parseInt(button.dataset.exerciseIndex);
-
-    // Ajouter la série dans les données
-    const newSet = {
-      reps: null,
-      weight: null,
-      completed: false
-    };
-
-    this.workoutManager.addSet(this.currentWorkout.id, exerciseIndex, newSet);
-
-    // Mettre à jour l'affichage
-    this.workoutRenderer.addSetToExercise(exerciseIndex);
-
-    // Sauvegarder
-    this.workoutManager.saveWorkouts();
-
-    console.log(`✅ Nouvelle série ajoutée à l'exercice ${exerciseIndex}`);
-  }
-
-  /**
-   * Gère les changements dans les inputs (auto-save)
-   */
-  handleInputChange(input) {
-    const setRow = input.closest('.set-row');
-    if (!setRow) return;
-
-    const exerciseIndex = parseInt(setRow.dataset.exerciseIndex);
-    const setIndex = parseInt(setRow.dataset.setIndex);
-
-    const repsInput = setRow.querySelector('.input-reps');
-    const weightInput = setRow.querySelector('.input-weight');
-
-    const reps = parseInt(repsInput.value) || null;
-    const weight = parseFloat(weightInput.value) || null;
-
-    // Mettre à jour les données (sans marquer comme completed)
-    this.workoutManager.updateSet(
-      this.currentWorkout.id,
-      exerciseIndex,
-      setIndex,
-      { reps, weight }
-    );
-
-    // Auto-save (debounced)
-    clearTimeout(this.saveTimeout);
-    this.saveTimeout = setTimeout(() => {
-      this.workoutManager.saveWorkouts();
-      console.log('💾 Auto-save effectué');
-    }, 500);
+    this.timerManager.start(restTime, exerciseName, setNumber);
   }
 }
 
-// Initialisation au chargement du DOM
+// Initialiser l'application au chargement
 document.addEventListener('DOMContentLoaded', () => {
   const app = new App();
   app.init();
 });
-
-console.log('✅ App.js chargé avec succès');
