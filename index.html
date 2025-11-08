@@ -12,450 +12,8 @@
     <link rel="stylesheet" href="styles/04-layout.css">
     <link rel="stylesheet" href="styles/05-components.css">
     <link rel="stylesheet" href="styles/06-series.css">
+    <link rel="stylesheet" href="styles/07-timer.css">
     <link rel="stylesheet" href="styles/08-responsive.css">
-    <style>
-        /* Styles pour le timer */
-        .timer-widget {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            padding: 20px;
-            border-radius: 15px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            z-index: 1000;
-            transition: all 0.3s ease;
-        }
-
-        .timer-widget.hidden {
-            opacity: 0;
-            pointer-events: none;
-            transform: translateY(20px);
-        }
-
-        .timer-content {
-            color: white;
-            text-align: center;
-        }
-
-        .timer-display {
-            font-size: 48px;
-            font-weight: bold;
-            margin-bottom: 15px;
-            font-family: 'Courier New', monospace;
-        }
-
-        .timer-separator {
-            animation: blink 1s infinite;
-        }
-
-        @keyframes blink {
-            0%, 49% { opacity: 1; }
-            50%, 100% { opacity: 0; }
-        }
-
-        .timer-controls {
-            display: flex;
-            gap: 10px;
-            justify-content: center;
-        }
-
-        .timer-btn {
-            background: rgba(255,255,255,0.2);
-            border: none;
-            padding: 10px 15px;
-            border-radius: 8px;
-            color: white;
-            cursor: pointer;
-            font-size: 14px;
-            transition: all 0.2s;
-        }
-
-        .timer-btn:hover {
-            background: rgba(255,255,255,0.3);
-            transform: scale(1.05);
-        }
-
-        /* Styles pour le modal paramètres */
-        .modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.7);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 2000;
-            transition: opacity 0.3s;
-        }
-
-        .modal.hidden {
-            opacity: 0;
-            pointer-events: none;
-        }
-
-        .modal-content {
-            background: white;
-            padding: 30px;
-            border-radius: 15px;
-            max-width: 400px;
-            width: 90%;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-        }
-
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-            border-bottom: 2px solid #f0f0f0;
-            padding-bottom: 15px;
-        }
-
-        .modal-header h3 {
-            margin: 0;
-            color: #333;
-        }
-
-        .close-btn {
-            background: none;
-            border: none;
-            font-size: 24px;
-            cursor: pointer;
-            color: #999;
-            transition: color 0.2s;
-        }
-
-        .close-btn:hover {
-            color: #333;
-        }
-
-        .modal-body {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-
-        .setting-item {
-            display: flex;
-            align-items: center;
-            padding: 10px;
-            background: #f8f9fa;
-            border-radius: 8px;
-        }
-
-        .setting-item label {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            cursor: pointer;
-            user-select: none;
-        }
-
-        .setting-item input[type="checkbox"] {
-            width: 20px;
-            height: 20px;
-            cursor: pointer;
-        }
-
-        /* Notification timer */
-        .timer-notification {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
-            color: white;
-            padding: 20px 30px;
-            border-radius: 10px;
-            font-size: 18px;
-            font-weight: bold;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            z-index: 3000;
-            opacity: 0;
-            transform: translateX(400px);
-            transition: all 0.3s ease;
-        }
-
-        .timer-notification.show {
-            opacity: 1;
-            transform: translateX(0);
-        }
-
-        /* Styles pour les exercices */
-        .exercise-card {
-            background: white;
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 15px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-
-        .exercise-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 16px rgba(0,0,0,0.15);
-        }
-
-        .exercise-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-        }
-
-        .exercise-name {
-            font-size: 20px;
-            color: #333;
-            margin: 0;
-        }
-
-        .machine-tag {
-            background: #e3f2fd;
-            color: #1976d2;
-            padding: 5px 12px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 600;
-        }
-
-        .exercise-details {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            margin-bottom: 15px;
-        }
-
-        .detail-badge {
-            background: #f5f5f5;
-            padding: 8px 15px;
-            border-radius: 20px;
-            font-size: 14px;
-            color: #666;
-        }
-
-        .detail-badge.weight {
-            background: #fff3e0;
-            color: #e65100;
-            font-weight: bold;
-        }
-
-        .exercise-notes {
-            background: #f0f4f8;
-            padding: 12px;
-            border-radius: 8px;
-            font-size: 13px;
-            color: #555;
-            margin-bottom: 15px;
-            border-left: 3px solid #667eea;
-        }
-
-        .sets-tracker {
-            display: flex;
-            gap: 8px;
-            flex-wrap: wrap;
-        }
-
-        .set-btn {
-            flex: 1;
-            min-width: 80px;
-            padding: 12px;
-            border: 2px solid #e0e0e0;
-            background: white;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 14px;
-            font-weight: 600;
-            color: #666;
-            transition: all 0.2s;
-        }
-
-        .set-btn:hover {
-            border-color: #667eea;
-            background: #f8f9ff;
-            transform: scale(1.05);
-        }
-
-        .set-btn.completed {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border-color: #667eea;
-        }
-
-        /* Supersets */
-        .superset-group {
-            background: linear-gradient(135deg, #ffecd2 0%, #fcb69f 100%);
-            padding: 20px;
-            border-radius: 15px;
-            margin-bottom: 20px;
-        }
-
-        .superset-label {
-            background: #ff6b6b;
-            color: white;
-            padding: 8px 20px;
-            border-radius: 20px;
-            display: inline-block;
-            font-weight: bold;
-            font-size: 14px;
-            margin-bottom: 15px;
-        }
-
-        .superset-exercise {
-            margin-bottom: 10px;
-        }
-
-        .superset-exercise:last-child {
-            margin-bottom: 0;
-        }
-
-        /* Deload banner */
-        .deload-banner {
-            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            color: white;
-            padding: 15px;
-            border-radius: 10px;
-            text-align: center;
-            font-weight: bold;
-            margin-bottom: 20px;
-            font-size: 16px;
-        }
-
-        /* Techniques banner */
-        .techniques-banner {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-            margin-bottom: 20px;
-        }
-
-        .technique-tag {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 10px 20px;
-            border-radius: 20px;
-            font-size: 14px;
-            font-weight: 600;
-        }
-
-        /* Navigation */
-        #week-selector {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 20px;
-            margin: 20px 0;
-            padding: 15px;
-            background: white;
-            border-radius: 10px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-
-        .week-nav-btn {
-            background: #667eea;
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-size: 18px;
-            transition: all 0.2s;
-        }
-
-        .week-nav-btn:hover {
-            background: #764ba2;
-            transform: scale(1.1);
-        }
-
-        .week-display {
-            font-size: 24px;
-            font-weight: bold;
-            color: #333;
-        }
-
-        /* Boutons jours */
-        .day-buttons-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 15px;
-            margin-bottom: 15px;
-        }
-
-        .day-btn {
-            background: white;
-            border: 2px solid #e0e0e0;
-            border-radius: 10px;
-            padding: 15px;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .day-btn:hover {
-            border-color: #667eea;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(102,126,234,0.3);
-        }
-
-        .day-btn.active {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-color: #667eea;
-            color: white;
-        }
-
-        .day-btn-label {
-            font-size: 18px;
-            font-weight: bold;
-            margin-bottom: 5px;
-        }
-
-        .day-btn-subtitle {
-            font-size: 12px;
-            opacity: 0.8;
-        }
-
-        .home-btn {
-            grid-column: 1 / -1;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            border-color: #667eea;
-            color: white;
-        }
-
-        .home-btn:hover {
-            background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
-        }
-
-        .home-btn.active {
-            background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);
-            border-color: #11998e;
-        }
-
-        /* Layout principal */
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            margin: 0;
-            padding: 0;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-        }
-
-        #app {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-        }
-
-        #workout-container {
-            margin-top: 20px;
-        }
-
-        .error {
-            color: #f44336;
-            text-align: center;
-            font-size: 18px;
-            padding: 20px;
-        }
-    </style>
 </head>
 <body>
     <div id="app">
@@ -468,6 +26,51 @@
         <div id="week-selector"></div>
         <div id="day-buttons"></div>
         <div id="workout-container"></div>
+    </div>
+
+    <!-- Timer Widget -->
+    <div id="timer-widget" class="timer-widget hidden">
+        <div class="timer-content">
+            <div class="timer-display">
+                <span id="timer-minutes">00</span>
+                <span class="timer-separator">:</span>
+                <span id="timer-seconds">00</span>
+            </div>
+            <div class="timer-controls">
+                <button class="timer-btn" id="timer-pause">⏸ Pause</button>
+                <button class="timer-btn" id="timer-reset">🔄 Reset</button>
+                <button class="timer-btn" id="timer-close">✕ Fermer</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Notification Timer -->
+    <div id="timer-notification" class="timer-notification">
+        ⏰ Temps de repos terminé !
+    </div>
+
+    <!-- Modal Paramètres -->
+    <div id="settings-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>⚙️ Paramètres</h3>
+                <button class="close-btn" id="close-settings">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="setting-item">
+                    <label>
+                        <input type="checkbox" id="sound-enabled" checked>
+                        🔊 Son de notification
+                    </label>
+                </div>
+                <div class="setting-item">
+                    <label>
+                        <input type="checkbox" id="vibration-enabled" checked>
+                        📳 Vibration
+                    </label>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Importer l'app en mode module ES6 -->
