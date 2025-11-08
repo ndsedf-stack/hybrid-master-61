@@ -1,5 +1,5 @@
 // ====================================================================
-// HYBRID MASTER 51 - PROGRAMME COMPLET DÉFINITIF
+// HYBRID MASTER 51 - PROGRAMME COMPLET DÉFINITIF (CORRIGÉ)
 // ====================================================================
 // Version : 1.0 Finale
 // Date : Novembre 2025
@@ -69,417 +69,25 @@ function generateProgram() {
             id: `w${week}_dim_1`,
             name: "Trap Bar Deadlift",
             category: "compound",
-            rpe: "7-8",
             muscle: ["dos", "jambes", "fessiers"],
             sets: 5,
             reps: "6-8",
-            rpe: "7-8",
-            weight: calculateWeight(75, week, 5, 3), // +5 kg / 3 sem
+            rpe: blockInfo.rpe,
+            weight: calculateWeight(75, week, 5, 3),
             rest: 120,
             tempo: isDeload ? "4-1-2" : (week <= 5 ? "3-1-2" : "2-1-2"),
-            notes: blockInfo.block === 2 && !isDeload ? "Rest-Pause série 5 : 6-8 reps → 20s → 2-3 reps" : 
-                   blockInfo.block === 4 && !isDeload ? "Clusters série 5 : 3 reps → 20s → 2 reps → 20s → 2 reps" : 
-                   "Exercice roi, technique parfaite obligatoire"
-          },
-          {
-            id: `w${week}_dim_2`,
-            name: "Goblet Squat",
-            category: "compound",
-           rpe: "7-8",
-            rpe: "7-8",
-            muscle: ["quadriceps", "fessiers"],
-            sets: 4,
-            reps: 10,
-            weight: calculateWeight(25, week, 2.5, 2), // +2.5 kg / 2 sem (haltère)
-            rest: 75,
-            tempo: isDeload ? "4-1-2" : (week <= 5 ? "3-1-2" : "2-1-2"),
-            notes: blockInfo.block === 3 && !isDeload ? "Drop-set série 4 : 10 reps → -25% → 8-10 reps" :
-                   blockInfo.block === 4 && !isDeload ? "Série 4 : 10 reps complètes → 5 demi-reps (partials amplitude haute)" :
-                   "Haltère tenu devant poitrine, descente contrôlée"
-          },
-          {
-            id: `w${week}_dim_3`,
-            name: "Leg Press",
-            category: "compound",
-            rpe: "7-8",
-            muscle: ["quadriceps", "fessiers"],
-            sets: 4,
-            reps: 10,
-            weight: calculateWeight(110, week, 10, 2), // +10 kg / 2 sem
-            rest: 75,
-            tempo: isDeload ? "4-1-2" : (week <= 5 ? "3-1-2" : "2-1-2"),
-            notes: blockInfo.block === 3 && !isDeload ? "Drop-set série 4 : 10 reps → -25% → 10-12 reps" :
-                   blockInfo.block === 4 && !isDeload ? "Clusters série 4 : 4 reps → 20s → 3 reps → 20s → 3 reps | Puis 10 reps complètes → 8 quarts de reps" :
-                   "Pieds largeur épaules, amplitude complète"
-          },
-          {
-            id: `w${week}_dim_4a`,
-            name: "Lat Pulldown (prise large)",
-            category: "compound",
-            rpe: "7-8",
-            muscle: ["dos"],
-            sets: 4,
-            reps: 10,
-            weight: calculateWeight(60, week, 2.5, 2), // +2.5 kg / 2 sem
-            rest: 90,
-            tempo: isDeload ? "4-1-2" : (week <= 5 ? "3-1-2" : "2-1-2"),
-            isSuperset: true,
-            supersetWith: "Landmine Press",
-            notes: blockInfo.block === 3 && !isDeload ? "Drop-set série 4 : 10 reps → -20% → 8-10 reps" :
-                   "SUPERSET avec Landmine Press | Prise 1.5× largeur épaules"
-          },
-          {
-            id: `w${week}_dim_4b`,
-            name: "Landmine Press",
-            category: "compound",
-            rpe: "7-8",
-            muscle: ["pectoraux", "épaules"],
-            sets: 4,
-            reps: 10,
-            weight: calculateWeight(35, week, 2.5, 2), // +2.5 kg / 2 sem
-            rest: 90,
-            tempo: isDeload ? "4-1-2" : (week <= 5 ? "3-1-2" : "2-1-2"),
-            isSuperset: true,
-            supersetWith: "Lat Pulldown",
-            notes: "SUPERSET avec Lat Pulldown | Barre calée dans coin ou landmine"
-          },
-          {
-            id: `w${week}_dim_5`,
-            name: "Rowing Machine (prise large)",
-            category: "compound",
-            rpe: "7-8",
-            muscle: ["dos"],
-            sets: 4,
-            reps: 10,
-            weight: calculateWeight(50, week, 2.5, 2), // +2.5 kg / 2 sem
-            rest: 75,
-            tempo: isDeload ? "4-1-2" : (week <= 5 ? "3-1-2" : "2-1-2"),
-            notes: blockInfo.block === 3 && !isDeload ? "Myo-reps série 4 : 10 reps → 5s → 4 mini-sets de 4 reps" :
-                   blockInfo.block === 4 && !isDeload ? "Myo-reps série 4 : 10 reps → 5s → 4 mini-sets de 4 reps" :
-                   "Mains écartées, coudes vers extérieur, tirer vers bas des pecs"
-          },
-          {
-            id: `w${week}_dim_6a`,
-            name: getBicepExercise(week),
-            category: "isolation",
-            rpe: "7-8",
-            muscle: ["biceps"],
-            sets: 4,
-            reps: 12,
-            weight: calculateWeight(12, week, 2.5, 3), // +2.5 kg / 3 sem (haltère)
-            rest: 75,
-            tempo: isDeload ? "4-1-2" : (week <= 5 ? "3-1-2" : "2-1-2"),
-            isSuperset: true,
-            supersetWith: "Cable Pushdown",
-            notes: blockInfo.block === 1 && !isDeload ? "SUPERSET | Pause 2s bras tendus (étirement maximal)" :
-                   blockInfo.block === 3 && !isDeload ? "SUPERSET | Myo-reps série 4 : 12 reps → 5s → 4 mini-sets de 4 reps" :
-                   blockInfo.block === 4 && !isDeload ? "SUPERSET | Myo-reps série 4 : 12 reps → 5s → 4 mini-sets de 4 reps" :
-                   `SUPERSET | ${getBicepExercise(week) === "Incline Curl" ? "Incline 45° sur banc" : "Spider curl pupitre"}`
-          },
-          {
-            id: `w${week}_dim_6b`,
-            name: "Cable Pushdown",
-            category: "isolation",
-            rpe: "7-8",
-            muscle: ["triceps"],
-            sets: 3,
-            reps: 12,
-            weight: calculateWeight(20, week, 2.5, 3), // +2.5 kg / 3 sem
-            rest: 75,
-            tempo: isDeload ? "4-1-2" : (week <= 5 ? "3-1-2" : "2-1-2"),
-            isSuperset: true,
-            supersetWith: getBicepExercise(week),
-            notes: blockInfo.block === 4 && !isDeload ? "SUPERSET | Myo-reps série 3 : 12 reps → 5s → 4 mini-sets de 4 reps" :
-                   "SUPERSET | Coudes fixes le long du corps"
-          }
-        ]
-      },
-      
-      // ============================================================
-      // MARDI : PECS + ÉPAULES + TRICEPS (70 min - 35 séries)
-      // ============================================================
-      mardi: {
-        name: "PECS + ÉPAULES + TRICEPS",
-        duration: 70,
-        totalSets: 35,
-        exercises: [
-          {
-            id: `w${week}_mar_1`,
-            name: "Dumbbell Press",
-            category: "compound",
-            rpe: "7-8",
-            muscle: ["pectoraux", "épaules", "triceps"],
-            sets: 5,
-            reps: 10,
-            weight: calculateWeight(22, week, 2.5, 3), // +2.5 kg / 3 sem (par haltère)
-            rest: 105,
-            tempo: isDeload ? "4-1-2" : (week <= 5 ? "3-1-2" : "2-1-2"),
-            notes: blockInfo.block === 2 && !isDeload ? "Rest-Pause série 5 : 10 reps → 20s → 3-4 reps" :
-                   blockInfo.block === 3 && !isDeload ? "Drop-set série 5 : 10 reps → -25% → 8-10 reps" :
-                   blockInfo.block === 4 && !isDeload ? "Clusters série 5 : 4 reps → 15s → 3 reps → 15s → 3 reps" :
-                   "Banc plat, haltères rotation naturelle"
-          },
-          {
-            id: `w${week}_mar_2`,
-            name: "Cable Fly (poulies moyennes)",
-            category: "isolation",
-            rpe: "7-8",
-            muscle: ["pectoraux"],
-            sets: 4,
-            reps: 12,
-            weight: calculateWeight(10, week, 2.5, 3), // +2.5 kg / 3 sem
-            rest: 60,
-            tempo: isDeload ? "4-1-2" : (week <= 5 ? "3-1-2" : "2-1-2"),
-            notes: blockInfo.block === 1 && !isDeload ? "Pause 2s bras écartés (étirement maximal pecs)" :
-                   blockInfo.block === 3 && !isDeload ? "Drop-set série 4 : 12 reps → -25% → 10-12 reps | Myo-reps : 12 reps → 5s → 5 mini-sets de 5 reps" :
-                   blockInfo.block === 4 && !isDeload ? "Myo-reps série 4 : 12 reps → 5s → 5 mini-sets de 5 reps" :
-                   "Poulies hauteur épaules, bras semi-fléchis"
-          },
-          {
-            id: `w${week}_mar_3`,
-            name: "Leg Press léger",
-            category: "compound",
-            rpe: "7-8",
-            muscle: ["quadriceps", "fessiers"],
-            sets: 3,
-            reps: 15,
-            weight: calculateWeight(80, week, 10, 3), // +10 kg / 3 sem
-            rest: 60,
-            tempo: isDeload ? "4-1-2" : (week <= 5 ? "3-1-2" : "2-1-2"),
-            notes: "Activation légère jambes, pas de fatigue excessive"
-          },
-          {
-            id: `w${week}_mar_4a`,
-            name: "Extension Triceps Corde",
-            category: "isolation",
-            rpe: "7-8",
-            muscle: ["triceps"],
-            sets: 5,
-            reps: 12,
-            weight: calculateWeight(20, week, 2.5, 3), // +2.5 kg / 3 sem
-            rest: 75,
-            tempo: isDeload ? "4-1-2" : (week <= 5 ? "3-1-2" : "2-1-2"),
-            isSuperset: true,
-            supersetWith: "Lateral Raises",
-            notes: blockInfo.block === 3 && !isDeload ? "SUPERSET | Drop-set série 5 : 12 reps → -20% → 10-12 reps" :
-                   blockInfo.block === 4 && !isDeload ? "SUPERSET | Myo-reps série 5 : 12 reps → 5s → 4 mini-sets de 4 reps" :
-                   "SUPERSET | Corde poulie haute, coudes fixes"
-          },
-          {
-            id: `w${week}_mar_4b`,
-            name: "Lateral Raises",
-            category: "isolation",
-            rpe: "7-8",
-            muscle: ["épaules"],
-            sets: 5,
-            reps: 15,
-            weight: calculateWeight(8, week, 2.5, 4), // +2.5 kg / 4 sem (haltère)
-            rest: 75,
-            tempo: isDeload ? "4-1-2" : (week <= 5 ? "3-1-2" : "2-1-2"),
-            isSuperset: true,
-            supersetWith: "Extension Triceps Corde",
-            notes: blockInfo.block === 1 && !isDeload ? "SUPERSET | Pause 1s bras horizontaux" :
-                   blockInfo.block === 3 && !isDeload ? "SUPERSET | Drop-set série 5 : 15 reps → -25% → 12-15 reps" :
-                   blockInfo.block === 4 && !isDeload ? "SUPERSET | Myo-reps série 5 : 15 reps → 5s → 5 mini-sets de 5 reps" :
-                   "SUPERSET | Coudes légèrement fléchis, monter à l'horizontal"
-          },
-          {
-            id: `w${week}_mar_5`,
-            name: "Face Pull",
-            category: "isolation",
-            rpe: "7-8",
-            muscle: ["épaules", "dos"],
-            sets: 5,
-            reps: 15,
-            weight: calculateWeight(20, week, 2.5, 3), // +2.5 kg / 3 sem
-            rest: 60,
-            tempo: isDeload ? "4-1-2" : (week <= 5 ? "3-1-2" : "2-1-2"),
-            notes: blockInfo.block === 1 && !isDeload ? "Pause 1s contraction arrière" :
-                   blockInfo.block === 3 && !isDeload ? "Myo-reps série 5 : 15 reps → 5s → 5 mini-sets de 5 reps" :
-                   blockInfo.block === 4 && !isDeload ? "Myo-reps série 5 : 15 reps → 5s → 5 mini-sets de 5 reps" :
-                   "Corde poulie haute, tirer vers visage, rotation externe"
-          },
-          {
-            id: `w${week}_mar_6`,
-            name: "Rowing Machine (prise serrée)",
-            category: "compound",
-            rpe: "7-8",
-            muscle: ["dos"],
-            sets: 4,
-            reps: 12,
-            weight: calculateWeight(50, week, 2.5, 2), // +2.5 kg / 2 sem
-            rest: 75,
-            tempo: isDeload ? "4-1-2" : (week <= 5 ? "3-1-2" : "2-1-2"),
-            notes: "Mains largeur épaules, coudes le long du corps, tirer vers nombril"
-          },
-          {
-            id: `w${week}_mar_7`,
-            name: "Overhead Extension (corde, assis)",
-            category: "isolation",
-            rpe: "7-8",
-            muscle: ["triceps"],
-            sets: 4,
-            reps: 12,
-            weight: calculateWeight(15, week, 2.5, 3), // +2.5 kg / 3 sem
-            rest: 60,
-            tempo: isDeload ? "4-1-2" : (week <= 5 ? "3-1-2" : "2-1-2"),
-            notes: blockInfo.block === 3 && !isDeload ? "Myo-reps série 4 : 12 reps → 5s → 4 mini-sets de 4 reps" :
-                   blockInfo.block === 4 && !isDeload ? "Myo-reps série 4 : 12 reps → 5s → 4 mini-sets de 4 reps" :
-                   "Corde poulie haute, assis, étirement triceps maximal"
-          }
-        ]
-      },
-      
-      // ============================================================
-      // VENDREDI : DOS + JAMBES LÉGÈRES + BRAS + ÉPAULES (73 min - 33 séries)
-      // ============================================================
-      vendredi: {
-        name: "DOS + JAMBES LÉGÈRES + BRAS + ÉPAULES",
-        duration: 73,
-        totalSets: 33,
-        exercises: [
-          {
-            id: `w${week}_ven_1`,
-            name: "Landmine Row",
-            category: "compound",
-            rpe: "7-8",
-            muscle: ["dos"],
-            sets: 5,
-            reps: 10,
-            weight: calculateWeight(55, week, 2.5, 2), // +2.5 kg / 2 sem
-            rest: 105,
-            tempo: isDeload ? "4-1-2" : (week <= 5 ? "3-1-2" : "2-1-2"),
-            notes: blockInfo.block === 2 && !isDeload ? "Rest-Pause série 5 : 10 reps → 20s → 3-4 reps" :
-                   blockInfo.block === 3 && !isDeload ? "Drop-set série 5 : 10 reps → -20% → 8-10 reps" :
-                   blockInfo.block === 4 && !isDeload ? "Clusters série 5 : 4 reps → 15s → 3 reps → 15s → 3 reps" :
-                   "Barre calée, une main, tirer vers hanche"
-          },
-          {
-            id: `w${week}_ven_2a`,
-            name: "Leg Curl",
-            category: "isolation",
-            rpe: "7-8",
-            muscle: ["ischios"],
-            sets: 5,
-            reps: 12,
-            weight: calculateWeight(40, week, 5, 3), // +5 kg / 3 sem
-            rest: 75,
-            tempo: isDeload ? "4-1-2" : (week <= 5 ? "3-1-2" : "2-1-2"),
-            isSuperset: true,
-            supersetWith: "Leg Extension",
-            notes: blockInfo.block === 3 && !isDeload ? "SUPERSET | Drop-set série 5 : 12 reps → -25% → 10-12 reps" :
-                   blockInfo.block === 4 && !isDeload ? "SUPERSET | Série 5 : 12 reps complètes → 6-8 partials (amplitude haute)" :
-                   "SUPERSET | Allongé ou assis selon machine"
-          },
-          {
-            id: `w${week}_ven_2b`,
-            name: "Leg Extension",
-            category: "isolation",
-            rpe: "7-8",
-            muscle: ["quadriceps"],
-            sets: 4,
-            reps: 15,
-            weight: calculateWeight(35, week, 5, 3), // +5 kg / 3 sem
-            rest: 75,
-            tempo: isDeload ? "4-1-2" : (week <= 5 ? "3-1-2" : "2-1-2"),
-            isSuperset: true,
-            supersetWith: "Leg Curl",
-            notes: blockInfo.block === 3 && !isDeload ? "SUPERSET | Drop-set série 4 : 15 reps → -25% → 12-15 reps" :
-                   blockInfo.block === 4 && !isDeload ? "SUPERSET | Série 4 : 15 reps complètes → 10 partials (derniers 30°)" :
-                   "SUPERSET | Extension complète, contraction 1s en haut"
-          },
-          {
-            id: `w${week}_ven_3a`,
-            name: "Cable Fly",
-            category: "isolation",
-            rpe: "7-8",
-            muscle: ["pectoraux"],
-            sets: 4,
-            reps: 15,
-            weight: calculateWeight(10, week, 2.5, 3), // +2.5 kg / 3 sem
-            rest: 60,
-            tempo: isDeload ? "4-1-2" : (week <= 5 ? "3-1-2" : "2-1-2"),
-            isSuperset: true,
-            supersetWith: "Dumbbell Fly",
-            notes: blockInfo.block === 3 && !isDeload ? "SUPERSET | Myo-reps série 4 : 15 reps → 5s → 5 mini-sets de 5 reps" :
-                   blockInfo.block === 4 && !isDeload ? "SUPERSET | Myo-reps série 4 : 15 reps → 5s → 5 mini-sets de 5 reps" :
-                   "SUPERSET | Poulies moyennes, étirement maximal"
-          },
-          {
-            id: `w${week}_ven_3b`,
-            name: "Dumbbell Fly",
-            category: "isolation",
-            rpe: "7-8",
-            muscle: ["pectoraux"],
-            sets: 4,
-            reps: 12,
-            weight: calculateWeight(10, week, 2.5, 3), // +2.5 kg / 3 sem (haltère)
-            rest: 60,
-            tempo: isDeload ? "4-1-2" : (week <= 5 ? "3-1-2" : "2-1-2"),
-            isSuperset: true,
-            supersetWith: "Cable Fly",
-            notes: blockInfo.block === 1 && !isDeload ? "SUPERSET | Pause 2s bras écartés (étirement pecs)" :
-                   blockInfo.block === 3 && !isDeload ? "SUPERSET | Drop-set série 4 : 12 reps → -25% → 10-12 reps" :
-                   blockInfo.block === 4 && !isDeload ? "SUPERSET | Myo-reps série 4 : 12 reps → 5s → 4 mini-sets de 4 reps" :
-                   "SUPERSET | Banc plat, amplitude complète"
-          },
-          {
-            id: `w${week}_ven_4a`,
-            name: "EZ Bar Curl",
-            category: "isolation",
-            rpe: "7-8",
-            muscle: ["biceps"],
-            sets: 5,
-            reps: 12,
-            weight: calculateWeight(25, week, 2.5, 3), // +2.5 kg / 3 sem
-            rest: 75,
-            tempo: isDeload ? "4-1-2" : (week <= 5 ? "3-1-2" : "2-1-2"),
-            isSuperset: true,
-            supersetWith: "Overhead Extension",
-            notes: blockInfo.block === 1 && !isDeload ? "SUPERSET | Pause 2s bras tendus (étirement biceps)" :
-                   blockInfo.block === 3 && !isDeload ? "SUPERSET | Myo-reps série 5 : 12 reps → 5s → 4 mini-sets de 4 reps" :
-                   blockInfo.block === 4 && !isDeload ? "SUPERSET | Myo-reps série 5 : 12 reps → 5s → 4 mini-sets de 4 reps" :
-                   "SUPERSET | Barre EZ, coudes fixes"
-          },
-          {
-            id: `w${week}_ven_4b`,
-            name: "Overhead Extension",
-            category: "isolation",
-            rpe: "7-8",
-            muscle: ["triceps"],
-            sets: 3,
-            reps: 12,
-            weight: calculateWeight(15, week, 2.5, 3), // +2.5 kg / 3 sem
-            rest: 75,
-            tempo: isDeload ? "4-1-2" : (week <= 5 ? "3-1-2" : "2-1-2"),
-            isSuperset: true,
-            supersetWith: "EZ Bar Curl",
-            notes: blockInfo.block === 4 && !isDeload ? "SUPERSET | Myo-reps série 3 : 12 reps → 5s → 4 mini-sets de 4 reps" :
-                   "SUPERSET | Corde poulie haute, assis, étirement maximal"
-          },
-          {
-            id: `w${week}_ven_5`,
-            name: "Lateral Raises",
-            category: "isolation",
-            rpe: "7-8",
-            muscle: ["épaules"],
-            sets: 3,
-            reps: 15,
-            weight: calculateWeight(8, week, 2.5, 4), // +2.5 kg / 4 sem (haltère)
-            rest: 60,
-            tempo: isDeload ? "4-1-2" : (week <= 5 ? "3-1-2" : "2-1-2"),
-            notes: blockInfo.block === 4 && !isDeload ? "Myo-reps série 3 : 15 reps → 5s → 5 mini-sets de 5 reps" :
-                   "Coudes légèrement fléchis, monter à l'horizontal"
+            notes: blockInfo.block === 4 && !isDeload ? "Myo-reps S3 : 15 reps → 5s → 5 mini-sets × 5 reps" :
+                   "Coudes fléchis, monter horizontal (haltère)"
           },
           {
             id: `w${week}_ven_6`,
             name: "Wrist Curl",
             category: "isolation",
-            rpe: "7-8",
             muscle: ["avant-bras"],
             sets: 3,
             reps: 20,
-            weight: calculateWeight(30, week, 2.5, 4), // +2.5 kg / 4 sem
+            rpe: blockInfo.rpe,
+            weight: calculateWeight(30, week, 2.5, 4),
             rest: 45,
             tempo: isDeload ? "4-1-2" : (week <= 5 ? "3-1-2" : "2-1-2"),
             notes: "Assis, avant-bras sur cuisses, flexion poignets"
@@ -500,14 +108,14 @@ function generateProgram() {
             id: `w${week}_maison_1`,
             name: "Hammer Curl",
             category: "isolation",
-            rpe: "7-8",
             muscle: ["biceps", "avant-bras"],
             sets: 3,
             reps: 12,
-            weight: calculateWeight(12, week, 2.5, 3), // +2.5 kg / 3 sem (haltère)
+            rpe: blockInfo.rpe,
+            weight: calculateWeight(12, week, 2.5, 3),
             rest: 60,
             tempo: isDeload ? "4-1-2" : (week <= 5 ? "3-1-2" : "2-1-2"),
-            notes: "À faire à la maison, Mardi ET Jeudi soir, prise marteau (neutre)"
+            notes: "À faire Mardi ET Jeudi soir, prise marteau (haltère)"
           }
         ]
       }
@@ -558,7 +166,7 @@ export const PROGRAM_INFO = {
       name: "Surcharge Progressive",
       weeks: "7-11",
       technique: "Rest-Pause",
-      description: "Dernière série exercices principaux : reps complètes → 20s repos → 2-4 reps supplémentaires",
+      description: "Dernière série exercices principaux : reps → 20s → 2-4 reps",
       exercises: "Trap Bar DL S5, Dumbbell Press S5, Landmine Row S5",
       rpe: "7-8"
     },
@@ -566,8 +174,8 @@ export const PROGRAM_INFO = {
       name: "Surcompensation Métabolique",
       weeks: "13-17",
       technique: "Drop-sets + Myo-reps",
-      description: "Drop-sets (-25%) dernière série | Myo-reps isolations (reps → 5s → 4-5 mini-sets)",
-      dropSets: "Goblet Squat, Leg Press, Lat Pulldown, Dumbbell Press, Cable Fly, Extension Triceps, Lateral Raises, Landmine Row, Leg Curl, Leg Extension, Dumbbell Fly",
+      description: "Drop-sets (-25%) + Myo-reps isolations",
+      dropSets: "Goblet, Leg Press, Lat Pulldown, Dumbbell Press, Cable Fly, Extension Triceps, Lateral Raises, Landmine Row, Leg Curl, Leg Extension, Dumbbell Fly",
       myoReps: "Face Pull, Overhead Extension, Incline Curl, Cable Fly, Rowing Machine",
       rpe: "8"
     },
@@ -575,17 +183,10 @@ export const PROGRAM_INFO = {
       name: "Intensification Maximale",
       weeks: "19-23",
       technique: "Clusters + Myo-reps + Partials",
-      description: "Clusters exercices lourds | Myo-reps TOUTES isolations | Partials fin de série jambes",
+      description: "Clusters lourds + Myo-reps isolations + Partials jambes",
       clusters: "Trap Bar DL, Dumbbell Press, Landmine Row, Leg Press",
-      myoReps: "Face Pull, Lateral Raises, Overhead Extension, Cable Fly, Dumbbell Fly, Spider Curl, EZ Bar Curl, Rowing Machine, Extension Triceps",
-      partials: "Goblet Squat (+5 demi-reps), Leg Press (+8 quarts), Leg Curl (+6-8 partials), Leg Extension (+10 partials)",
-      rpe: "8-9"
-    },
-    block5: {
-      name: "Peak Week",
-      weeks: "25",
-      technique: "Intensité maximale",
-      description: "Semaine de test de force, charges maximales",
+      myoReps: "TOUTES les isolations",
+      partials: "Goblet (+5 demi), Leg Press (+8 quarts), Leg Curl (+6-8), Leg Extension (+10)",
       rpe: "8-9"
     }
   },
@@ -595,7 +196,7 @@ export const PROGRAM_INFO = {
     loadReduction: "-40%",
     tempo: "4-1-2",
     rpe: "5-6",
-    purpose: "Récupération complète, prévention surentraînement, consolidation gains"
+    purpose: "Récupération complète, prévention surentraînement"
   },
   
   bicepsRotation: {
@@ -603,7 +204,7 @@ export const PROGRAM_INFO = {
     block2: "Spider Curl",
     block3: "Incline Curl",
     block4: "Spider Curl",
-    reason: "Incline = étirement maximal | Spider = contraction maximale | Rotation optimise hypertrophie"
+    reason: "Incline = étirement max | Spider = contraction max"
   },
   
   expectedResults: {
@@ -640,43 +241,43 @@ export const PROGRAM_INFO = {
     fats: "0.8-1g/kg (hormones, santé)",
     surplus: "+300 à +500 kcal/jour",
     preWorkout: "30-40g protéines + 50-60g glucides (1-2h avant)",
-    postWorkout: "30g whey + 50g glucides rapides (dans les 30 min)",
-    beforeBed: "30g caséine ou fromage blanc + ZMA",
-    hydration: "3L/jour minimum + 500ml/heure training"
+    postWorkout: "30g whey + 50g glucides rapides (30 min)",
+    beforeBed: "30g caséine + ZMA",
+    hydration: "3L/jour + 500ml/heure training"
   },
   
   supplementation: {
     mandatory: {
-      protein: "2g/kg poids corps répartis",
+      protein: "2g/kg répartis",
       creatine: "5g/jour post-training",
-      collagen: "10g/jour matin à jeun",
-      omega3: "3g/jour (EPA/DHA) avec repas",
+      collagen: "10g/jour matin jeun",
+      omega3: "3g/jour avec repas",
       vitaminD3: "4000 UI/jour matin",
-      zma: "Selon étiquette 30 min avant coucher",
-      wheyIsolate: "30g post-training immédiat",
+      zma: "30 min avant coucher",
+      wheyIsolate: "30g post-training",
       fastCarbs: "50g post-training",
       electrolytes: "1 dose pendant training"
     },
     optional: {
-      glucosamineChondroitin: "1500mg/jour (santé articulaire)",
-      curcumin: "500mg matin (anti-inflammatoire)",
-      magnesiumBisglycinate: "400mg soir (récupération)"
+      glucosamineChondroitin: "1500mg/jour",
+      curcumin: "500mg matin",
+      magnesiumBisglycinate: "400mg soir"
     }
   },
   
   recovery: {
     sleep: "7h30 minimum (optimal 8h)",
-    bedtime: "Régulier, chambre fraîche 18-19°C, obscurité totale",
+    bedtime: "Régulier, 18-19°C, obscurité totale",
     overtrainingSignals: [
       "Insomnie persistante (>3 nuits)",
       "Douleur articulaire aiguë",
       "Fatigue extrême constante",
       "Perte motivation totale",
-      "Régression force 2 séances consécutives",
-      "Fréquence cardiaque repos +10 bpm vs normale"
+      "Régression force 2 séances",
+      "FC repos +10 bpm vs normale"
     ],
     actionIfOvertrained: [
-      "Deload anticipé immédiat (1 sem -50%)",
+      "Deload anticipé (1 sem -50%)",
       "Sommeil 9h minimum",
       "Massage/kiné si douleurs",
       "Retour progressif"
@@ -684,23 +285,23 @@ export const PROGRAM_INFO = {
   },
   
   warmup: {
-    phase1: "Cardio léger 5 min (vélo/rameur) 60-70% FC max",
-    phase2: "Mobilité articulaire 5 min (rotations épaules, cat-cow, leg swings, rotations poignets/chevilles, dislocations épaules)",
-    phase3: "Échauffement spécifique par exercice lourd : 40% 8 reps → 60% 5 reps → 80% 3 reps → 90% 1 rep → 100% série travail"
+    phase1: "Cardio 5 min 60-70% FC max",
+    phase2: "Mobilité 5 min (rotations épaules, cat-cow, leg swings, poignets/chevilles, dislocations)",
+    phase3: "Spécifique : 40% 8 reps → 60% 5 reps → 80% 3 reps → 90% 1 rep → 100% travail"
   },
   
   safetyRules: {
     golden: [
       "Technique > Charge TOUJOURS",
-      "Douleur ≠ Courbature (courbature = OK / douleur articulaire = STOP)",
-      "Progression conservative (ne JAMAIS sauter échelon)",
+      "Douleur ≠ Courbature",
+      "Progression conservative",
       "Respiration : inspirer descente, expirer montée",
-      "Amplitude contrôlée (privilégier complète sauf si douleur)"
+      "Amplitude contrôlée"
     ],
     stopSignals: [
-      "Douleur aiguë articulaire",
-      "Craquement/claquement tendon",
-      "Engourdissement/fourmillement",
+      "Douleur articulaire aiguë",
+      "Craquement tendon",
+      "Engourdissement",
       "Perte force soudaine",
       "Vertiges/nausées",
       "Douleur thoracique"
@@ -708,9 +309,9 @@ export const PROGRAM_INFO = {
   },
   
   progressionCriteria: {
-    increase: "RPE ≤6 sur 2 séances consécutives + technique parfaite + aucune douleur",
-    maintain: "RPE 7-8 constant + technique légèrement dégradée dernières reps",
-    decrease: "RPE >9 deux séances consécutives + technique dégradée + douleur articulaire"
+    increase: "RPE ≤6 sur 2 séances + technique parfaite + aucune douleur",
+    maintain: "RPE 7-8 constant + technique légèrement dégradée",
+    decrease: "RPE >9 deux séances + technique dégradée + douleur"
   }
 };
 
@@ -724,33 +325,29 @@ export class ProgramData {
     this.currentWeek = 1;
   }
   
-  // Récupérer une semaine complète
   getWeek(weekNumber) {
     if (weekNumber < 1 || weekNumber > 26) {
-      throw new Error(`Semaine invalide : ${weekNumber}. Doit être entre 1 et 26.`);
+      throw new Error(`Semaine invalide : ${weekNumber}`);
     }
     return this.program[`week${weekNumber}`];
   }
   
-  // Récupérer un workout spécifique d'une semaine
   getWorkout(weekNumber, day) {
     const week = this.getWeek(weekNumber);
     const validDays = ['dimanche', 'mardi', 'vendredi', 'maison'];
     
     if (!validDays.includes(day.toLowerCase())) {
-      throw new Error(`Jour invalide : ${day}. Doit être dimanche, mardi, vendredi ou maison.`);
+      throw new Error(`Jour invalide : ${day}`);
     }
     
     return week[day.toLowerCase()];
   }
   
-  // Récupérer tous les exercices d'un workout
   getWorkoutExercises(weekNumber, day) {
     const workout = this.getWorkout(weekNumber, day);
     return workout.exercises;
   }
   
-  // Récupérer la progression d'un exercice sur 26 semaines
   getExerciseProgression(exerciseName) {
     const progression = [];
     
@@ -778,7 +375,6 @@ export class ProgramData {
     return progression;
   }
   
-  // Récupérer tous les exercices uniques du programme
   getAllExercises() {
     const exercisesSet = new Set();
     
@@ -795,7 +391,6 @@ export class ProgramData {
     return Array.from(exercisesSet).sort();
   }
   
-  // Calculer volume total d'une semaine
   getWeekVolume(weekNumber) {
     const week = this.getWeek(weekNumber);
     let totalSets = 0;
@@ -820,7 +415,6 @@ export class ProgramData {
     };
   }
   
-  // Récupérer toutes les semaines
   getAllWeeks() {
     const weeks = [];
     for (let i = 1; i <= 26; i++) {
@@ -829,24 +423,20 @@ export class ProgramData {
     return weeks;
   }
   
-  // Vérifier si une semaine est un deload
   isDeloadWeek(weekNumber) {
     return [6, 12, 18, 24, 26].includes(weekNumber);
   }
   
-  // Récupérer le bloc d'une semaine
   getBlock(weekNumber) {
     const week = this.getWeek(weekNumber);
     return week.block;
   }
   
-  // Récupérer la technique d'une semaine
   getTechnique(weekNumber) {
     const week = this.getWeek(weekNumber);
     return week.technique;
   }
   
-  // Exporter en JSON
   exportToJSON() {
     return JSON.stringify({
       program: this.program,
@@ -854,7 +444,6 @@ export class ProgramData {
     }, null, 2);
   }
   
-  // Importer depuis JSON
   importFromJSON(jsonString) {
     try {
       const data = JSON.parse(jsonString);
@@ -867,35 +456,30 @@ export class ProgramData {
     }
   }
   
-  // Valider la structure du programme
   validateProgram() {
     const errors = [];
     
-    // Vérifier 26 semaines
     if (Object.keys(this.program).length !== 26) {
-      errors.push(`Nombre de semaines incorrect : ${Object.keys(this.program).length} au lieu de 26`);
+      errors.push(`Nombre semaines incorrect : ${Object.keys(this.program).length}`);
     }
     
-    // Vérifier chaque semaine
     for (let week = 1; week <= 26; week++) {
       try {
         const weekData = this.getWeek(week);
         
-        // Vérifier jours obligatoires
         ['dimanche', 'mardi', 'vendredi', 'maison'].forEach(day => {
           if (!weekData[day]) {
-            errors.push(`Semaine ${week} : jour ${day} manquant`);
+            errors.push(`S${week} : jour ${day} manquant`);
           } else if (!weekData[day].exercises || weekData[day].exercises.length === 0) {
-            errors.push(`Semaine ${week}, ${day} : aucun exercice`);
+            errors.push(`S${week} ${day} : aucun exercice`);
           }
         });
         
-        // Vérifier propriétés obligatoires
-        if (!weekData.block) errors.push(`Semaine ${week} : propriété 'block' manquante`);
-        if (!weekData.technique) errors.push(`Semaine ${week} : propriété 'technique' manquante`);
+        if (!weekData.block) errors.push(`S${week} : 'block' manquant`);
+        if (!weekData.technique) errors.push(`S${week} : 'technique' manquant`);
         
       } catch (error) {
-        errors.push(`Semaine ${week} : ${error.message}`);
+        errors.push(`S${week} : ${error.message}`);
       }
     }
     
@@ -911,4 +495,394 @@ export class ProgramData {
 // ====================================================================
 // EXPORT PAR DÉFAUT
 // ====================================================================
-export default new ProgramData();
+export default new ProgramData();-2"),
+            notes: blockInfo.block === 2 && !isDeload ? "Rest-Pause série 5 : 6-8 reps → 20s repos → 2-3 reps" : 
+                   blockInfo.block === 4 && !isDeload ? "Clusters série 5 : 3 reps → 20s → 2 reps → 20s → 2 reps" : 
+                   "Exercice roi, technique parfaite obligatoire"
+          },
+          {
+            id: `w${week}_dim_2`,
+            name: "Goblet Squat",
+            category: "compound",
+            muscle: ["quadriceps", "fessiers"],
+            sets: 4,
+            reps: 10,
+            rpe: blockInfo.rpe,
+            weight: calculateWeight(25, week, 2.5, 2),
+            rest: 75,
+            tempo: isDeload ? "4-1-2" : (week <= 5 ? "3-1-2" : "2-1-2"),
+            notes: blockInfo.block === 3 && !isDeload ? "Drop-set série 4 : 10 reps → -25% → 8-10 reps" :
+                   blockInfo.block === 4 && !isDeload ? "Partials série 4 : 10 reps → 5 demi-reps amplitude haute" :
+                   "Haltère tenu devant poitrine, descente contrôlée"
+          },
+          {
+            id: `w${week}_dim_3`,
+            name: "Leg Press",
+            category: "compound",
+            muscle: ["quadriceps", "fessiers"],
+            sets: 4,
+            reps: 10,
+            rpe: blockInfo.rpe,
+            weight: calculateWeight(110, week, 10, 2),
+            rest: 75,
+            tempo: isDeload ? "4-1-2" : (week <= 5 ? "3-1-2" : "2-1-2"),
+            notes: blockInfo.block === 3 && !isDeload ? "Drop-set série 4 : 10 reps → -25% → 10-12 reps" :
+                   blockInfo.block === 4 && !isDeload ? "Clusters S4 : 4 reps → 20s → 3 reps → 20s → 3 reps | Puis 10 reps → 8 quarts reps" :
+                   "Pieds largeur épaules, amplitude complète"
+          },
+          {
+            id: `w${week}_dim_4a`,
+            name: "Lat Pulldown (prise large)",
+            category: "compound",
+            muscle: ["dos"],
+            sets: 4,
+            reps: 10,
+            rpe: blockInfo.rpe,
+            weight: calculateWeight(60, week, 2.5, 2),
+            rest: 90,
+            tempo: isDeload ? "4-1-2" : (week <= 5 ? "3-1-2" : "2-1-2"),
+            isSuperset: true,
+            supersetWith: "Landmine Press",
+            notes: blockInfo.block === 3 && !isDeload ? "SUPERSET | Drop-set S4 : 10 reps → -20% → 8-10 reps" :
+                   "SUPERSET avec Landmine Press | Prise 1.5× largeur épaules"
+          },
+          {
+            id: `w${week}_dim_4b`,
+            name: "Landmine Press",
+            category: "compound",
+            muscle: ["pectoraux", "épaules"],
+            sets: 4,
+            reps: 10,
+            rpe: blockInfo.rpe,
+            weight: calculateWeight(35, week, 2.5, 2),
+            rest: 90,
+            tempo: isDeload ? "4-1-2" : (week <= 5 ? "3-1-2" : "2-1-2"),
+            isSuperset: true,
+            supersetWith: "Lat Pulldown (prise large)",
+            notes: "SUPERSET avec Lat Pulldown | Barre calée dans coin"
+          },
+          {
+            id: `w${week}_dim_5`,
+            name: "Rowing Machine (prise large)",
+            category: "compound",
+            muscle: ["dos"],
+            sets: 4,
+            reps: 10,
+            rpe: blockInfo.rpe,
+            weight: calculateWeight(50, week, 2.5, 2),
+            rest: 75,
+            tempo: isDeload ? "4-1-2" : (week <= 5 ? "3-1-2" : "2-1-2"),
+            notes: blockInfo.block === 3 && !isDeload ? "Myo-reps S4 : 10 reps → 5s → 4 mini-sets × 4 reps" :
+                   blockInfo.block === 4 && !isDeload ? "Myo-reps S4 : 10 reps → 5s → 4 mini-sets × 4 reps" :
+                   "Prise large, coudes extérieur, tirer vers bas pecs"
+          },
+          {
+            id: `w${week}_dim_6a`,
+            name: getBicepExercise(week),
+            category: "isolation",
+            muscle: ["biceps"],
+            sets: 4,
+            reps: 12,
+            rpe: blockInfo.rpe,
+            weight: calculateWeight(12, week, 2.5, 3),
+            rest: 75,
+            tempo: isDeload ? "4-1-2" : (week <= 5 ? "3-1-2" : "2-1-2"),
+            isSuperset: true,
+            supersetWith: "Cable Pushdown",
+            notes: blockInfo.block === 1 && !isDeload ? "SUPERSET | Pause 2s bras tendus (étirement max)" :
+                   blockInfo.block === 3 && !isDeload ? "SUPERSET | Myo-reps S4 : 12 reps → 5s → 4 mini-sets × 4 reps" :
+                   blockInfo.block === 4 && !isDeload ? "SUPERSET | Myo-reps S4 : 12 reps → 5s → 4 mini-sets × 4 reps" :
+                   `SUPERSET | ${getBicepExercise(week) === "Incline Curl" ? "Incline 45° sur banc" : "Spider curl pupitre"}`
+          },
+          {
+            id: `w${week}_dim_6b`,
+            name: "Cable Pushdown",
+            category: "isolation",
+            muscle: ["triceps"],
+            sets: 3,
+            reps: 12,
+            rpe: blockInfo.rpe,
+            weight: calculateWeight(20, week, 2.5, 3),
+            rest: 75,
+            tempo: isDeload ? "4-1-2" : (week <= 5 ? "3-1-2" : "2-1-2"),
+            isSuperset: true,
+            supersetWith: getBicepExercise(week),
+            notes: blockInfo.block === 4 && !isDeload ? "SUPERSET | Myo-reps S3 : 12 reps → 5s → 4 mini-sets × 4 reps" :
+                   "SUPERSET | Coudes fixes le long du corps"
+          }
+        ]
+      },
+      
+      // ============================================================
+      // MARDI : PECS + ÉPAULES + TRICEPS (70 min - 35 séries)
+      // ============================================================
+      mardi: {
+        name: "PECS + ÉPAULES + TRICEPS",
+        duration: 70,
+        totalSets: 35,
+        exercises: [
+          {
+            id: `w${week}_mar_1`,
+            name: "Dumbbell Press",
+            category: "compound",
+            muscle: ["pectoraux", "épaules", "triceps"],
+            sets: 5,
+            reps: 10,
+            rpe: blockInfo.rpe,
+            weight: calculateWeight(22, week, 2.5, 3),
+            rest: 105,
+            tempo: isDeload ? "4-1-2" : (week <= 5 ? "3-1-2" : "2-1-2"),
+            notes: blockInfo.block === 2 && !isDeload ? "Rest-Pause S5 : 10 reps → 20s → 3-4 reps" :
+                   blockInfo.block === 3 && !isDeload ? "Drop-set S5 : 10 reps → -25% → 8-10 reps" :
+                   blockInfo.block === 4 && !isDeload ? "Clusters S5 : 4 reps → 15s → 3 reps → 15s → 3 reps" :
+                   "Banc plat, haltères rotation naturelle (par haltère)"
+          },
+          {
+            id: `w${week}_mar_2`,
+            name: "Cable Fly (poulies moyennes)",
+            category: "isolation",
+            muscle: ["pectoraux"],
+            sets: 4,
+            reps: 12,
+            rpe: blockInfo.rpe,
+            weight: calculateWeight(10, week, 2.5, 3),
+            rest: 60,
+            tempo: isDeload ? "4-1-2" : (week <= 5 ? "3-1-2" : "2-1-2"),
+            notes: blockInfo.block === 1 && !isDeload ? "Pause 2s bras écartés (étirement pecs max)" :
+                   blockInfo.block === 3 && !isDeload ? "Drop-set S4 : 12 reps → -25% → 10-12 reps + Myo-reps S4 : 12 reps → 5s → 5 mini-sets × 5 reps" :
+                   blockInfo.block === 4 && !isDeload ? "Myo-reps S4 : 12 reps → 5s → 5 mini-sets × 5 reps" :
+                   "Poulies hauteur épaules, bras semi-fléchis"
+          },
+          {
+            id: `w${week}_mar_3`,
+            name: "Leg Press léger",
+            category: "compound",
+            muscle: ["quadriceps", "fessiers"],
+            sets: 3,
+            reps: 15,
+            rpe: blockInfo.rpe,
+            weight: calculateWeight(80, week, 10, 3),
+            rest: 60,
+            tempo: isDeload ? "4-1-2" : (week <= 5 ? "3-1-2" : "2-1-2"),
+            notes: "Activation légère jambes, pas de fatigue excessive"
+          },
+          {
+            id: `w${week}_mar_4a`,
+            name: "Extension Triceps Corde",
+            category: "isolation",
+            muscle: ["triceps"],
+            sets: 5,
+            reps: 12,
+            rpe: blockInfo.rpe,
+            weight: calculateWeight(20, week, 2.5, 3),
+            rest: 75,
+            tempo: isDeload ? "4-1-2" : (week <= 5 ? "3-1-2" : "2-1-2"),
+            isSuperset: true,
+            supersetWith: "Lateral Raises",
+            notes: blockInfo.block === 3 && !isDeload ? "SUPERSET | Drop-set S5 : 12 reps → -20% → 10-12 reps" :
+                   blockInfo.block === 4 && !isDeload ? "SUPERSET | Myo-reps S5 : 12 reps → 5s → 4 mini-sets × 4 reps" :
+                   "SUPERSET | Corde poulie haute, coudes fixes"
+          },
+          {
+            id: `w${week}_mar_4b`,
+            name: "Lateral Raises",
+            category: "isolation",
+            muscle: ["épaules"],
+            sets: 5,
+            reps: 15,
+            rpe: blockInfo.rpe,
+            weight: calculateWeight(8, week, 2.5, 4),
+            rest: 75,
+            tempo: isDeload ? "4-1-2" : (week <= 5 ? "3-1-2" : "2-1-2"),
+            isSuperset: true,
+            supersetWith: "Extension Triceps Corde",
+            notes: blockInfo.block === 1 && !isDeload ? "SUPERSET | Pause 1s bras horizontaux" :
+                   blockInfo.block === 3 && !isDeload ? "SUPERSET | Drop-set S5 : 15 reps → -25% → 12-15 reps" :
+                   blockInfo.block === 4 && !isDeload ? "SUPERSET | Myo-reps S5 : 15 reps → 5s → 5 mini-sets × 5 reps" :
+                   "SUPERSET | Coudes fléchis, monter horizontal (haltère)"
+          },
+          {
+            id: `w${week}_mar_5`,
+            name: "Face Pull",
+            category: "isolation",
+            muscle: ["épaules", "dos"],
+            sets: 5,
+            reps: 15,
+            rpe: blockInfo.rpe,
+            weight: calculateWeight(20, week, 2.5, 3),
+            rest: 60,
+            tempo: isDeload ? "4-1-2" : (week <= 5 ? "3-1-2" : "2-1-2"),
+            notes: blockInfo.block === 1 && !isDeload ? "Pause 1s contraction arrière" :
+                   blockInfo.block === 3 && !isDeload ? "Myo-reps S5 : 15 reps → 5s → 5 mini-sets × 5 reps" :
+                   blockInfo.block === 4 && !isDeload ? "Myo-reps S5 : 15 reps → 5s → 5 mini-sets × 5 reps" :
+                   "Corde poulie haute, tirer vers visage, rotation externe"
+          },
+          {
+            id: `w${week}_mar_6`,
+            name: "Rowing Machine (prise serrée)",
+            category: "compound",
+            muscle: ["dos"],
+            sets: 4,
+            reps: 12,
+            rpe: blockInfo.rpe,
+            weight: calculateWeight(50, week, 2.5, 2),
+            rest: 75,
+            tempo: isDeload ? "4-1-2" : (week <= 5 ? "3-1-2" : "2-1-2"),
+            notes: "Prise serrée, coudes corps, tirer vers nombril"
+          },
+          {
+            id: `w${week}_mar_7`,
+            name: "Overhead Extension (corde, assis)",
+            category: "isolation",
+            muscle: ["triceps"],
+            sets: 4,
+            reps: 12,
+            rpe: blockInfo.rpe,
+            weight: calculateWeight(15, week, 2.5, 3),
+            rest: 60,
+            tempo: isDeload ? "4-1-2" : (week <= 5 ? "3-1-2" : "2-1-2"),
+            notes: blockInfo.block === 3 && !isDeload ? "Myo-reps S4 : 12 reps → 5s → 4 mini-sets × 4 reps" :
+                   blockInfo.block === 4 && !isDeload ? "Myo-reps S4 : 12 reps → 5s → 4 mini-sets × 4 reps" :
+                   "Corde poulie haute, assis, étirement triceps max"
+          }
+        ]
+      },
+      
+      // ============================================================
+      // VENDREDI : DOS + JAMBES LÉGÈRES + BRAS + ÉPAULES (73 min - 33 séries)
+      // ============================================================
+      vendredi: {
+        name: "DOS + JAMBES LÉGÈRES + BRAS + ÉPAULES",
+        duration: 73,
+        totalSets: 33,
+        exercises: [
+          {
+            id: `w${week}_ven_1`,
+            name: "Landmine Row",
+            category: "compound",
+            muscle: ["dos"],
+            sets: 5,
+            reps: 10,
+            rpe: blockInfo.rpe,
+            weight: calculateWeight(55, week, 2.5, 2),
+            rest: 105,
+            tempo: isDeload ? "4-1-2" : (week <= 5 ? "3-1-2" : "2-1-2"),
+            notes: blockInfo.block === 2 && !isDeload ? "Rest-Pause S5 : 10 reps → 20s → 3-4 reps" :
+                   blockInfo.block === 3 && !isDeload ? "Drop-set S5 : 10 reps → -20% → 8-10 reps" :
+                   blockInfo.block === 4 && !isDeload ? "Clusters S5 : 4 reps → 15s → 3 reps → 15s → 3 reps" :
+                   "Barre calée, une main, tirer vers hanche"
+          },
+          {
+            id: `w${week}_ven_2a`,
+            name: "Leg Curl",
+            category: "isolation",
+            muscle: ["ischios"],
+            sets: 5,
+            reps: 12,
+            rpe: blockInfo.rpe,
+            weight: calculateWeight(40, week, 5, 3),
+            rest: 75,
+            tempo: isDeload ? "4-1-2" : (week <= 5 ? "3-1-2" : "2-1-2"),
+            isSuperset: true,
+            supersetWith: "Leg Extension",
+            notes: blockInfo.block === 3 && !isDeload ? "SUPERSET | Drop-set S5 : 12 reps → -25% → 10-12 reps" :
+                   blockInfo.block === 4 && !isDeload ? "SUPERSET | Partials S5 : 12 reps → 6-8 partials amplitude haute" :
+                   "SUPERSET | Allongé ou assis selon machine"
+          },
+          {
+            id: `w${week}_ven_2b`,
+            name: "Leg Extension",
+            category: "isolation",
+            muscle: ["quadriceps"],
+            sets: 4,
+            reps: 15,
+            rpe: blockInfo.rpe,
+            weight: calculateWeight(35, week, 5, 3),
+            rest: 75,
+            tempo: isDeload ? "4-1-2" : (week <= 5 ? "3-1-2" : "2-1-2"),
+            isSuperset: true,
+            supersetWith: "Leg Curl",
+            notes: blockInfo.block === 3 && !isDeload ? "SUPERSET | Drop-set S4 : 15 reps → -25% → 12-15 reps" :
+                   blockInfo.block === 4 && !isDeload ? "SUPERSET | Partials S4 : 15 reps → 10 partials derniers 30°" :
+                   "SUPERSET | Extension complète, contraction 1s"
+          },
+          {
+            id: `w${week}_ven_3a`,
+            name: "Cable Fly",
+            category: "isolation",
+            muscle: ["pectoraux"],
+            sets: 4,
+            reps: 15,
+            rpe: blockInfo.rpe,
+            weight: calculateWeight(10, week, 2.5, 3),
+            rest: 60,
+            tempo: isDeload ? "4-1-2" : (week <= 5 ? "3-1-2" : "2-1-2"),
+            isSuperset: true,
+            supersetWith: "Dumbbell Fly",
+            notes: blockInfo.block === 3 && !isDeload ? "SUPERSET | Myo-reps S4 : 15 reps → 5s → 5 mini-sets × 5 reps" :
+                   blockInfo.block === 4 && !isDeload ? "SUPERSET | Myo-reps S4 : 15 reps → 5s → 5 mini-sets × 5 reps" :
+                   "SUPERSET | Poulies moyennes, étirement max"
+          },
+          {
+            id: `w${week}_ven_3b`,
+            name: "Dumbbell Fly",
+            category: "isolation",
+            muscle: ["pectoraux"],
+            sets: 4,
+            reps: 12,
+            rpe: blockInfo.rpe,
+            weight: calculateWeight(10, week, 2.5, 3),
+            rest: 60,
+            tempo: isDeload ? "4-1-2" : (week <= 5 ? "3-1-2" : "2-1-2"),
+            isSuperset: true,
+            supersetWith: "Cable Fly",
+            notes: blockInfo.block === 1 && !isDeload ? "SUPERSET | Pause 2s bras écartés (étirement pecs)" :
+                   blockInfo.block === 3 && !isDeload ? "SUPERSET | Drop-set S4 : 12 reps → -25% → 10-12 reps" :
+                   blockInfo.block === 4 && !isDeload ? "SUPERSET | Myo-reps S4 : 12 reps → 5s → 4 mini-sets × 4 reps" :
+                   "SUPERSET | Banc plat, amplitude complète (haltère)"
+          },
+          {
+            id: `w${week}_ven_4a`,
+            name: "EZ Bar Curl",
+            category: "isolation",
+            muscle: ["biceps"],
+            sets: 5,
+            reps: 12,
+            rpe: blockInfo.rpe,
+            weight: calculateWeight(25, week, 2.5, 3),
+            rest: 75,
+            tempo: isDeload ? "4-1-2" : (week <= 5 ? "3-1-2" : "2-1-2"),
+            isSuperset: true,
+            supersetWith: "Overhead Extension",
+            notes: blockInfo.block === 1 && !isDeload ? "SUPERSET | Pause 2s bras tendus (étirement biceps)" :
+                   blockInfo.block === 3 && !isDeload ? "SUPERSET | Myo-reps S5 : 12 reps → 5s → 4 mini-sets × 4 reps" :
+                   blockInfo.block === 4 && !isDeload ? "SUPERSET | Myo-reps S5 : 12 reps → 5s → 4 mini-sets × 4 reps" :
+                   "SUPERSET | Barre EZ, coudes fixes"
+          },
+          {
+            id: `w${week}_ven_4b`,
+            name: "Overhead Extension",
+            category: "isolation",
+            muscle: ["triceps"],
+            sets: 3,
+            reps: 12,
+            rpe: blockInfo.rpe,
+            weight: calculateWeight(15, week, 2.5, 3),
+            rest: 75,
+            tempo: isDeload ? "4-1-2" : (week <= 5 ? "3-1-2" : "2-1-2"),
+            isSuperset: true,
+            supersetWith: "EZ Bar Curl",
+            notes: blockInfo.block === 4 && !isDeload ? "SUPERSET | Myo-reps S3 : 12 reps → 5s → 4 mini-sets × 4 reps" :
+                   "SUPERSET | Corde poulie haute, assis, étirement max"
+          },
+          {
+            id: `w${week}_ven_5`,
+            name: "Lateral Raises",
+            category: "isolation",
+            muscle: ["épaules"],
+            sets: 3,
+            reps: 15,
+            rpe: blockInfo.rpe,
+            weight: calculateWeight(8, week, 2.5, 4),
+            rest: 60,
+            tempo: isDeload ? "4-1-2" : (week <= 5 ? "3-1-2" : "2-1
