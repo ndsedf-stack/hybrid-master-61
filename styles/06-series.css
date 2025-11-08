@@ -1,304 +1,131 @@
-/**
- * SÉRIES - DESIGN PREMIUM STYLE HEVY - VERSION CORRIGÉE COMPLÈTE
- * Affichage texte, validation visuelle, effets modernes
- */
+/* ==============================================
+   06 - SERIES CSS
+   Mise en page des séries individuelles
+   ============================================== */
 
-/* Container des séries - CORRECTION PADDING */
-.series-container {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    margin-top: 20px;
-    padding: 0; /* CORRECTION - enlever le padding sur les côtés */
+/* ============== SET ROW - LAYOUT ============== */
+.set-row {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 1rem;
+  align-items: center;
+  padding: 1rem;
+  background: var(--bg-primary);
+  border: 2px solid var(--border-color);
+  border-radius: 10px;
+  transition: all 0.3s ease;
 }
 
-/* Ligne de série - Design Premium - CORRECTION ALIGNEMENT */
-.serie-row {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    padding: 16px 20px;
-    background: rgba(26, 26, 26, 0.8);
-    backdrop-filter: blur(10px);
-    border: 3px solid transparent;
-    border-radius: 16px;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-    position: relative;
+.set-row:hover:not(.completed) {
+  border-color: var(--primary-color);
+  box-shadow: 0 2px 8px rgba(0, 123, 255, 0.1);
 }
 
-.serie-row:hover {
-    background: rgba(35, 35, 35, 0.9);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+/* ============== SET COMPLETED STATE ============== */
+.set-row.completed {
+  background: var(--success-bg);
+  border-color: var(--success-color);
+  opacity: 0.85;
 }
 
-/* Série validée - EFFET WOW */
-.serie-row.validated {
-    border-color: #4caf50;
-    background: linear-gradient(135deg, rgba(76, 175, 80, 0.15) 0%, rgba(76, 175, 80, 0.05) 100%);
-    box-shadow: 0 0 20px rgba(76, 175, 80, 0.3), 0 4px 16px rgba(0, 0, 0, 0.4);
+.set-row.completed:hover {
+  border-color: var(--success-color);
+  box-shadow: none;
 }
 
-.serie-row.validated::before {
-    content: '';
-    position: absolute;
-    inset: -3px;
-    border-radius: 16px;
-    padding: 3px;
-    background: linear-gradient(135deg, #4caf50, #66bb6a);
-    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
-    -webkit-mask-composite: xor;
-    mask-composite: exclude;
-    opacity: 0.6;
+/* ============== SET NUMBER ============== */
+.set-number {
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  min-width: 50px;
+  text-align: center;
+  padding: 0.5rem;
+  background: var(--bg-tertiary);
+  border-radius: 6px;
 }
 
-/* Numéro de série - Gros cercle moderne - CORRECTION FORCE DISPLAY */
-.serie-row .serie-number,
-span.serie-number {
-    display: flex !important;
-    align-items: center !important;
-    justify-content: center !important;
-    min-width: 44px !important;
-    width: 44px !important;
-    height: 44px !important;
-    background: linear-gradient(135deg, #2c2c2c 0%, #1a1a1a 100%) !important;
-    color: #ffffff !important;
-    font-weight: 700 !important;
-    font-size: 18px !important;
-    border-radius: 50% !important;
-    flex-shrink: 0 !important;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important;
-    transition: all 0.3s ease !important;
-    text-align: center !important;
-    line-height: 44px !important;
+.set-row.completed .set-number {
+  color: var(--success-color);
+  background: rgba(40, 167, 69, 0.1);
 }
 
-.serie-row.validated .serie-number {
-    background: linear-gradient(135deg, #4caf50 0%, #66bb6a 100%) !important;
-    color: white !important;
-    box-shadow: 0 4px 12px rgba(76, 175, 80, 0.5) !important;
-    transform: scale(1.1);
+/* ============== SET INPUTS ============== */
+.set-inputs {
+  display: flex;
+  gap: 1rem;
+  flex: 1;
 }
 
-/* Infos de la série - Texte premium - CORRECTION FLEX */
-.serie-info {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    min-width: 0; /* CORRECTION - permet le texte de s'adapter */
+/* ============== ANIMATIONS ============== */
+
+/* Animation lors de la validation */
+@keyframes validatePulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
 }
 
-.serie-reps {
-    font-size: 17px;
-    font-weight: 600;
-    color: #ffffff;
-    letter-spacing: 0.3px;
+.set-row.completed {
+  animation: validatePulse 0.4s ease;
 }
 
-.serie-weight {
-    font-size: 19px;
-    font-weight: 700;
-    color: #ff9800;
-    text-shadow: 0 2px 4px rgba(255, 152, 0, 0.3);
+/* Shake animation pour les erreurs */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-10px); }
+  75% { transform: translateX(10px); }
 }
 
-/* Timer de repos - Style discret - CORRECTION FLEX-SHRINK */
-.serie-rest {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    padding: 6px 12px;
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 20px;
-    font-size: 13px;
-    color: rgba(255, 255, 255, 0.6);
-    backdrop-filter: blur(5px);
-    flex-shrink: 0; /* CORRECTION - empêche de rétrécir */
-    white-space: nowrap; /* CORRECTION - pas de retour à la ligne */
+.set-row.error {
+  animation: shake 0.4s ease;
+  border-color: var(--danger-color);
 }
 
-.rest-icon {
-    font-size: 14px;
+/* ============== RESPONSIVE ============== */
+
+@media (max-width: 768px) {
+  .set-row {
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+    padding: 0.75rem;
+  }
+
+  .set-number {
+    font-size: 0.75rem;
+    min-width: auto;
+    text-align: left;
+  }
+
+  .set-inputs {
+    gap: 0.75rem;
+  }
+
+  .btn-validate-set {
+    width: 100%;
+  }
 }
 
-.rest-time {
-    font-weight: 500;
-}
-
-/* Bouton de validation - GROS ET VISIBLE - CORRECTION FLEX-SHRINK */
-.validate-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 50px;
-    width: 50px; /* CORRECTION - largeur fixe */
-    height: 50px;
-    background: rgba(76, 175, 80, 0.2);
-    color: #4caf50;
-    border: 2px solid #4caf50;
-    border-radius: 50%;
-    font-size: 24px;
-    cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    flex-shrink: 0; /* CORRECTION - taille fixe */
-    box-shadow: 0 2px 8px rgba(76, 175, 80, 0.2);
-}
-
-.validate-btn:hover {
-    background: rgba(76, 175, 80, 0.3);
-    transform: scale(1.15) rotate(5deg);
-    box-shadow: 0 4px 16px rgba(76, 175, 80, 0.4);
-}
-
-.validate-btn:active {
-    transform: scale(0.95);
-}
-
-/* Bouton validé - Rempli vert */
-.serie-row.validated .validate-btn {
-    background: linear-gradient(135deg, #4caf50 0%, #66bb6a 100%);
-    color: white;
-    border-color: #66bb6a;
-    box-shadow: 0 4px 16px rgba(76, 175, 80, 0.5);
-}
-
-.serie-row.validated .validate-btn:hover {
-    background: linear-gradient(135deg, #45a049 0%, #5cb85c 100%);
-    transform: scale(1.15);
-}
-
-/* Animations d'entrée */
-@keyframes slideIn {
-    from {
-        opacity: 0;
-        transform: translateX(-20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateX(0);
-    }
-}
-
-.serie-row {
-    animation: slideIn 0.4s ease-out backwards;
-}
-
-.serie-row:nth-child(1) { animation-delay: 0.05s; }
-.serie-row:nth-child(2) { animation-delay: 0.1s; }
-.serie-row:nth-child(3) { animation-delay: 0.15s; }
-.serie-row:nth-child(4) { animation-delay: 0.2s; }
-.serie-row:nth-child(5) { animation-delay: 0.25s; }
-.serie-row:nth-child(6) { animation-delay: 0.3s; }
-
-/* Responsive - Mobile optimisé - CORRECTIONS */
 @media (max-width: 480px) {
-    .serie-row {
-        gap: 12px;
-        padding: 14px 16px;
-        border-radius: 14px;
-        flex-wrap: nowrap; /* CORRECTION - pas de wrap */
-    }
+  .set-row {
+    padding: 0.6rem;
+    gap: 0.6rem;
+  }
 
-    .serie-number {
-        min-width: 38px !important;
-        width: 38px !important;
-        height: 38px !important;
-        font-size: 16px !important;
-        line-height: 38px !important;
-    }
+  .set-inputs {
+    flex-direction: column;
+    gap: 0.6rem;
+  }
 
-    .serie-info {
-        flex: 1;
-        min-width: 0;
-    }
-
-    .serie-reps {
-        font-size: 15px;
-    }
-
-    .serie-weight {
-        font-size: 17px;
-    }
-
-    .validate-btn {
-        min-width: 44px;
-        width: 44px; /* CORRECTION - taille fixe sur mobile */
-        height: 44px;
-        font-size: 22px;
-    }
-
-    .serie-rest {
-        font-size: 12px;
-        padding: 5px 10px;
-    }
-}
-
-/* CORRECTION - Layout alternatif si manque de place sur très petits écrans */
-@media (max-width: 380px) {
-    .serie-row {
-        display: grid;
-        grid-template-columns: 38px 1fr 44px;
-        grid-template-rows: auto auto;
-        gap: 10px;
-    }
-
-    .serie-number {
-        grid-row: 1 / 2;
-        grid-column: 1;
-    }
-
-    .serie-info {
-        grid-row: 1 / 2;
-        grid-column: 2;
-    }
-
-    .validate-btn {
-        grid-row: 1 / 2;
-        grid-column: 3;
-    }
-
-    .serie-rest {
-        grid-row: 2 / 3;
-        grid-column: 2 / 4;
-        justify-self: end;
-    }
-}
-
-/* Animation de pulse quand on clique */
-@keyframes pulse {
-    0% { transform: scale(1); }
-    50% { transform: scale(1.05); }
-    100% { transform: scale(1); }
-}
-
-.serie-row.validated {
-    animation: pulse 0.5s ease-out;
-}
-
-/* Effet de brillance sur validation */
-@keyframes shine {
-    0% {
-        background-position: -200% center;
-    }
-    100% {
-        background-position: 200% center;
-    }
-}
-
-.serie-row.validated::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    border-radius: 16px;
-    background: linear-gradient(
-        90deg,
-        transparent,
-        rgba(255, 255, 255, 0.1),
-        transparent
-    );
-    background-size: 200% 100%;
-    animation: shine 2s ease-in-out;
-    pointer-events: none;
+  .input-group {
+    width: 100%;
+  }
 }
