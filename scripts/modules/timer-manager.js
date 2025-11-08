@@ -1,357 +1,399 @@
 /**
- * TIMER MANAGER - Gestion du timer de repos
- * Module autonome pour le compte à rebours entre les séries
+ * TIMER MANAGER - VERSION AMÉLIORÉE v1.1
+ * Gestion complète du timer de repos avec contrôles avancés
  * 
  * Fonctionnalités:
- * - Compte à rebours configurable
- * - Notifications visuelles et sonores
- * - Pause/Reprise
- * - Configuration via roue de paramètres
+ * - Démarrage automatique après validation série
+ * - Contrôles: Pause, Resume, Stop, Skip, Reset
+ * - Ajustement: +15s / -15s
+ * - Affichage: Temps + Exercice + Série
+ * - Notification: Son/Vibration à la fin
+ * - Progress bar circulaire
  */
 
 export default class TimerManager {
     constructor() {
-        this.timeRemaining = 0;
+        // État du timer
         this.isRunning = false;
-        this.intervalId = null;
+        this.isPaused = false;
+        this.timeRemaining = 0;
+        this.initialTime = 0;
+        this.timerId = null;
+        
+        // Contexte (exercice en cours)
+        this.currentExercise = null;
+        this.currentSet = null;
+        
+        // Références DOM
+        this.widget = null;
+        this.progressRing = null;
+        
+        // Configuration
         this.config = {
             soundEnabled: true,
             vibrationEnabled: true,
             autoStart: true
         };
         
-        this.initUI();
-        this.loadConfig();
+        // Initialiser le widget
+        this.initWidget();
     }
-
+    
     /**
-     * Initialise l'interface du timer
+     * Initialise le widget DOM (appelé une seule fois)
      */
-    initUI() {
-        // Vérifier si l'UI existe déjà
-        if (document.getElementById('timer-widget')) return;
-
-        const timerHTML = `
-            <div id="timer-widget" class="timer-widget hidden">
-                <div class="timer-content">
-                    <div class="timer-display">
-                        <span class="timer-minutes">00</span>
-                        <span class="timer-separator">:</span>
-                        <span class="timer-seconds">00</span>
-                    </div>
-                    <div class="timer-controls">
-                        <button id="timer-pause-btn" class="timer-btn">⏸️ Pause</button>
-                        <button id="timer-reset-btn" class="timer-btn">🔄 Reset</button>
-                        <button id="timer-settings-btn" class="timer-btn">⚙️</button>
-                    </div>
-                </div>
-            </div>
-
-            <div id="timer-settings-modal" class="modal hidden">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h3>Paramètres du Timer</h3>
-                        <button id="close-timer-settings" class="close-btn">✕</button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="setting-item">
-                            <label>
-                                <input type="checkbox" id="timer-sound" checked>
-                                Son activé
-                            </label>
-                        </div>
-                        <div class="setting-item">
-                            <label>
-                                <input type="checkbox" id="timer-vibration" checked>
-                                Vibration activée
-                            </label>
-                        </div>
-                        <div class="setting-item">
-                            <label>
-                                <input type="checkbox" id="timer-autostart" checked>
-                                Démarrage automatique
-                            </label>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        `;
-
-        document.body.insertAdjacentHTML('beforeend', timerHTML);
-        this.initEventListeners();
+    initWidget() {
+        // Vérifier si le widget existe déjà
+        this.widget = document.getElementById('timer-widget');
+        
+        if (!this.widget) {
+            console.error('❌ Widget timer introuvable dans le DOM');
+            return;
+        }
+        
+        // Récupérer les éléments
+        this.progressRing = this.widget.querySelector('.timer-progress-ring circle');
+        
+        // Attacher les event listeners
+        this.attachListeners();
+        
+        console.log('✅ TimerManager initialisé');
     }
-
+    
     /**
-     * Initialise les écouteurs d'événements
+     * Attache les event listeners aux boutons
      */
-    initEventListeners() {
-        // Bouton Pause/Reprise
-        document.getElementById('timer-pause-btn')?.addEventListener('click', () => {
-            if (this.isRunning) {
-                this.pause();
-            } else {
-                this.resume();
-            }
-        });
-
-        // Bouton Reset
-        document.getElementById('timer-reset-btn')?.addEventListener('click', () => {
-            this.reset();
-        });
-
-        // Bouton Paramètres
-        document.getElementById('timer-settings-btn')?.addEventListener('click', () => {
-            this.openSettings();
-        });
-
-        // Fermer modal paramètres
-        document.getElementById('close-timer-settings')?.addEventListener('click', () => {
-            this.closeSettings();
-        });
-
-        // Sauvegarder paramètres
-        document.getElementById('timer-sound')?.addEventListener('change', (e) => {
-            this.config.soundEnabled = e.target.checked;
-            this.saveConfig();
-        });
-
-        document.getElementById('timer-vibration')?.addEventListener('change', (e) => {
-            this.config.vibrationEnabled = e.target.checked;
-            this.saveConfig();
-        });
-
-        document.getElementById('timer-autostart')?.addEventListener('change', (e) => {
-            this.config.autoStart = e.target.checked;
-            this.saveConfig();
-        });
+    attachListeners() {
+        const pauseBtn = document.getElementById('timer-pause');
+        const resetBtn = document.getElementById('timer-reset');
+        const closeBtn = document.getElementById('timer-close');
+        const add15Btn = document.getElementById('timer-add-15');
+        const sub15Btn = document.getElementById('timer-sub-15');
+        const skipBtn = document.getElementById('timer-skip');
+        
+        if (pauseBtn) {
+            pauseBtn.addEventListener('click', () => {
+                if (this.isPaused) {
+                    this.resume();
+                } else {
+                    this.pause();
+                }
+            });
+        }
+        
+        if (resetBtn) {
+            resetBtn.addEventListener('click', () => this.reset());
+        }
+        
+        if (closeBtn) {
+            closeBtn.addEventListener('click', () => this.stop());
+        }
+        
+        if (add15Btn) {
+            add15Btn.addEventListener('click', () => this.addTime(15));
+        }
+        
+        if (sub15Btn) {
+            sub15Btn.addEventListener('click', () => this.addTime(-15));
+        }
+        
+        if (skipBtn) {
+            skipBtn.addEventListener('click', () => this.skip());
+        }
     }
-
+    
     /**
-     * Démarre le timer avec un temps donné (en secondes)
+     * Démarre le timer
+     * @param {number} seconds - Durée en secondes
+     * @param {string} exerciseName - Nom de l'exercice (optionnel)
+     * @param {number} setNumber - Numéro de série (optionnel)
      */
-    start(seconds) {
-        this.reset();
+    start(seconds, exerciseName = null, setNumber = null) {
+        // Arrêter le timer en cours si existant
+        if (this.isRunning) {
+            this.stop();
+        }
+        
+        // Initialiser
         this.timeRemaining = seconds;
+        this.initialTime = seconds;
         this.isRunning = true;
-        this.updateDisplay();
+        this.isPaused = false;
+        this.currentExercise = exerciseName;
+        this.currentSet = setNumber;
+        
+        // Afficher le widget
         this.show();
         
-        this.intervalId = setInterval(() => {
-            this.tick();
-        }, 1000);
-    }
-
-    /**
-     * Tick du timer (appelé chaque seconde)
-     */
-    tick() {
-        if (!this.isRunning) return;
-
-        this.timeRemaining--;
+        // Mettre à jour l'affichage initial
         this.updateDisplay();
-
-        if (this.timeRemaining <= 0) {
-            this.complete();
-        }
+        
+        // Démarrer le compte à rebours
+        this.timerId = setInterval(() => {
+            if (!this.isPaused) {
+                this.timeRemaining--;
+                
+                this.updateDisplay();
+                
+                // Timer terminé
+                if (this.timeRemaining <= 0) {
+                    this.onComplete();
+                }
+            }
+        }, 1000);
+        
+        console.log(`⏱️ Timer démarré: ${seconds}s`);
     }
-
+    
     /**
-     * Met en pause le timer
+     * Met le timer en pause
      */
     pause() {
-        this.isRunning = false;
-        const pauseBtn = document.getElementById('timer-pause-btn');
+        if (!this.isRunning) return;
+        
+        this.isPaused = true;
+        
+        // Changer le bouton pause en resume
+        const pauseBtn = document.getElementById('timer-pause');
         if (pauseBtn) {
-            pauseBtn.textContent = '▶️ Reprendre';
+            pauseBtn.innerHTML = '▶️ Reprendre';
         }
+        
+        console.log('⏸️ Timer en pause');
     }
-
+    
     /**
-     * Reprend le timer
+     * Reprend le timer après pause
      */
     resume() {
-        if (this.timeRemaining > 0) {
-            this.isRunning = true;
-            const pauseBtn = document.getElementById('timer-pause-btn');
-            if (pauseBtn) {
-                pauseBtn.textContent = '⏸️ Pause';
-            }
+        if (!this.isRunning) return;
+        
+        this.isPaused = false;
+        
+        // Changer le bouton resume en pause
+        const pauseBtn = document.getElementById('timer-pause');
+        if (pauseBtn) {
+            pauseBtn.innerHTML = '⏸️ Pause';
         }
+        
+        console.log('▶️ Timer repris');
     }
-
+    
     /**
-     * Réinitialise le timer
+     * Arrête complètement le timer et cache le widget
      */
-    reset() {
-        this.isRunning = false;
-        this.timeRemaining = 0;
-        if (this.intervalId) {
-            clearInterval(this.intervalId);
-            this.intervalId = null;
+    stop() {
+        if (this.timerId) {
+            clearInterval(this.timerId);
+            this.timerId = null;
         }
-        this.updateDisplay();
+        
+        this.isRunning = false;
+        this.isPaused = false;
+        this.timeRemaining = 0;
+        this.initialTime = 0;
+        this.currentExercise = null;
+        this.currentSet = null;
+        
         this.hide();
         
-        const pauseBtn = document.getElementById('timer-pause-btn');
+        console.log('⏹️ Timer arrêté');
+    }
+    
+    /**
+     * Recommence le timer avec le temps initial
+     */
+    reset() {
+        if (!this.isRunning) return;
+        
+        this.timeRemaining = this.initialTime;
+        this.isPaused = false;
+        
+        // Réinitialiser le bouton pause
+        const pauseBtn = document.getElementById('timer-pause');
         if (pauseBtn) {
-            pauseBtn.textContent = '⏸️ Pause';
+            pauseBtn.innerHTML = '⏸️ Pause';
         }
+        
+        this.updateDisplay();
+        
+        console.log('🔄 Timer réinitialisé');
     }
-
+    
     /**
-     * Timer terminé
+     * Passe le timer (skip)
      */
-    complete() {
-        this.reset();
-        this.notify();
+    skip() {
+        console.log('⏭️ Timer passé');
+        this.stop();
     }
-
+    
     /**
-     * Notifications (son + vibration)
+     * Ajoute ou retire du temps
+     * @param {number} seconds - Secondes à ajouter (positif) ou retirer (négatif)
      */
-    notify() {
-        // Son
-        if (this.config.soundEnabled) {
-            this.playSound();
+    addTime(seconds) {
+        if (!this.isRunning) return;
+        
+        this.timeRemaining += seconds;
+        
+        // Ne pas descendre en dessous de 0
+        if (this.timeRemaining < 0) {
+            this.timeRemaining = 0;
         }
-
-        // Vibration
-        if (this.config.vibrationEnabled && navigator.vibrate) {
-            navigator.vibrate([200, 100, 200]);
-        }
-
-        // Notification visuelle
-        this.showNotification();
+        
+        this.updateDisplay();
+        
+        const action = seconds > 0 ? '+' : '';
+        console.log(`⏱️ ${action}${seconds}s (reste: ${this.timeRemaining}s)`);
     }
-
-    /**
-     * Joue un son de notification
-     */
-    playSound() {
-        const audioContext = new (window.AudioContext || window.webkitAudioContext)();
-        const oscillator = audioContext.createOscillator();
-        const gainNode = audioContext.createGain();
-
-        oscillator.connect(gainNode);
-        gainNode.connect(audioContext.destination);
-
-        oscillator.frequency.value = 800;
-        oscillator.type = 'sine';
-
-        gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
-        gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
-
-        oscillator.start(audioContext.currentTime);
-        oscillator.stop(audioContext.currentTime + 0.5);
-    }
-
-    /**
-     * Affiche une notification visuelle
-     */
-    showNotification() {
-        const notification = document.createElement('div');
-        notification.className = 'timer-notification';
-        notification.textContent = '✅ Repos terminé !';
-        document.body.appendChild(notification);
-
-        setTimeout(() => {
-            notification.classList.add('show');
-        }, 10);
-
-        setTimeout(() => {
-            notification.classList.remove('show');
-            setTimeout(() => {
-                notification.remove();
-            }, 300);
-        }, 3000);
-    }
-
+    
     /**
      * Met à jour l'affichage du timer
      */
     updateDisplay() {
+        // Temps
         const minutes = Math.floor(this.timeRemaining / 60);
         const seconds = this.timeRemaining % 60;
-
-        const minutesEl = document.querySelector('.timer-minutes');
-        const secondsEl = document.querySelector('.timer-seconds');
-
-        if (minutesEl) {
-            minutesEl.textContent = String(minutes).padStart(2, '0');
+        
+        const minutesElement = document.getElementById('timer-minutes');
+        const secondsElement = document.getElementById('timer-seconds');
+        
+        if (minutesElement) {
+            minutesElement.textContent = String(minutes).padStart(2, '0');
         }
-        if (secondsEl) {
-            secondsEl.textContent = String(seconds).padStart(2, '0');
+        
+        if (secondsElement) {
+            secondsElement.textContent = String(seconds).padStart(2, '0');
+        }
+        
+        // Exercice + Série
+        const exerciseInfoElement = document.getElementById('timer-exercise-info');
+        if (exerciseInfoElement && this.currentExercise) {
+            const setInfo = this.currentSet ? ` - Série ${this.currentSet}` : '';
+            exerciseInfoElement.textContent = `${this.currentExercise}${setInfo}`;
+        }
+        
+        // Progress bar circulaire
+        if (this.progressRing && this.initialTime > 0) {
+            const progress = (this.timeRemaining / this.initialTime) * 100;
+            const circumference = 2 * Math.PI * 54; // rayon = 54
+            const offset = circumference - (progress / 100) * circumference;
+            
+            this.progressRing.style.strokeDashoffset = offset;
         }
     }
-
+    
     /**
-     * Affiche le widget timer
+     * Appelé quand le timer se termine
+     */
+    onComplete() {
+        // Arrêter le timer
+        clearInterval(this.timerId);
+        this.timerId = null;
+        this.isRunning = false;
+        
+        // Notification
+        this.showNotification();
+        
+        // Son
+        if (this.config.soundEnabled) {
+            this.playSound();
+        }
+        
+        // Vibration
+        if (this.config.vibrationEnabled && 'vibrate' in navigator) {
+            navigator.vibrate([200, 100, 200]);
+        }
+        
+        // Cacher automatiquement après 3 secondes
+        setTimeout(() => {
+            this.hide();
+        }, 3000);
+        
+        console.log('✅ Timer terminé !');
+    }
+    
+    /**
+     * Affiche une notification
+     */
+    showNotification() {
+        const notification = document.getElementById('timer-notification');
+        if (!notification) return;
+        
+        notification.classList.add('show');
+        
+        // Cacher après 3 secondes
+        setTimeout(() => {
+            notification.classList.remove('show');
+        }, 3000);
+    }
+    
+    /**
+     * Joue un son (simple beep avec Web Audio API)
+     */
+    playSound() {
+        try {
+            const audioContext = new (window.AudioContext || window.webkitAudioContext)();
+            const oscillator = audioContext.createOscillator();
+            const gainNode = audioContext.createGain();
+            
+            oscillator.connect(gainNode);
+            gainNode.connect(audioContext.destination);
+            
+            oscillator.frequency.value = 800;
+            oscillator.type = 'sine';
+            
+            gainNode.gain.setValueAtTime(0.3, audioContext.currentTime);
+            gainNode.gain.exponentialRampToValueAtTime(0.01, audioContext.currentTime + 0.5);
+            
+            oscillator.start(audioContext.currentTime);
+            oscillator.stop(audioContext.currentTime + 0.5);
+        } catch (error) {
+            console.log('Son non disponible:', error);
+        }
+    }
+    
+    /**
+     * Affiche le widget
      */
     show() {
-        const widget = document.getElementById('timer-widget');
-        if (widget) {
-            widget.classList.remove('hidden');
+        if (this.widget) {
+            this.widget.classList.remove('hidden');
         }
     }
-
+    
     /**
-     * Cache le widget timer
+     * Cache le widget
      */
     hide() {
-        const widget = document.getElementById('timer-widget');
-        if (widget) {
-            widget.classList.add('hidden');
+        if (this.widget) {
+            this.widget.classList.add('hidden');
         }
     }
-
-    /**
-     * Ouvre le modal des paramètres
-     */
-    openSettings() {
-        const modal = document.getElementById('timer-settings-modal');
-        if (modal) {
-            modal.classList.remove('hidden');
-        }
-    }
-
-    /**
-     * Ferme le modal des paramètres
-     */
-    closeSettings() {
-        const modal = document.getElementById('timer-settings-modal');
-        if (modal) {
-            modal.classList.add('hidden');
-        }
-    }
-
+    
     /**
      * Charge la configuration depuis localStorage
      */
     loadConfig() {
-        const saved = localStorage.getItem('timer-config');
-        if (saved) {
-            this.config = JSON.parse(saved);
-            this.applyConfig();
+        try {
+            const saved = localStorage.getItem('timer-config');
+            if (saved) {
+                this.config = { ...this.config, ...JSON.parse(saved) };
+            }
+        } catch (error) {
+            console.error('Erreur chargement config timer:', error);
         }
     }
-
+    
     /**
-     * Sauvegarde la configuration dans localStorage
+     * Sauvegarde la configuration
      */
     saveConfig() {
-        localStorage.setItem('timer-config', JSON.stringify(this.config));
-    }
-
-    /**
-     * Applique la configuration à l'UI
-     */
-    applyConfig() {
-        const soundCheckbox = document.getElementById('timer-sound');
-        const vibrationCheckbox = document.getElementById('timer-vibration');
-        const autostartCheckbox = document.getElementById('timer-autostart');
-
-        if (soundCheckbox) soundCheckbox.checked = this.config.soundEnabled;
-        if (vibrationCheckbox) vibrationCheckbox.checked = this.config.vibrationEnabled;
-        if (autostartCheckbox) autostartCheckbox.checked = this.config.autoStart;
+        try {
+            localStorage.setItem('timer-config', JSON.stringify(this.config));
+        } catch (error) {
+            console.error('Erreur sauvegarde config timer:', error);
+        }
     }
 }
