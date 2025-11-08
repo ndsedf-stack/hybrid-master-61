@@ -1,11 +1,13 @@
 /**
- * WORKOUT RENDERER - VERSION PREMIUM CORRIGÉE COMPLÈTE
+ * WORKOUT RENDERER - VERSION AVEC TIMER INTÉGRÉ
  * Affichage texte des reps/poids, validation visuelle
+ * NOUVEAU: Déclenchement automatique du timer
  */
 
 export default class WorkoutRenderer {
-    constructor() {
+    constructor(timerManager = null) {
         this.container = null;
+        this.timerManager = timerManager; // Référence au TimerManager
     }
 
     init() {
@@ -13,6 +15,13 @@ export default class WorkoutRenderer {
         if (!this.container) {
             console.error('❌ Container workout-container introuvable');
         }
+    }
+    
+    /**
+     * Injecte le TimerManager (appelé depuis app.js)
+     */
+    setTimerManager(timerManager) {
+        this.timerManager = timerManager;
     }
 
     render(workoutDay, week) {
@@ -164,7 +173,8 @@ export default class WorkoutRenderer {
             return `
                 <div class="serie-row ${completedClass}" 
                      data-exercise-id="${exerciseId}" 
-                     data-set-number="${setNumber}">
+                     data-set-number="${setNumber}"
+                     data-rest="${rest || 0}">
                     
                     <span class="serie-number">${setNumber}</span>
                     
@@ -195,6 +205,9 @@ export default class WorkoutRenderer {
         return `<div class="series-container">${seriesHTML}</div>`;
     }
 
+    /**
+     * ⭐ AMÉLIORATION: Connexion au timer
+     */
     attachSeriesListeners() {
         document.querySelectorAll('.validate-btn').forEach(btn => {
             btn.addEventListener('click', (e) => {
@@ -202,16 +215,28 @@ export default class WorkoutRenderer {
                 const exerciseId = btn.dataset.exerciseId;
                 const setNumber = btn.dataset.setNumber;
 
+                // Toggle validated
                 serieRow.classList.toggle('validated');
 
                 const isValidated = serieRow.classList.contains('validated');
                 console.log(`${isValidated ? '✅' : '⬜'} Série ${setNumber} de ${exerciseId}`);
 
-                if (isValidated) {
-                    const restElement = serieRow.querySelector('.rest-time');
-                    if (restElement) {
-                        const restSeconds = parseInt(restElement.textContent);
-                        console.log(`⏱️ Démarrer timer: ${restSeconds}s`);
+                // ⭐ DÉCLENCHEMENT DU TIMER
+                if (isValidated && this.timerManager) {
+                    // Récupérer le temps de repos
+                    const restSeconds = parseInt(serieRow.dataset.rest) || 0;
+                    
+                    if (restSeconds > 0) {
+                        // Récupérer le nom de l'exercice
+                        const exerciseCard = serieRow.closest('.exercise-card');
+                        const exerciseName = exerciseCard 
+                            ? exerciseCard.querySelector('.exercise-name')?.textContent 
+                            : 'Exercice';
+                        
+                        // Démarrer le timer
+                        this.timerManager.start(restSeconds, exerciseName, setNumber);
+                        
+                        console.log(`⏱️ Timer démarré: ${restSeconds}s pour ${exerciseName} série ${setNumber}`);
                     }
                 }
             });
