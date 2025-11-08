@@ -208,3 +208,4 @@ function renderWorkoutFallback(workout) {
 console.log('📱 App.js chargé avec succès');
 console.log('🎯 Version modulaire ES6 avec WorkoutRenderer');
 console.log('📦 Modules importés: ProgramData, TimerManager, WorkoutRenderer');
+´
