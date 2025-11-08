@@ -1,18 +1,18 @@
 /**
- * SÉRIES - DESIGN PREMIUM STYLE HEVY
+ * SÉRIES - DESIGN PREMIUM STYLE HEVY - VERSION CORRIGÉE COMPLÈTE
  * Affichage texte, validation visuelle, effets modernes
  */
 
-/* Container des séries */
+/* Container des séries - CORRECTION PADDING */
 .series-container {
     display: flex;
     flex-direction: column;
     gap: 12px;
     margin-top: 20px;
-    padding: 0 4px;
+    padding: 0; /* CORRECTION - enlever le padding sur les côtés */
 }
 
-/* Ligne de série - Design Premium */
+/* Ligne de série - Design Premium - CORRECTION ALIGNEMENT */
 .serie-row {
     display: flex;
     align-items: center;
@@ -53,7 +53,7 @@
     opacity: 0.6;
 }
 
-/* Numéro de série - Gros cercle moderne */
+/* Numéro de série - Gros cercle moderne - CORRECTION FORCE DISPLAY */
 .serie-row .serie-number,
 span.serie-number {
     display: flex !important;
@@ -75,18 +75,19 @@ span.serie-number {
 }
 
 .serie-row.validated .serie-number {
-    background: linear-gradient(135deg, #4caf50 0%, #66bb6a 100%);
-    color: white;
-    box-shadow: 0 4px 12px rgba(76, 175, 80, 0.5);
+    background: linear-gradient(135deg, #4caf50 0%, #66bb6a 100%) !important;
+    color: white !important;
+    box-shadow: 0 4px 12px rgba(76, 175, 80, 0.5) !important;
     transform: scale(1.1);
 }
 
-/* Infos de la série - Texte premium */
+/* Infos de la série - Texte premium - CORRECTION FLEX */
 .serie-info {
     flex: 1;
     display: flex;
     flex-direction: column;
     gap: 4px;
+    min-width: 0; /* CORRECTION - permet le texte de s'adapter */
 }
 
 .serie-reps {
@@ -103,7 +104,7 @@ span.serie-number {
     text-shadow: 0 2px 4px rgba(255, 152, 0, 0.3);
 }
 
-/* Timer de repos - Style discret */
+/* Timer de repos - Style discret - CORRECTION FLEX-SHRINK */
 .serie-rest {
     display: flex;
     align-items: center;
@@ -114,6 +115,8 @@ span.serie-number {
     font-size: 13px;
     color: rgba(255, 255, 255, 0.6);
     backdrop-filter: blur(5px);
+    flex-shrink: 0; /* CORRECTION - empêche de rétrécir */
+    white-space: nowrap; /* CORRECTION - pas de retour à la ligne */
 }
 
 .rest-icon {
@@ -124,12 +127,13 @@ span.serie-number {
     font-weight: 500;
 }
 
-/* Bouton de validation - GROS ET VISIBLE */
+/* Bouton de validation - GROS ET VISIBLE - CORRECTION FLEX-SHRINK */
 .validate-btn {
     display: flex;
     align-items: center;
     justify-content: center;
     min-width: 50px;
+    width: 50px; /* CORRECTION - largeur fixe */
     height: 50px;
     background: rgba(76, 175, 80, 0.2);
     color: #4caf50;
@@ -138,7 +142,7 @@ span.serie-number {
     font-size: 24px;
     cursor: pointer;
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    flex-shrink: 0;
+    flex-shrink: 0; /* CORRECTION - taille fixe */
     box-shadow: 0 2px 8px rgba(76, 175, 80, 0.2);
 }
 
@@ -188,18 +192,26 @@ span.serie-number {
 .serie-row:nth-child(5) { animation-delay: 0.25s; }
 .serie-row:nth-child(6) { animation-delay: 0.3s; }
 
-/* Responsive - Mobile optimisé */
+/* Responsive - Mobile optimisé - CORRECTIONS */
 @media (max-width: 480px) {
     .serie-row {
         gap: 12px;
         padding: 14px 16px;
         border-radius: 14px;
+        flex-wrap: nowrap; /* CORRECTION - pas de wrap */
     }
 
     .serie-number {
-        min-width: 38px;
-        height: 38px;
-        font-size: 16px;
+        min-width: 38px !important;
+        width: 38px !important;
+        height: 38px !important;
+        font-size: 16px !important;
+        line-height: 38px !important;
+    }
+
+    .serie-info {
+        flex: 1;
+        min-width: 0;
     }
 
     .serie-reps {
@@ -212,6 +224,7 @@ span.serie-number {
 
     .validate-btn {
         min-width: 44px;
+        width: 44px; /* CORRECTION - taille fixe sur mobile */
         height: 44px;
         font-size: 22px;
     }
@@ -219,6 +232,37 @@ span.serie-number {
     .serie-rest {
         font-size: 12px;
         padding: 5px 10px;
+    }
+}
+
+/* CORRECTION - Layout alternatif si manque de place sur très petits écrans */
+@media (max-width: 380px) {
+    .serie-row {
+        display: grid;
+        grid-template-columns: 38px 1fr 44px;
+        grid-template-rows: auto auto;
+        gap: 10px;
+    }
+
+    .serie-number {
+        grid-row: 1 / 2;
+        grid-column: 1;
+    }
+
+    .serie-info {
+        grid-row: 1 / 2;
+        grid-column: 2;
+    }
+
+    .validate-btn {
+        grid-row: 1 / 2;
+        grid-column: 3;
+    }
+
+    .serie-rest {
+        grid-row: 2 / 3;
+        grid-column: 2 / 4;
+        justify-self: end;
     }
 }
 
