@@ -1,6 +1,7 @@
 /**
  * WORKOUT RENDERER - Affichage des séances avec supersets
  * Génère le HTML pour afficher les exercices avec leurs séries
+ * VERSION HEVY - Inputs interactifs avec validation
  */
 
 export default class WorkoutRenderer {
@@ -42,6 +43,9 @@ export default class WorkoutRenderer {
         ).join('');
 
         this.container.innerHTML = exercisesHTML;
+
+        // Attacher les event listeners après le rendu
+        this.attachSeriesListeners();
     }
 
     /**
@@ -75,6 +79,7 @@ export default class WorkoutRenderer {
             name,
             type,
             category,
+            muscle,
             muscles,
             sets,
             reps,
@@ -91,13 +96,15 @@ export default class WorkoutRenderer {
         const icon = type === 'cardio' ? '🔥' : '💪';
         const typeClass = type === 'cardio' ? 'cardio' : 'strength';
         const categoryLabel = category || '';
-        const musclesLabel = muscles ? muscles.join(', ') : '';
+        // Support pour "muscle" (singulier) ET "muscles" (pluriel)
+        const muscleArray = muscles || muscle;
+        const musclesLabel = muscleArray ? muscleArray.join(', ') : '';
         const supersetClass = isSuperset ? 'superset' : '';
 
         // Génération des paramètres principaux
         const paramsHTML = this.renderParams(exercise);
 
-        // Génération des séries
+        // Génération des séries (STYLE HEVY)
         const seriesHTML = this.renderSeries(exercise, id);
 
         // Notes si présentes
@@ -201,40 +208,54 @@ export default class WorkoutRenderer {
     }
 
     /**
-     * Rend les séries individuelles avec checkboxes
+     * Rend les séries individuelles STYLE HEVY
+     * Avec inputs interactifs et boutons de validation
      */
     renderSeries(exercise, exerciseId) {
-        const { sets, reps, weight, rest } = exercise;
+        const { sets, reps, weight } = exercise;
 
         if (!sets || sets === 0) return '';
 
         const seriesArray = Array.from({ length: sets }, (_, i) => i + 1);
 
         const seriesHTML = seriesArray.map(setNumber => {
-            // Récupérer l'état depuis le storage (TODO)
+            // TODO: Récupérer l'état depuis le storage
             const isCompleted = false;
-            const completedClass = isCompleted ? 'completed' : '';
+            const completedClass = isCompleted ? 'validated' : '';
 
             return `
-                <div class="serie-item ${completedClass}" data-set-number="${setNumber}">
-                    <div class="serie-number">${setNumber}</div>
-                    <div class="serie-info">
-                        <div class="serie-reps">${reps} reps</div>
-                        ${weight ? `<div class="serie-weight">${weight}kg</div>` : ''}
-                    </div>
-                    ${rest ? `
-                        <div class="serie-rest">
-                            <span class="rest-icon">⏱️</span>
-                            <span class="rest-time">${rest}s repos</span>
-                        </div>
-                    ` : ''}
+                <div class="serie-row ${completedClass}" 
+                     data-exercise-id="${exerciseId}" 
+                     data-set-number="${setNumber}">
+                    
+                    <span class="serie-number">${setNumber}</span>
+                    
+                    <input 
+                        type="number" 
+                        class="reps-input" 
+                        value="${reps || 0}"
+                        placeholder="Reps"
+                        min="0"
+                        data-type="reps"
+                    />
+                    
+                    <input 
+                        type="number" 
+                        class="weight-input" 
+                        value="${weight || 0}"
+                        placeholder="kg"
+                        min="0"
+                        step="0.5"
+                        data-type="weight"
+                    />
+                    
                     <button 
-                        class="serie-check" 
+                        class="validate-btn"
                         data-exercise-id="${exerciseId}"
                         data-set-number="${setNumber}"
-                        aria-label="Compléter la série ${setNumber}"
+                        aria-label="Valider la série ${setNumber}"
                     >
-                        <span class="check-icon">${isCompleted ? '✓' : ''}</span>
+                        ✓
                     </button>
                 </div>
             `;
@@ -245,6 +266,42 @@ export default class WorkoutRenderer {
                 ${seriesHTML}
             </div>
         `;
+    }
+
+    /**
+     * Attache les event listeners pour les séries
+     */
+    attachSeriesListeners() {
+        // Boutons de validation
+        document.querySelectorAll('.validate-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const serieRow = e.target.closest('.serie-row');
+                const exerciseId = btn.dataset.exerciseId;
+                const setNumber = btn.dataset.setNumber;
+
+                // Toggle validated
+                serieRow.classList.toggle('validated');
+
+                // TODO: Sauvegarder dans storage
+                console.log(`✅ Série ${setNumber} de l'exercice ${exerciseId} validée`);
+
+                // TODO: Démarrer le timer si repos défini
+            });
+        });
+
+        // Inputs - Sauvegarder à chaque modification
+        document.querySelectorAll('.reps-input, .weight-input').forEach(input => {
+            input.addEventListener('change', (e) => {
+                const serieRow = e.target.closest('.serie-row');
+                const exerciseId = serieRow.dataset.exerciseId;
+                const setNumber = serieRow.dataset.setNumber;
+                const type = e.target.dataset.type;
+                const value = e.target.value;
+
+                // TODO: Sauvegarder dans storage
+                console.log(`💾 ${type}: ${value} pour série ${setNumber} de ${exerciseId}`);
+            });
+        });
     }
 
     /**
