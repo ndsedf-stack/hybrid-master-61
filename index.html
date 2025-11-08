@@ -29,19 +29,61 @@
         <div id="workout-container"></div>
     </div>
 
-    <!-- Timer Widget -->
+    <!-- Overlay sombre (optionnel) -->
+    <div id="timer-overlay" class="timer-overlay"></div>
+
+    <!-- Widget Timer Principal (NOUVEAU) -->
     <div id="timer-widget" class="timer-widget hidden">
-        <div class="timer-content">
+        
+        <!-- Container du cercle de progression -->
+        <div class="timer-progress-container">
+            
+            <!-- SVG Progress Ring -->
+            <svg class="timer-progress-ring" viewBox="0 0 120 120">
+                <!-- Cercle de fond (gris) -->
+                <circle class="bg" cx="60" cy="60" r="54"></circle>
+                
+                <!-- Cercle de progression (bleu) -->
+                <circle class="progress" cx="60" cy="60" r="54"></circle>
+            </svg>
+            
+            <!-- Affichage du temps au centre -->
             <div class="timer-display">
-                <span id="timer-minutes">00</span>
-                <span class="timer-separator">:</span>
-                <span id="timer-seconds">00</span>
+                <div class="timer-time">
+                    <span id="timer-minutes">00</span>
+                    <span class="timer-separator">:</span>
+                    <span id="timer-seconds">00</span>
+                </div>
+                
+                <div id="timer-exercise-info" class="timer-exercise-info">
+                    <!-- Nom exercice + série injecté par JS -->
+                </div>
             </div>
-            <div class="timer-controls">
-                <button class="timer-btn" id="timer-pause">⏸ Pause</button>
-                <button class="timer-btn" id="timer-reset">🔄 Reset</button>
-                <button class="timer-btn" id="timer-close">✕ Fermer</button>
-            </div>
+        </div>
+        
+        <!-- Quick Actions: +15s / -15s -->
+        <div class="timer-quick-actions">
+            <button class="timer-quick-btn" id="timer-sub-15">-15s</button>
+            <button class="timer-quick-btn" id="timer-add-15">+15s</button>
+        </div>
+        
+        <!-- Contrôles principaux -->
+        <div class="timer-controls">
+            <button class="timer-btn" id="timer-pause">
+                ⏸️ Pause
+            </button>
+            
+            <button class="timer-btn" id="timer-reset">
+                🔄 Reset
+            </button>
+            
+            <button class="timer-btn" id="timer-skip">
+                ⏭️ Passer
+            </button>
+            
+            <button class="timer-btn" id="timer-close">
+                ✕ Fermer
+            </button>
         </div>
     </div>
 
