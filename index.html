@@ -1,122 +1,68 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hybrid Master 60</title>
-    
-    <!-- CSS Modulaire -->
-    <link rel="stylesheet" href="styles/01-reset.css">
-    <link rel="stylesheet" href="styles/02-variables.css">
-    <link rel="stylesheet" href="styles/03-base.css">
-    <link rel="stylesheet" href="styles/04-layout.css">
-    <link rel="stylesheet" href="styles/05-components.css">
-    <link rel="stylesheet" href="styles/06-series.css">
-    <link rel="stylesheet" href="styles/07-timer.css">
-    <link rel="stylesheet" href="styles/08-responsive.css">
-    <link rel="stylesheet" href="styles/09-statistics.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hybrid Master 60 - Workout Tracker</title>
+  
+  <!-- CSS -->
+  <link rel="stylesheet" href="css/01-variables.css">
+  <link rel="stylesheet" href="css/02-reset.css">
+  <link rel="stylesheet" href="css/03-base.css">
+  <link rel="stylesheet" href="css/04-layout.css">
+  <link rel="stylesheet" href="css/05-components.css">
+  <link rel="stylesheet" href="css/06-series.css">
+  <link rel="stylesheet" href="css/07-timer.css">
 </head>
 <body>
-    <div id="app">
-        <header>
-            <h1 style="color: white; text-align: center; margin-bottom: 30px;">
-                💪 HYBRID MASTER 60
-            </h1>
-        </header>
+  <!-- Header -->
+  <header class="app-header">
+    <h1>💪 Hybrid Master 60</h1>
+  </header>
 
-        <div id="week-selector"></div>
-        <div id="day-buttons"></div>
-        <div id="workout-container"></div>
+  <!-- Main Container -->
+  <main class="app-container">
+    <div id="workout-container">
+      <!-- Les workouts seront rendus ici par workout-renderer.js -->
+    </div>
+  </main>
+
+  <!-- Timer Widget (en bas de page) -->
+  <div id="timer-widget">
+    <!-- Header du timer -->
+    <div class="timer-header">
+      <div class="timer-info">
+        <h3 class="timer-exercise-name" id="timer-exercise-name">Exercice</h3>
+        <p class="timer-set-number" id="timer-set-number">Set 1/5</p>
+      </div>
+      <button class="timer-close-btn" id="timer-close">×</button>
     </div>
 
-    <!-- Overlay sombre (optionnel) -->
-    <div id="timer-overlay" class="timer-overlay"></div>
-
-    <!-- Widget Timer Principal (NOUVEAU) -->
-    <div id="timer-widget" class="timer-widget hidden">
-        
-        <!-- Container du cercle de progression -->
-        <div class="timer-progress-container">
-            
-            <!-- SVG Progress Ring -->
-            <svg class="timer-progress-ring" viewBox="0 0 120 120">
-                <!-- Cercle de fond (gris) -->
-                <circle class="bg" cx="60" cy="60" r="54"></circle>
-                
-                <!-- Cercle de progression (bleu) -->
-                <circle class="progress" cx="60" cy="60" r="54"></circle>
-            </svg>
-            
-            <!-- Affichage du temps au centre -->
-            <div class="timer-display">
-                <div class="timer-time">
-                    <span id="timer-minutes">00</span>
-                    <span class="timer-separator">:</span>
-                    <span id="timer-seconds">00</span>
-                </div>
-                
-                <div id="timer-exercise-info" class="timer-exercise-info">
-                    <!-- Nom exercice + série injecté par JS -->
-                </div>
-            </div>
-        </div>
-        
-        <!-- Quick Actions: +15s / -15s -->
-        <div class="timer-quick-actions">
-            <button class="timer-quick-btn" id="timer-sub-15">-15s</button>
-            <button class="timer-quick-btn" id="timer-add-15">+15s</button>
-        </div>
-        
-        <!-- Contrôles principaux -->
-        <div class="timer-controls">
-            <button class="timer-btn" id="timer-pause">
-                ⏸️ Pause
-            </button>
-            
-            <button class="timer-btn" id="timer-reset">
-                🔄 Reset
-            </button>
-            
-            <button class="timer-btn" id="timer-skip">
-                ⏭️ Passer
-            </button>
-            
-            <button class="timer-btn" id="timer-close">
-                ✕ Fermer
-            </button>
-        </div>
+    <!-- Affichage circulaire du timer -->
+    <div class="timer-display">
+      <div class="timer-circle">
+        <svg viewBox="0 0 120 120">
+          <!-- Cercle de fond -->
+          <circle class="timer-progress-bg" cx="60" cy="60" r="54"></circle>
+          <!-- Cercle de progression -->
+          <circle class="timer-progress-circle" cx="60" cy="60" r="54"></circle>
+        </svg>
+        <!-- Temps affiché au centre -->
+        <div class="timer-time" id="timer-time">1:30</div>
+      </div>
     </div>
 
-    <!-- Notification Timer -->
-    <div id="timer-notification" class="timer-notification">
-        ⏰ Temps de repos terminé !
+    <!-- Contrôles du timer -->
+    <div class="timer-controls">
+      <button id="timer-pause">Pause</button>
+      <button id="timer-minus-15">-15s</button>
+      <button id="timer-plus-15">+15s</button>
+      <button id="timer-reset">Reset</button>
+      <button id="timer-skip">Skip</button>
     </div>
+  </div>
 
-    <!-- Modal Paramètres -->
-    <div id="settings-modal" class="modal hidden">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>⚙️ Paramètres</h3>
-                <button class="close-btn" id="close-settings">×</button>
-            </div>
-            <div class="modal-body">
-                <div class="setting-item">
-                    <label>
-                        <input type="checkbox" id="sound-enabled" checked>
-                        🔊 Son de notification
-                    </label>
-                </div>
-                <div class="setting-item">
-                    <label>
-                        <input type="checkbox" id="vibration-enabled" checked>
-                        📳 Vibration
-                    </label>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Importer l'app en mode module ES6 -->
-    <script type="module" src="scripts/app.js"></script>
+  <!-- JavaScript Modules -->
+  <script type="module" src="app.js"></script>
 </body>
 </html>
