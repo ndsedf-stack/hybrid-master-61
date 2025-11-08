@@ -1,7 +1,6 @@
 /**
- * WORKOUT RENDERER - Affichage des séances avec supersets
- * Génère le HTML pour afficher les exercices avec leurs séries
- * VERSION HEVY - Inputs interactifs avec validation
+ * WORKOUT RENDERER - VERSION PREMIUM
+ * Affichage texte des reps/poids, validation visuelle
  */
 
 export default class WorkoutRenderer {
@@ -49,16 +48,14 @@ export default class WorkoutRenderer {
     }
 
     /**
-     * Détecter les supersets (exercices avec même numéro de série)
+     * Détecter les supersets
      */
     detectSupersets(exercises) {
         return exercises.map((exercise, index) => {
-            // Si l'exercice a une propriété "superset" ou "setGroup"
             if (exercise.superset || exercise.setGroup) {
                 return { ...exercise, isSuperset: true };
             }
 
-            // Détection automatique : exercices consécutifs de même catégorie
             const nextExercise = exercises[index + 1];
             if (nextExercise && 
                 exercise.category === nextExercise.category && 
@@ -104,7 +101,7 @@ export default class WorkoutRenderer {
         // Génération des paramètres principaux
         const paramsHTML = this.renderParams(exercise);
 
-        // Génération des séries (STYLE HEVY)
+        // Génération des séries (VERSION PREMIUM)
         const seriesHTML = this.renderSeries(exercise, id);
 
         // Notes si présentes
@@ -208,15 +205,25 @@ export default class WorkoutRenderer {
     }
 
     /**
-     * Rend les séries individuelles STYLE HEVY
-     * Avec inputs interactifs et boutons de validation
+     * Rend les séries - VERSION PREMIUM
+     * Affichage TEXTE des reps/poids (pas d'inputs)
      */
     renderSeries(exercise, exerciseId) {
-        const { sets, reps, weight } = exercise;
+        const { sets, reps, weight, rest } = exercise;
 
         if (!sets || sets === 0) return '';
 
         const seriesArray = Array.from({ length: sets }, (_, i) => i + 1);
+
+        // Formater les reps pour l'affichage
+        const formatReps = (repsValue) => {
+            if (!repsValue) return '0';
+            if (typeof repsValue === 'number') return `${repsValue}`;
+            return repsValue; // "6-8" reste "6-8"
+        };
+
+        const formattedReps = formatReps(reps);
+        const formattedWeight = weight ? `${weight}kg` : '';
 
         const seriesHTML = seriesArray.map(setNumber => {
             // TODO: Récupérer l'état depuis le storage
@@ -230,24 +237,17 @@ export default class WorkoutRenderer {
                     
                     <span class="serie-number">${setNumber}</span>
                     
-                    <input 
-                        type="number" 
-                        class="reps-input" 
-                        value="${reps || 0}"
-                        placeholder="Reps"
-                        min="0"
-                        data-type="reps"
-                    />
+                    <div class="serie-info">
+                        <div class="serie-reps">${formattedReps} reps</div>
+                        ${formattedWeight ? `<div class="serie-weight">${formattedWeight}</div>` : ''}
+                    </div>
                     
-                    <input 
-                        type="number" 
-                        class="weight-input" 
-                        value="${weight || 0}"
-                        placeholder="kg"
-                        min="0"
-                        step="0.5"
-                        data-type="weight"
-                    />
+                    ${rest ? `
+                        <div class="serie-rest">
+                            <span class="rest-icon">⏱️</span>
+                            <span class="rest-time">${rest}s repos</span>
+                        </div>
+                    ` : ''}
                     
                     <button 
                         class="validate-btn"
@@ -282,24 +282,20 @@ export default class WorkoutRenderer {
                 // Toggle validated
                 serieRow.classList.toggle('validated');
 
-                // TODO: Sauvegarder dans storage
-                console.log(`✅ Série ${setNumber} de l'exercice ${exerciseId} validée`);
-
-                // TODO: Démarrer le timer si repos défini
-            });
-        });
-
-        // Inputs - Sauvegarder à chaque modification
-        document.querySelectorAll('.reps-input, .weight-input').forEach(input => {
-            input.addEventListener('change', (e) => {
-                const serieRow = e.target.closest('.serie-row');
-                const exerciseId = serieRow.dataset.exerciseId;
-                const setNumber = serieRow.dataset.setNumber;
-                const type = e.target.dataset.type;
-                const value = e.target.value;
+                // Log pour debug
+                const isValidated = serieRow.classList.contains('validated');
+                console.log(`${isValidated ? '✅' : '⬜'} Série ${setNumber} de ${exerciseId}`);
 
                 // TODO: Sauvegarder dans storage
-                console.log(`💾 ${type}: ${value} pour série ${setNumber} de ${exerciseId}`);
+                // TODO: Démarrer le timer si repos défini et série validée
+                if (isValidated) {
+                    const restElement = serieRow.querySelector('.rest-time');
+                    if (restElement) {
+                        const restSeconds = parseInt(restElement.textContent);
+                        console.log(`⏱️ Démarrer timer: ${restSeconds}s`);
+                        // Ici appeler AppState.timerManager.start(restSeconds)
+                    }
+                }
             });
         });
     }
