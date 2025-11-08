@@ -495,7 +495,7 @@ export class ProgramData {
 // ====================================================================
 // EXPORT PAR DÉFAUT
 // ====================================================================
-export default new ProgramData();-2"),
+export default new ProgramData();
             notes: blockInfo.block === 2 && !isDeload ? "Rest-Pause série 5 : 6-8 reps → 20s repos → 2-3 reps" : 
                    blockInfo.block === 4 && !isDeload ? "Clusters série 5 : 3 reps → 20s → 2 reps → 20s → 2 reps" : 
                    "Exercice roi, technique parfaite obligatoire"
