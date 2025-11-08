@@ -1,156 +1,256 @@
 /**
- * SÉRIES - STYLE HEVY
- * Inputs interactifs avec validation visuelle
+ * SÉRIES - DESIGN PREMIUM STYLE HEVY
+ * Affichage texte, validation visuelle, effets modernes
  */
 
 /* Container des séries */
 .series-container {
     display: flex;
     flex-direction: column;
-    gap: 8px;
-    margin-top: 15px;
+    gap: 12px;
+    margin-top: 20px;
+    padding: 0 4px;
 }
 
-/* Ligne de série (comme Hevy) */
+/* Ligne de série - Design Premium */
 .serie-row {
     display: flex;
     align-items: center;
-    gap: 12px;
-    padding: 10px;
-    background: var(--bg-dark, #1a1a1a);
-    border: 2px solid transparent;
-    border-radius: 10px;
-    transition: all 0.3s ease;
+    gap: 16px;
+    padding: 16px 20px;
+    background: rgba(26, 26, 26, 0.8);
+    backdrop-filter: blur(10px);
+    border: 3px solid transparent;
+    border-radius: 16px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    position: relative;
 }
 
-/* Série validée - bordure verte */
+.serie-row:hover {
+    background: rgba(35, 35, 35, 0.9);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
+}
+
+/* Série validée - EFFET WOW */
 .serie-row.validated {
     border-color: #4caf50;
-    background: rgba(76, 175, 80, 0.1);
+    background: linear-gradient(135deg, rgba(76, 175, 80, 0.15) 0%, rgba(76, 175, 80, 0.05) 100%);
+    box-shadow: 0 0 20px rgba(76, 175, 80, 0.3), 0 4px 16px rgba(0, 0, 0, 0.4);
 }
 
-/* Numéro de série dans un cercle */
+.serie-row.validated::before {
+    content: '';
+    position: absolute;
+    inset: -3px;
+    border-radius: 16px;
+    padding: 3px;
+    background: linear-gradient(135deg, #4caf50, #66bb6a);
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    opacity: 0.6;
+}
+
+/* Numéro de série - Gros cercle moderne */
 .serie-number {
     display: flex;
     align-items: center;
     justify-content: center;
-    min-width: 32px;
-    height: 32px;
-    background: #2c2c2c;
-    color: white;
-    font-weight: bold;
-    font-size: 14px;
+    min-width: 44px;
+    height: 44px;
+    background: linear-gradient(135deg, #2c2c2c 0%, #1a1a1a 100%);
+    color: #ffffff;
+    font-weight: 700;
+    font-size: 18px;
     border-radius: 50%;
     flex-shrink: 0;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    transition: all 0.3s ease;
 }
 
 .serie-row.validated .serie-number {
-    background: #4caf50;
-}
-
-/* Inputs pour reps et poids */
-.reps-input,
-.weight-input {
-    flex: 1;
-    padding: 8px 12px;
-    background: #0f0f0f;
+    background: linear-gradient(135deg, #4caf50 0%, #66bb6a 100%);
     color: white;
-    border: 1px solid #333;
-    border-radius: 8px;
-    font-size: 15px;
-    font-weight: 500;
-    text-align: center;
-    transition: all 0.2s ease;
+    box-shadow: 0 4px 12px rgba(76, 175, 80, 0.5);
+    transform: scale(1.1);
 }
 
-.reps-input:focus,
-.weight-input:focus {
-    outline: none;
-    border-color: #4caf50;
-    background: #1a1a1a;
+/* Infos de la série - Texte premium */
+.serie-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
 }
 
-/* Poids en orange comme Hevy */
-.weight-input {
+.serie-reps {
+    font-size: 17px;
+    font-weight: 600;
+    color: #ffffff;
+    letter-spacing: 0.3px;
+}
+
+.serie-weight {
+    font-size: 19px;
+    font-weight: 700;
     color: #ff9800;
+    text-shadow: 0 2px 4px rgba(255, 152, 0, 0.3);
 }
 
-/* Bouton de validation (checkmark) */
+/* Timer de repos - Style discret */
+.serie-rest {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 20px;
+    font-size: 13px;
+    color: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(5px);
+}
+
+.rest-icon {
+    font-size: 14px;
+}
+
+.rest-time {
+    font-weight: 500;
+}
+
+/* Bouton de validation - GROS ET VISIBLE */
 .validate-btn {
     display: flex;
     align-items: center;
     justify-content: center;
-    min-width: 36px;
-    height: 36px;
-    background: #2c2c2c;
-    color: white;
-    border: none;
+    min-width: 50px;
+    height: 50px;
+    background: rgba(76, 175, 80, 0.2);
+    color: #4caf50;
+    border: 2px solid #4caf50;
     border-radius: 50%;
-    font-size: 18px;
+    font-size: 24px;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     flex-shrink: 0;
+    box-shadow: 0 2px 8px rgba(76, 175, 80, 0.2);
 }
 
 .validate-btn:hover {
-    background: #3c3c3c;
-    transform: scale(1.1);
+    background: rgba(76, 175, 80, 0.3);
+    transform: scale(1.15) rotate(5deg);
+    box-shadow: 0 4px 16px rgba(76, 175, 80, 0.4);
 }
 
 .validate-btn:active {
     transform: scale(0.95);
 }
 
-/* Bouton validé - vert */
+/* Bouton validé - Rempli vert */
 .serie-row.validated .validate-btn {
-    background: #4caf50;
+    background: linear-gradient(135deg, #4caf50 0%, #66bb6a 100%);
     color: white;
+    border-color: #66bb6a;
+    box-shadow: 0 4px 16px rgba(76, 175, 80, 0.5);
 }
 
 .serie-row.validated .validate-btn:hover {
-    background: #45a049;
+    background: linear-gradient(135deg, #45a049 0%, #5cb85c 100%);
+    transform: scale(1.15);
 }
 
-/* Animation au hover de la ligne */
-.serie-row:hover {
-    background: #222;
+/* Animations d'entrée */
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
 }
 
-.serie-row.validated:hover {
-    background: rgba(76, 175, 80, 0.15);
+.serie-row {
+    animation: slideIn 0.4s ease-out backwards;
 }
 
-/* Responsive - Mobile */
+.serie-row:nth-child(1) { animation-delay: 0.05s; }
+.serie-row:nth-child(2) { animation-delay: 0.1s; }
+.serie-row:nth-child(3) { animation-delay: 0.15s; }
+.serie-row:nth-child(4) { animation-delay: 0.2s; }
+.serie-row:nth-child(5) { animation-delay: 0.25s; }
+.serie-row:nth-child(6) { animation-delay: 0.3s; }
+
+/* Responsive - Mobile optimisé */
 @media (max-width: 480px) {
     .serie-row {
-        gap: 8px;
-        padding: 8px;
+        gap: 12px;
+        padding: 14px 16px;
+        border-radius: 14px;
     }
 
     .serie-number {
-        min-width: 28px;
-        height: 28px;
-        font-size: 12px;
+        min-width: 38px;
+        height: 38px;
+        font-size: 16px;
     }
 
-    .reps-input,
-    .weight-input {
-        padding: 6px 8px;
-        font-size: 14px;
+    .serie-reps {
+        font-size: 15px;
+    }
+
+    .serie-weight {
+        font-size: 17px;
     }
 
     .validate-btn {
-        min-width: 32px;
-        height: 32px;
-        font-size: 16px;
+        min-width: 44px;
+        height: 44px;
+        font-size: 22px;
+    }
+
+    .serie-rest {
+        font-size: 12px;
+        padding: 5px 10px;
     }
 }
 
-/* Anciens styles (si tu en avais) - À supprimer si en doublon */
-.serie-item {
-    /* Ancien style - peut être supprimé si plus utilisé */
+/* Animation de pulse quand on clique */
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+    100% { transform: scale(1); }
 }
 
-.serie-check {
-    /* Ancien style - peut être supprimé si plus utilisé */
+.serie-row.validated {
+    animation: pulse 0.5s ease-out;
+}
+
+/* Effet de brillance sur validation */
+@keyframes shine {
+    0% {
+        background-position: -200% center;
+    }
+    100% {
+        background-position: 200% center;
+    }
+}
+
+.serie-row.validated::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: 16px;
+    background: linear-gradient(
+        90deg,
+        transparent,
+        rgba(255, 255, 255, 0.1),
+        transparent
+    );
+    background-size: 200% 100%;
+    animation: shine 2s ease-in-out;
+    pointer-events: none;
 }
