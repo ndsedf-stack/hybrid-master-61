@@ -54,20 +54,24 @@
 }
 
 /* Numéro de série - Gros cercle moderne */
-.serie-number {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 44px;
-    height: 44px;
-    background: linear-gradient(135deg, #2c2c2c 0%, #1a1a1a 100%);
-    color: #ffffff;
-    font-weight: 700;
-    font-size: 18px;
-    border-radius: 50%;
-    flex-shrink: 0;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-    transition: all 0.3s ease;
+.serie-row .serie-number,
+span.serie-number {
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    min-width: 44px !important;
+    width: 44px !important;
+    height: 44px !important;
+    background: linear-gradient(135deg, #2c2c2c 0%, #1a1a1a 100%) !important;
+    color: #ffffff !important;
+    font-weight: 700 !important;
+    font-size: 18px !important;
+    border-radius: 50% !important;
+    flex-shrink: 0 !important;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3) !important;
+    transition: all 0.3s ease !important;
+    text-align: center !important;
+    line-height: 44px !important;
 }
 
 .serie-row.validated .serie-number {
