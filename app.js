@@ -6,7 +6,6 @@
 import WorkoutSession from './scripts/modules/workout-session.js';
 import WorkoutRenderer from './scripts/ui/workout-renderer.js';
 import TimerManager from './scripts/modules/timer-manager.js';
-import { currentProgram } from './scripts/program-data.js';
 
 class App {
   constructor() {
@@ -20,43 +19,7 @@ class App {
     try {
       console.log('🚀 Initialisation de l\'application...');
 
-      // Charger les données du programme depuis les JSON
-      await this.loadProgramData();
-
-      // Initialiser les managers
-      this.workoutSession = new WorkoutSession();
-      this.workoutRenderer = new WorkoutRenderer();
-      this.timerManager = new TimerManager();
-
-      // Initialiser le renderer
-      this.workoutRenderer.init();
-
-      // Initialiser le timer
-      this.timerManager.init();
-
-      // Connecter workoutRenderer au timerManager
-      this.workoutRenderer.timerManager = this.timerManager;
-
-      // Afficher la séance
-      this.workoutRenderer.render(this.currentWorkout);
-
-      // Attacher les événements
-      this.attachEvents();
-
-      console.log('✅ Application initialisée avec succès !');
-
-    } catch (error) {
-      console.error('❌ Erreur lors de l\'initialisation:', error);
-    }
-  }
-
-  async loadProgramData() {
-    try {
-      // Charger la structure du programme
-      const response = await fetch('./data/program-structure.json');
-      const programData = await response.json();
-      
-      // Créer un workout de test avec les données
+      // Créer des données de test directement
       this.currentWorkout = {
         name: "Séance A - Push",
         exercises: [
@@ -83,15 +46,31 @@ class App {
           }
         ]
       };
-      
-      console.log('✅ Données du programme chargées');
+
+      // Initialiser les managers
+      this.workoutSession = new WorkoutSession();
+      this.workoutRenderer = new WorkoutRenderer();
+      this.timerManager = new TimerManager();
+
+      // Initialiser le renderer
+      this.workoutRenderer.init();
+
+      // Initialiser le timer
+      this.timerManager.init();
+
+      // Connecter workoutRenderer au timerManager
+      this.workoutRenderer.timerManager = this.timerManager;
+
+      // Afficher la séance
+      this.workoutRenderer.render(this.currentWorkout);
+
+      // Attacher les événements
+      this.attachEvents();
+
+      console.log('✅ Application initialisée avec succès !');
+
     } catch (error) {
-      console.error('❌ Erreur chargement programme:', error);
-      // Données par défaut en cas d'erreur
-      this.currentWorkout = {
-        name: "Séance Test",
-        exercises: []
-      };
+      console.error('❌ Erreur lors de l\'initialisation:', error);
     }
   }
 
