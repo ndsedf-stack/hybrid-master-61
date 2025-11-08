@@ -5,11 +5,13 @@
  * Architecture:
  * - Importe le programme depuis program-data.js
  * - Utilise TimerManager depuis modules/timer-manager.js
+ * - Utilise WorkoutRenderer depuis ui/workout-renderer.js
  * - Gère l'UI et la navigation
  */
 
 import programData from './program-data.js';
 import TimerManager from './modules/timer-manager.js';
+import WorkoutRenderer from './ui/workout-renderer.js';
 
 // ============================================================
 // ÉTAT DE L'APPLICATION
@@ -20,7 +22,8 @@ const AppState = {
     currentDay: 'dimanche', // 'dimanche', 'mardi', 'vendredi', 'maison'
     currentWorkout: null,
     completedSets: new Set(),
-    timerManager: null
+    timerManager: null,
+    workoutRenderer: null
 };
 
 // ============================================================
@@ -37,6 +40,10 @@ document.addEventListener('DOMContentLoaded', () => {
 function initializeApp() {
     // Initialiser le timer manager
     AppState.timerManager = new TimerManager();
+    
+    // Initialiser le workout renderer
+    AppState.workoutRenderer = new WorkoutRenderer();
+    AppState.workoutRenderer.init();
     
     // Créer les sélecteurs de semaine et jour
     createWeekSelector();
@@ -142,10 +149,17 @@ function loadWorkout(weekNumber, day) {
     const workout = programData.getWorkout(weekNumber, day);
     AppState.currentWorkout = workout;
     
-    renderWorkout(workout);
+    // Utiliser le WorkoutRenderer pour afficher
+    if (AppState.workoutRenderer) {
+        AppState.workoutRenderer.render(workout, weekNumber);
+    } else {
+        // Fallback si le renderer n'est pas initialisé
+        renderWorkoutFallback(workout);
+    }
 }
 
-function renderWorkout(workout) {
+// Fallback si WorkoutRenderer pas disponible
+function renderWorkoutFallback(workout) {
     const container = document.getElementById('workout-container');
     
     const header = `
@@ -160,13 +174,6 @@ function renderWorkout(workout) {
     
     const exercises = workout.exercises.map((ex, index) => {
         const isSuperset = ex.isSuperset;
-        const nextExIsSuperset = workout.exercises[index + 1]?.isSuperset;
-        const prevExIsSuperset = workout.exercises[index - 1]?.isSuperset;
-        
-        // Ajouter header superset si c'est le premier d'un superset
-        const supersetHeader = (isSuperset && !prevExIsSuperset) 
-            ? `<div class="superset-header">🔗 SUPERSET</div>` 
-            : '';
         
         const exerciseHtml = `
             <div class="exercise-card ${isSuperset ? 'superset' : ''}">
@@ -184,61 +191,14 @@ function renderWorkout(workout) {
                         <span>⏱️ ${ex.rest}s repos</span>
                         <span>🎵 Tempo ${ex.tempo}</span>
                     </div>
-                    ${ex.notes ? `<div class="exercise-notes">💡 ${ex.notes}</div>` : ''}
-                </div>
-                
-                <div class="sets-tracker">
-                    ${generateSetButtons(ex)}
                 </div>
             </div>
         `;
         
-        return supersetHeader + exerciseHtml;
+        return exerciseHtml;
     }).join('');
     
     container.innerHTML = header + exercises;
-    
-    // Attacher les event listeners pour les séries
-    attachSetListeners();
-}
-
-function generateSetButtons(exercise) {
-    return Array.from({ length: exercise.sets }, (_, i) => {
-        const setNumber = i + 1;
-        const setId = `${exercise.id}_set${setNumber}`;
-        const isCompleted = AppState.completedSets.has(setId);
-        
-        return `
-            <button 
-                class="set-button ${isCompleted ? 'completed' : ''}"
-                data-set-id="${setId}"
-                data-rest="${exercise.rest}"
-            >
-                Série ${setNumber}
-            </button>
-        `;
-    }).join('');
-}
-
-function attachSetListeners() {
-    document.querySelectorAll('.set-button').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            const setId = e.currentTarget.dataset.setId;
-            const rest = parseInt(e.currentTarget.dataset.rest);
-            
-            // Toggle completed
-            if (AppState.completedSets.has(setId)) {
-                AppState.completedSets.delete(setId);
-                e.currentTarget.classList.remove('completed');
-            } else {
-                AppState.completedSets.add(setId);
-                e.currentTarget.classList.add('completed');
-                
-                // Démarrer le timer
-                AppState.timerManager.start(rest);
-            }
-        });
-    });
 }
 
 // ============================================================
@@ -246,5 +206,5 @@ function attachSetListeners() {
 // ============================================================
 
 console.log('📱 App.js chargé avec succès');
-console.log('🎯 Version modulaire ES6');
-console.log('📦 Modules importés: ProgramData, TimerManager');
+console.log('🎯 Version modulaire ES6 avec WorkoutRenderer');
+console.log('📦 Modules importés: ProgramData, TimerManager, WorkoutRenderer');
