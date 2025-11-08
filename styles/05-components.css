@@ -1,67 +1,43 @@
 /* ====================================================================
-   COMPOSANTS - Point 1: Cartes Exercices Ultra Modernes
-   Style inspiré des meilleures apps fitness + créativité
-   CORRECTION: Textes visibles avec ton design original magnifique
+   COMPOSANTS - Style HEVY Professionnel
+   Design inspiré de Hevy avec dark mode total
    ==================================================================== */
 
 /* ==================================
-   CONTENEUR PRINCIPAL
+   CONTENEUR PRINCIPAL - DARK MODE
    ================================== */
 .exercises-container {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 24px;
-    background: linear-gradient(180deg, #0a0e13 0%, #151b24 100%);
+    padding: 20px;
+    background: #0f1419;
     min-height: 100vh;
 }
 
 /* ==================================
-   CARTE EXERCICE PRINCIPALE
+   CARTE EXERCICE - STYLE HEVY DARK
    ================================== */
 .exercise-card {
-    background: linear-gradient(145deg, #151b24 0%, #1a2332 100%);
+    background: #1a1f26;
     border-radius: 16px;
-    margin-bottom: 24px;
+    margin-bottom: 16px;
     overflow: hidden;
-    box-shadow: 
-        0 10px 20px rgba(0, 0, 0, 0.4),
-        0 2px 8px rgba(0, 0, 0, 0.2);
-    border: 1px solid rgba(255, 255, 255, 0.08);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    position: relative;
-}
-
-.exercise-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 3px;
-    background: linear-gradient(90deg, #3b82f6 0%, #8b5cf6 100%);
-    opacity: 0;
-    transition: opacity 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    border: 1px solid #2a3038;
+    transition: all 0.2s ease;
 }
 
 .exercise-card:hover {
-    transform: translateY(-2px);
-    box-shadow: 
-        0 15px 30px rgba(0, 0, 0, 0.5),
-        0 5px 15px rgba(59, 130, 246, 0.1);
-    border-color: rgba(59, 130, 246, 0.2);
-}
-
-.exercise-card:hover::before {
-    opacity: 1;
+    border-color: #3a4048;
 }
 
 /* ==================================
-   HEADER EXERCICE
+   HEADER EXERCICE - COMPACT
    ================================== */
 .exercise-header {
-    padding: 20px 24px;
-    background: linear-gradient(135deg, rgba(59, 130, 246, 0.08) 0%, rgba(139, 92, 246, 0.08) 100%);
-    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 16px 20px;
+    background: #1f252d;
+    border-bottom: 1px solid #2a3038;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -70,104 +46,153 @@
 .exercise-title-section {
     display: flex;
     align-items: center;
-    gap: 16px;
+    gap: 12px;
     flex: 1;
 }
 
 .exercise-icon {
-    width: 48px;
-    height: 48px;
-    background: linear-gradient(135deg, #3b82f6 0%, #8b5cf6 100%);
-    border-radius: 12px;
+    width: 40px;
+    height: 40px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 10px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 24px;
-    box-shadow: 
-        0 4px 12px rgba(59, 130, 246, 0.3),
-        inset 0 -2px 8px rgba(0, 0, 0, 0.2);
+    font-size: 20px;
+    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
 }
 
 .exercise-title-info h3 {
     margin: 0 0 4px 0;
-    font-size: 20px;
+    font-size: 18px;
     font-weight: 700;
-    color: #ffffff; /* TEXTE BLANC */
-    letter-spacing: -0.02em;
+    color: #ffffff;
+    letter-spacing: -0.01em;
 }
 
 .exercise-meta {
     display: flex;
-    gap: 12px;
+    gap: 10px;
     align-items: center;
+    flex-wrap: wrap;
 }
 
 .exercise-badge {
     display: inline-flex;
     align-items: center;
-    gap: 6px;
-    padding: 4px 12px;
-    border-radius: 20px;
+    gap: 4px;
+    padding: 4px 10px;
+    border-radius: 6px;
     font-size: 12px;
     font-weight: 600;
-    background: rgba(59, 130, 246, 0.15);
-    color: #60a5fa; /* BLEU CLAIR */
-    border: 1px solid rgba(59, 130, 246, 0.3);
+    background: rgba(102, 126, 234, 0.15);
+    color: #8b9dc3;
+    border: 1px solid rgba(102, 126, 234, 0.2);
 }
 
 .exercise-badge.muscle {
     background: rgba(139, 92, 246, 0.15);
-    color: #a78bfa; /* VIOLET CLAIR */
-    border-color: rgba(139, 92, 246, 0.3);
+    color: #a78bfa;
+    border-color: rgba(139, 92, 246, 0.2);
 }
 
 .exercise-badge.equipment {
     background: rgba(16, 185, 129, 0.15);
-    color: #34d399; /* VERT CLAIR */
-    border-color: rgba(16, 185, 129, 0.3);
+    color: #5eead4;
+    border-color: rgba(16, 185, 129, 0.2);
 }
 
 /* ==================================
-   CORPS EXERCICE (SÉRIES)
+   STATS EXERCICE (4 SÉRIES, 10 REPS, 27.5kg)
+   ================================== */
+.exercise-stats {
+    display: flex;
+    gap: 20px;
+    padding: 12px 20px;
+    background: #151a21;
+    border-bottom: 1px solid #2a3038;
+}
+
+.exercise-stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+}
+
+.exercise-stat-value {
+    font-size: 20px;
+    font-weight: 700;
+    color: #ff9500;
+}
+
+.exercise-stat-label {
+    font-size: 11px;
+    font-weight: 600;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* ==================================
+   CORPS EXERCICE - SÉRIES STYLE HEVY
    ================================== */
 .exercise-body {
-    padding: 24px;
+    padding: 16px;
+    background: #1a1f26;
 }
 
 .series-list {
     display: flex;
     flex-direction: column;
-    gap: 12px;
+    gap: 10px;
 }
 
+/* SÉRIE ROW - STYLE HEVY AVEC BORDURE VERTE */
 .series-row {
     display: grid;
-    grid-template-columns: 60px 1fr 1fr auto;
-    gap: 16px;
+    grid-template-columns: 50px 1fr 1fr auto;
+    gap: 12px;
     align-items: center;
-    padding: 16px;
-    background: rgba(255, 255, 255, 0.03);
+    padding: 14px 16px;
+    background: #151a21;
     border-radius: 12px;
-    border: 1px solid rgba(255, 255, 255, 0.06);
+    border: 2px solid #2a3038;
     transition: all 0.2s ease;
 }
 
 .series-row:hover {
-    background: rgba(255, 255, 255, 0.05);
-    border-color: rgba(59, 130, 246, 0.3);
-    transform: translateX(4px);
+    background: #1a1f26;
+    border-color: #3a4048;
 }
 
+/* SÉRIE VALIDÉE - BORDURE VERTE COMME HEVY */
+.series-row.completed {
+    background: rgba(16, 185, 129, 0.08);
+    border-color: #10b981;
+    box-shadow: 0 0 0 1px rgba(16, 185, 129, 0.2);
+}
+
+/* NUMÉRO DE SÉRIE - CERCLE COLORÉ */
 .series-number {
-    font-size: 18px;
+    width: 36px;
+    height: 36px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #2a3038;
+    border-radius: 50%;
+    font-size: 16px;
     font-weight: 700;
-    color: #60a5fa; /* BLEU CLAIR */
-    text-align: center;
-    padding: 8px;
-    background: rgba(59, 130, 246, 0.1);
-    border-radius: 8px;
+    color: #8b9dc3;
 }
 
+.series-row.completed .series-number {
+    background: #10b981;
+    color: #ffffff;
+}
+
+/* INPUT GROUP */
 .series-input-group {
     display: flex;
     flex-direction: column;
@@ -175,36 +200,50 @@
 }
 
 .series-input-group label {
-    font-size: 11px;
+    font-size: 10px;
     font-weight: 600;
-    color: #9ca3af; /* GRIS CLAIR */
+    color: #6b7280;
     text-transform: uppercase;
     letter-spacing: 0.05em;
 }
 
 .series-input {
-    padding: 10px 14px;
-    background: rgba(0, 0, 0, 0.3);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 10px 12px;
+    background: #0f1419;
+    border: 1px solid #2a3038;
     border-radius: 8px;
     font-size: 16px;
-    font-weight: 600;
-    color: #ffffff; /* TEXTE BLANC */
+    font-weight: 700;
+    color: #ff9500;
     transition: all 0.2s ease;
     text-align: center;
 }
 
 .series-input:focus {
     outline: none;
-    border-color: #3b82f6;
-    background: rgba(59, 130, 246, 0.1);
-    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+    border-color: #667eea;
+    background: rgba(102, 126, 234, 0.05);
 }
 
 .series-input::placeholder {
-    color: #4b5563; /* GRIS MOYEN */
+    color: #4b5563;
+    font-weight: 600;
 }
 
+/* REPOS TIMER */
+.series-rest {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    background: rgba(102, 126, 234, 0.1);
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 600;
+    color: #8b9dc3;
+}
+
+/* ACTIONS SÉRIE */
 .series-actions {
     display: flex;
     gap: 8px;
@@ -213,7 +252,7 @@
 .btn-series {
     width: 36px;
     height: 36px;
-    border-radius: 8px;
+    border-radius: 50%;
     border: none;
     cursor: pointer;
     display: flex;
@@ -224,14 +263,18 @@
 }
 
 .btn-check {
-    background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+    background: #10b981;
     color: white;
     box-shadow: 0 2px 8px rgba(16, 185, 129, 0.3);
 }
 
 .btn-check:hover {
     transform: scale(1.1);
-    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+    box-shadow: 0 4px 12px rgba(16, 185, 129, 0.5);
+}
+
+.btn-check:active {
+    transform: scale(0.95);
 }
 
 .btn-delete {
@@ -246,21 +289,63 @@
 }
 
 /* ==================================
-   PIED EXERCICE (ACTIONS)
+   PROGRESSION BAR - STYLE HEVY
+   ================================== */
+.exercise-progression {
+    padding: 14px 20px;
+    background: rgba(16, 185, 129, 0.08);
+    border: 2px solid #10b981;
+    border-radius: 12px;
+    margin: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.progression-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #6b7280;
+}
+
+.progression-values {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 18px;
+    font-weight: 700;
+}
+
+.progression-start {
+    color: #6b7280;
+}
+
+.progression-separator {
+    color: #4b5563;
+}
+
+.progression-end {
+    color: #10b981;
+}
+
+/* ==================================
+   FOOTER EXERCICE
    ================================== */
 .exercise-footer {
-    padding: 20px 24px;
-    background: rgba(0, 0, 0, 0.2);
-    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 16px 20px;
+    background: #151a21;
+    border-top: 1px solid #2a3038;
     display: flex;
-    gap: 12px;
-    justify-content: space-between;
+    gap: 10px;
 }
 
 .btn-add-series {
     flex: 1;
-    padding: 12px 20px;
-    background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+    padding: 12px 16px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
     color: white;
     border: none;
     border-radius: 10px;
@@ -271,13 +356,13 @@
     align-items: center;
     justify-content: center;
     gap: 8px;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 8px rgba(102, 126, 234, 0.3);
 }
 
 .btn-add-series:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(59, 130, 246, 0.4);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
 }
 
 .btn-add-series:active {
@@ -301,26 +386,44 @@
 
 .btn-note:hover {
     background: rgba(139, 92, 246, 0.25);
-    border-color: rgba(139, 92, 246, 0.5);
+}
+
+.btn-timer {
+    padding: 12px 16px;
+    background: rgba(59, 130, 246, 0.15);
+    color: #60a5fa;
+    border: 1px solid rgba(59, 130, 246, 0.3);
+    border-radius: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    transition: all 0.2s ease;
+}
+
+.btn-timer:hover {
+    background: rgba(59, 130, 246, 0.25);
 }
 
 /* ==================================
-   SECTION NOTES
+   NOTES EXERCICE
    ================================== */
 .exercise-notes {
-    padding: 20px 24px;
-    background: rgba(139, 92, 246, 0.08);
-    border-top: 1px solid rgba(139, 92, 246, 0.2);
+    padding: 16px 20px;
+    background: #151a21;
+    border-top: 1px solid #2a3038;
 }
 
 .exercise-notes textarea {
     width: 100%;
     min-height: 80px;
-    padding: 14px;
-    background: rgba(0, 0, 0, 0.3);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    padding: 12px;
+    background: #0f1419;
+    border: 1px solid #2a3038;
     border-radius: 10px;
-    color: #e5e7eb; /* TEXTE GRIS CLAIR */
+    color: #d1d5db;
     font-size: 14px;
     font-family: inherit;
     resize: vertical;
@@ -329,13 +432,12 @@
 
 .exercise-notes textarea:focus {
     outline: none;
-    border-color: #8b5cf6;
-    background: rgba(139, 92, 246, 0.1);
-    box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+    border-color: #667eea;
+    background: rgba(102, 126, 234, 0.05);
 }
 
 .exercise-notes textarea::placeholder {
-    color: #6b7280; /* GRIS MOYEN */
+    color: #4b5563;
 }
 
 /* ==================================
@@ -344,16 +446,12 @@
 @keyframes slideIn {
     from {
         opacity: 0;
-        transform: translateY(20px);
+        transform: translateY(10px);
     }
     to {
         opacity: 1;
         transform: translateY(0);
     }
-}
-
-.exercise-card {
-    animation: slideIn 0.3s ease-out;
 }
 
 .series-row {
@@ -365,7 +463,7 @@
    ================================== */
 @media (max-width: 768px) {
     .exercises-container {
-        padding: 16px;
+        padding: 12px;
     }
 
     .exercise-header {
@@ -375,8 +473,8 @@
     }
 
     .series-row {
-        grid-template-columns: 50px 1fr;
-        gap: 12px;
+        grid-template-columns: 40px 1fr;
+        gap: 10px;
     }
 
     .series-actions {
@@ -386,5 +484,9 @@
 
     .exercise-footer {
         flex-direction: column;
+    }
+
+    .exercise-stats {
+        gap: 12px;
     }
 }
