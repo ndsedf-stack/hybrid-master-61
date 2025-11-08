@@ -959,7 +959,7 @@ class App {
 
         // Boutons de sélection de jour
         const daySelector = `
-            <div class="day-selector" style="display: flex; gap: 8px; margin-bottom: 20px; padding: 16px; background: rgba(255,255,255,0.05); border-radius: 12px; flex-wrap: wrap;">
+            <div class="day-selector" style="display: flex; gap: 8px; margin-bottom: 20px; padding: 16px; background: rgba(255,255,255,0.05); border-radius: 12px;">
                 <button class="day-btn ${this.currentDay === 'dimanche' ? 'active' : ''}" data-day="dimanche">
                     💪 Dimanche<br><small>${weekData.dimanche.name}</small>
                 </button>
@@ -969,17 +969,12 @@ class App {
                 <button class="day-btn ${this.currentDay === 'vendredi' ? 'active' : ''}" data-day="vendredi">
                     ⚡ Vendredi<br><small>${weekData.vendredi.name}</small>
                 </button>
-                <button class="day-btn ${this.currentDay === 'maison' ? 'active' : ''}" data-day="maison" style="flex-basis: 100%; background: rgba(59, 130, 246, 0.1); border-color: rgba(59, 130, 246, 0.3);">
-                    🏠 Maison<br><small>${weekData.maison.name} (Mardi + Jeudi soir)</small>
-                </button>
             </div>
             <style>
-                .day-btn { flex: 1; padding: 12px; background: rgba(255,255,255,0.05); border: 2px solid rgba(255,255,255,0.1); border-radius: 8px; color: white; cursor: pointer; transition: all 0.2s; font-size: 14px; font-weight: 600; min-width: 120px; }
+                .day-btn { flex: 1; padding: 12px; background: rgba(255,255,255,0.05); border: 2px solid rgba(255,255,255,0.1); border-radius: 8px; color: white; cursor: pointer; transition: all 0.2s; font-size: 14px; font-weight: 600; }
                 .day-btn small { font-size: 10px; font-weight: 400; opacity: 0.7; display: block; margin-top: 4px; }
                 .day-btn:hover { background: rgba(255,107,53,0.2); border-color: #ff6b35; }
                 .day-btn.active { background: #ff6b35; border-color: #ff6b35; }
-                .day-btn[data-day="maison"]:hover { background: rgba(59, 130, 246, 0.2); border-color: #3b82f6; }
-                .day-btn[data-day="maison"].active { background: #3b82f6; border-color: #3b82f6; }
             </style>
         `;
 
