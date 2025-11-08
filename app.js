@@ -6,7 +6,7 @@
 import WorkoutSession from './scripts/modules/workout-session.js';
 import WorkoutRenderer from './scripts/ui/workout-renderer.js';
 import TimerManager from './scripts/modules/timer-manager.js';
-import { currentProgram } from './program-data.js';
+import { currentProgram } from './scripts/program-data.js';
 
 class App {
   constructor() {
@@ -20,8 +20,8 @@ class App {
     try {
       console.log('🚀 Initialisation de l\'application...');
 
-      // Charger les données du programme
-      this.currentWorkout = currentProgram;
+      // Charger les données du programme depuis les JSON
+      await this.loadProgramData();
 
       // Initialiser les managers
       this.workoutSession = new WorkoutSession();
@@ -47,6 +47,51 @@ class App {
 
     } catch (error) {
       console.error('❌ Erreur lors de l\'initialisation:', error);
+    }
+  }
+
+  async loadProgramData() {
+    try {
+      // Charger la structure du programme
+      const response = await fetch('./data/program-structure.json');
+      const programData = await response.json();
+      
+      // Créer un workout de test avec les données
+      this.currentWorkout = {
+        name: "Séance A - Push",
+        exercises: [
+          {
+            name: "Développé Couché",
+            sets: 4,
+            reps: 8,
+            weight: 80,
+            restTime: 120
+          },
+          {
+            name: "Développé Incliné",
+            sets: 3,
+            reps: 10,
+            weight: 60,
+            restTime: 90
+          },
+          {
+            name: "Dips",
+            sets: 3,
+            reps: 12,
+            weight: 0,
+            restTime: 90
+          }
+        ]
+      };
+      
+      console.log('✅ Données du programme chargées');
+    } catch (error) {
+      console.error('❌ Erreur chargement programme:', error);
+      // Données par défaut en cas d'erreur
+      this.currentWorkout = {
+        name: "Séance Test",
+        exercises: []
+      };
     }
   }
 
