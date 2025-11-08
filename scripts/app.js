@@ -1,6 +1,6 @@
 /**
- * HYBRID MASTER 60 - APPLICATION COMPLÈTE STANDALONE
- * Version sans imports - Tout dans un seul fichier
+ * HYBRID MASTER 51 - APPLICATION COMPLÈTE AVEC PROGRAMME RÉEL
+ * Version finale avec program-data.js intégré
  */
 
 // ============================================================================
@@ -15,8 +15,6 @@ class TimerManager {
         this.targetSeconds = null;
         this.onTick = null;
         this.onComplete = null;
-
-        // Éléments DOM
         this.display = null;
         this.startBtn = null;
         this.pauseBtn = null;
@@ -39,7 +37,6 @@ class TimerManager {
             this.resetBtn.addEventListener('click', () => this.reset());
         }
 
-        // Raccourci clavier ESPACE
         document.addEventListener('keydown', (e) => {
             if (e.code === 'Space' && e.target.tagName !== 'INPUT') {
                 e.preventDefault();
@@ -54,7 +51,6 @@ class TimerManager {
 
     start(targetSeconds = null) {
         if (this.isRunning) return;
-
         this.isRunning = true;
         this.isFinished = false;
         this.targetSeconds = targetSeconds;
@@ -66,11 +62,7 @@ class TimerManager {
         this.interval = setInterval(() => {
             this.seconds++;
             this.updateDisplay();
-
-            if (this.onTick) {
-                this.onTick(this.seconds);
-            }
-
+            if (this.onTick) this.onTick(this.seconds);
             if (this.targetSeconds && this.seconds >= this.targetSeconds) {
                 this.complete();
             }
@@ -82,13 +74,11 @@ class TimerManager {
 
     pause() {
         if (!this.isRunning) return;
-
         this.isRunning = false;
         if (this.interval) {
             clearInterval(this.interval);
             this.interval = null;
         }
-
         this.updateButtons();
         this.updateDisplay();
     }
@@ -106,11 +96,9 @@ class TimerManager {
         this.seconds = 0;
         this.targetSeconds = null;
         this.isFinished = false;
-        
         if (this.display) {
             this.display.classList.remove('finished');
         }
-        
         this.updateDisplay();
         this.updateButtons();
     }
@@ -118,35 +106,22 @@ class TimerManager {
     complete() {
         this.pause();
         this.isFinished = true;
-        
         if (this.display) {
             this.display.classList.add('finished');
         }
-        
         this.playSound();
         this.showVisualNotification();
-        
-        if (this.onComplete) {
-            this.onComplete(this.seconds);
-        }
-
+        if (this.onComplete) this.onComplete(this.seconds);
         this.updateDisplay();
     }
 
     showVisualNotification() {
         const notification = document.createElement('div');
         notification.style.cssText = `
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
+            position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%);
             background: linear-gradient(135deg, #dc3545 0%, #c82333 100%);
-            color: white;
-            padding: 30px 50px;
-            border-radius: 15px;
-            font-size: 2rem;
-            font-weight: bold;
-            z-index: 10000;
+            color: white; padding: 30px 50px; border-radius: 15px;
+            font-size: 2rem; font-weight: bold; z-index: 10000;
             box-shadow: 0 10px 40px rgba(220, 53, 69, 0.6);
             animation: alert-bounce 0.5s ease-out;
         `;
@@ -161,19 +136,14 @@ class TimerManager {
             }
         `;
         document.head.appendChild(style);
-        
         document.body.appendChild(notification);
         
         setTimeout(() => {
             notification.style.transition = 'opacity 0.5s ease-out';
             notification.style.opacity = '0';
             setTimeout(() => {
-                if (notification.parentNode) {
-                    document.body.removeChild(notification);
-                }
-                if (style.parentNode) {
-                    document.head.removeChild(style);
-                }
+                if (notification.parentNode) document.body.removeChild(notification);
+                if (style.parentNode) document.head.removeChild(style);
             }, 500);
         }, 3000);
     }
@@ -191,7 +161,6 @@ class TimerManager {
         const hours = Math.floor(totalSeconds / 3600);
         const minutes = Math.floor((totalSeconds % 3600) / 60);
         const seconds = totalSeconds % 60;
-
         if (hours > 0) {
             return `${hours}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
         }
@@ -201,7 +170,6 @@ class TimerManager {
     updateDisplay() {
         if (this.display) {
             this.display.textContent = this.formatTime(this.seconds);
-
             this.display.classList.toggle('running', this.isRunning);
             this.display.classList.toggle('paused', !this.isRunning && this.seconds > 0 && !this.isFinished);
             this.display.classList.toggle('finished', this.isFinished);
@@ -219,33 +187,502 @@ class TimerManager {
 }
 
 // ============================================================================
+// PROGRAMME DATA - INTÉGRÉ DANS APP.JS
+// ============================================================================
+function calculateWeight(baseWeight, week, increment, frequency) {
+    const progressions = Math.floor((week - 1) / frequency);
+    const newWeight = baseWeight + (progressions * increment);
+    const isDeload = [6, 12, 18, 24, 26].includes(week);
+    return isDeload ? Math.round(newWeight * 0.6 * 2) / 2 : newWeight;
+}
+
+function getBlockTechnique(week) {
+    if (week <= 5) return { block: 1, technique: "Tempo 3-1-2", rpe: "6-7" };
+    if (week === 6) return { block: 1, technique: "Deload", rpe: "5-6" };
+    if (week <= 11) return { block: 2, technique: "Rest-Pause", rpe: "7-8" };
+    if (week === 12) return { block: 2, technique: "Deload", rpe: "5-6" };
+    if (week <= 17) return { block: 3, technique: "Drop-sets + Myo-reps", rpe: "8" };
+    if (week === 18) return { block: 3, technique: "Deload", rpe: "5-6" };
+    if (week <= 23) return { block: 4, technique: "Clusters + Myo-reps + Partials", rpe: "8-9" };
+    if (week === 24) return { block: 4, technique: "Deload", rpe: "5-6" };
+    if (week === 25) return { block: 5, technique: "Peak Week", rpe: "8-9" };
+    return { block: 5, technique: "Deload Final", rpe: "5-6" };
+}
+
+function getBicepExercise(week) {
+    const block = getBlockTechnique(week).block;
+    return (block === 1 || block === 3) ? "Incline Curl" : "Spider Curl";
+}
+
+class ProgramGenerator {
+    generateWeek(week) {
+        const blockInfo = getBlockTechnique(week);
+        const isDeload = [6, 12, 18, 24, 26].includes(week);
+        
+        return {
+            weekNumber: week,
+            block: blockInfo.block,
+            technique: blockInfo.technique,
+            rpeTarget: blockInfo.rpe,
+            isDeload: isDeload,
+            dimanche: this.generateDimanche(week, blockInfo, isDeload),
+            mardi: this.generateMardi(week, blockInfo, isDeload),
+            vendredi: this.generateVendredi(week, blockInfo, isDeload),
+            maison: this.generateMaison(week, blockInfo, isDeload)
+        };
+    }
+
+    generateDimanche(week, blockInfo, isDeload) {
+        const bicepExercise = getBicepExercise(week);
+        return {
+            name: "DOS + JAMBES LOURDES + BRAS",
+            duration: 68,
+            totalSets: 31,
+            exercises: [
+                {
+                    id: `w${week}_dim_trapbar`,
+                    name: "Trap Bar Deadlift",
+                    category: "compound",
+                    muscle: ["dos", "jambes", "fessiers"],
+                    sets: 5,
+                    reps: "6-8",
+                    weight: calculateWeight(75, week, 5, 3),
+                    rest: 120,
+                    tempo: isDeload ? "4-1-2" : (week <= 5 ? "3-1-2" : "2-1-2"),
+                    notes: blockInfo.block === 2 && !isDeload ? "🔥 Rest-Pause série 5 : 6-8 reps → 20s → 2-3 reps" : 
+                           blockInfo.block === 4 && !isDeload ? "🔥 Clusters série 5 : 3 reps → 20s → 2 reps → 20s → 2 reps" : 
+                           "Exercice roi, technique parfaite obligatoire"
+                },
+                {
+                    id: `w${week}_dim_goblet`,
+                    name: "Goblet Squat",
+                    category: "compound",
+                    muscle: ["quadriceps", "fessiers"],
+                    sets: 4,
+                    reps: 10,
+                    weight: calculateWeight(25, week, 2.5, 2),
+                    rest: 75,
+                    tempo: isDeload ? "4-1-2" : (week <= 5 ? "3-1-2" : "2-1-2"),
+                    notes: blockInfo.block === 3 && !isDeload ? "🔥 Drop-set série 4 : 10 reps → -25% → 8-10 reps" :
+                           blockInfo.block === 4 && !isDeload ? "🔥 Série 4 : 10 reps complètes → 5 demi-reps (partials)" :
+                           "Haltère devant poitrine, descente contrôlée"
+                },
+                {
+                    id: `w${week}_dim_legpress`,
+                    name: "Leg Press",
+                    category: "compound",
+                    muscle: ["quadriceps", "fessiers"],
+                    sets: 4,
+                    reps: 10,
+                    weight: calculateWeight(110, week, 10, 2),
+                    rest: 75,
+                    tempo: isDeload ? "4-1-2" : (week <= 5 ? "3-1-2" : "2-1-2"),
+                    notes: blockInfo.block === 3 && !isDeload ? "🔥 Drop-set série 4 : 10 reps → -25% → 10-12 reps" :
+                           blockInfo.block === 4 && !isDeload ? "🔥 Clusters série 4 + Partials : 4→20s→3→20s→3 puis 10 reps + 8 quarts" :
+                           "Pieds largeur épaules, amplitude complète"
+                },
+                {
+                    id: `w${week}_dim_latpull`,
+                    name: "Lat Pulldown (prise large)",
+                    category: "compound",
+                    muscle: ["dos"],
+                    sets: 4,
+                    reps: 10,
+                    weight: calculateWeight(60, week, 2.5, 2),
+                    rest: 90,
+                    tempo: isDeload ? "4-1-2" : (week <= 5 ? "3-1-2" : "2-1-2"),
+                    isSuperset: true,
+                    supersetWith: "Landmine Press",
+                    notes: blockInfo.block === 3 && !isDeload ? "🔥 Drop-set série 4 : 10 reps → -20% → 8-10 reps | ⚡ SUPERSET" :
+                           "⚡ SUPERSET avec Landmine Press | Prise 1.5× largeur épaules"
+                },
+                {
+                    id: `w${week}_dim_landmine`,
+                    name: "Landmine Press",
+                    category: "compound",
+                    muscle: ["pectoraux", "épaules"],
+                    sets: 4,
+                    reps: 10,
+                    weight: calculateWeight(35, week, 2.5, 2),
+                    rest: 90,
+                    tempo: isDeload ? "4-1-2" : (week <= 5 ? "3-1-2" : "2-1-2"),
+                    isSuperset: true,
+                    supersetWith: "Lat Pulldown",
+                    notes: "⚡ SUPERSET avec Lat Pulldown | Barre calée dans coin"
+                },
+                {
+                    id: `w${week}_dim_rowing`,
+                    name: "Rowing Machine (prise large)",
+                    category: "compound",
+                    muscle: ["dos"],
+                    sets: 4,
+                    reps: 10,
+                    weight: calculateWeight(50, week, 2.5, 2),
+                    rest: 75,
+                    tempo: isDeload ? "4-1-2" : (week <= 5 ? "3-1-2" : "2-1-2"),
+                    notes: blockInfo.block === 3 && !isDeload ? "🔥 Myo-reps série 4 : 10 reps → 5s → 4 mini-sets de 4 reps" :
+                           blockInfo.block === 4 && !isDeload ? "🔥 Myo-reps série 4 : 10 reps → 5s → 4 mini-sets de 4 reps" :
+                           "Mains écartées, coudes vers extérieur, tirer vers bas des pecs"
+                },
+                {
+                    id: `w${week}_dim_bicep`,
+                    name: bicepExercise,
+                    category: "isolation",
+                    muscle: ["biceps"],
+                    sets: 4,
+                    reps: 12,
+                    weight: calculateWeight(12, week, 2.5, 3),
+                    rest: 75,
+                    tempo: isDeload ? "4-1-2" : (week <= 5 ? "3-1-2" : "2-1-2"),
+                    isSuperset: true,
+                    supersetWith: "Cable Pushdown",
+                    notes: blockInfo.block === 1 && !isDeload ? "⚡ SUPERSET | Pause 2s bras tendus (étirement maximal)" :
+                           blockInfo.block === 3 && !isDeload ? "⚡ SUPERSET | 🔥 Myo-reps série 4 : 12 reps → 5s → 4 mini-sets" :
+                           blockInfo.block === 4 && !isDeload ? "⚡ SUPERSET | 🔥 Myo-reps série 4 : 12 reps → 5s → 4 mini-sets" :
+                           `⚡ SUPERSET | ${bicepExercise === "Incline Curl" ? "Banc incliné 45°" : "Spider curl pupitre"}`
+                },
+                {
+                    id: `w${week}_dim_pushdown`,
+                    name: "Cable Pushdown",
+                    category: "isolation",
+                    muscle: ["triceps"],
+                    sets: 3,
+                    reps: 12,
+                    weight: calculateWeight(20, week, 2.5, 3),
+                    rest: 75,
+                    tempo: isDeload ? "4-1-2" : (week <= 5 ? "3-1-2" : "2-1-2"),
+                    isSuperset: true,
+                    supersetWith: bicepExercise,
+                    notes: blockInfo.block === 4 && !isDeload ? "⚡ SUPERSET | 🔥 Myo-reps série 3 : 12 reps → 5s → 4 mini-sets" :
+                           "⚡ SUPERSET | Coudes fixes le long du corps"
+                }
+            ]
+        };
+    }
+
+    generateMardi(week, blockInfo, isDeload) {
+        return {
+            name: "PECS + ÉPAULES + TRICEPS",
+            duration: 70,
+            totalSets: 35,
+            exercises: [
+                {
+                    id: `w${week}_mar_dbpress`,
+                    name: "Dumbbell Press",
+                    category: "compound",
+                    muscle: ["pectoraux", "épaules", "triceps"],
+                    sets: 5,
+                    reps: 10,
+                    weight: calculateWeight(22, week, 2.5, 3),
+                    rest: 105,
+                    tempo: isDeload ? "4-1-2" : (week <= 5 ? "3-1-2" : "2-1-2"),
+                    notes: blockInfo.block === 2 && !isDeload ? "🔥 Rest-Pause série 5 : 10 reps → 20s → 3-4 reps" :
+                           blockInfo.block === 3 && !isDeload ? "🔥 Drop-set série 5 : 10 reps → -25% → 8-10 reps" :
+                           blockInfo.block === 4 && !isDeload ? "🔥 Clusters série 5 : 4 reps → 15s → 3 reps → 15s → 3 reps" :
+                           "Banc plat, haltères rotation naturelle"
+                },
+                {
+                    id: `w${week}_mar_cablefly`,
+                    name: "Cable Fly (poulies moyennes)",
+                    category: "isolation",
+                    muscle: ["pectoraux"],
+                    sets: 4,
+                    reps: 12,
+                    weight: calculateWeight(10, week, 2.5, 3),
+                    rest: 60,
+                    tempo: isDeload ? "4-1-2" : (week <= 5 ? "3-1-2" : "2-1-2"),
+                    notes: blockInfo.block === 1 && !isDeload ? "Pause 2s bras écartés (étirement maximal pecs)" :
+                           blockInfo.block === 3 && !isDeload ? "🔥 Drop-set série 4 : 12 reps → -25% → 10-12 reps | 🔥 Myo-reps : 12→5s→5 mini-sets" :
+                           blockInfo.block === 4 && !isDeload ? "🔥 Myo-reps série 4 : 12 reps → 5s → 5 mini-sets de 5 reps" :
+                           "Poulies hauteur épaules, bras semi-fléchis"
+                },
+                {
+                    id: `w${week}_mar_leglight`,
+                    name: "Leg Press léger",
+                    category: "compound",
+                    muscle: ["quadriceps", "fessiers"],
+                    sets: 3,
+                    reps: 15,
+                    weight: calculateWeight(80, week, 10, 3),
+                    rest: 60,
+                    tempo: isDeload ? "4-1-2" : (week <= 5 ? "3-1-2" : "2-1-2"),
+                    notes: "Activation légère jambes, pas de fatigue excessive"
+                },
+                {
+                    id: `w${week}_mar_triceps`,
+                    name: "Extension Triceps Corde",
+                    category: "isolation",
+                    muscle: ["triceps"],
+                    sets: 5,
+                    reps: 12,
+                    weight: calculateWeight(20, week, 2.5, 3),
+                    rest: 75,
+                    tempo: isDeload ? "4-1-2" : (week <= 5 ? "3-1-2" : "2-1-2"),
+                    isSuperset: true,
+                    supersetWith: "Lateral Raises",
+                    notes: blockInfo.block === 3 && !isDeload ? "⚡ SUPERSET | 🔥 Drop-set série 5 : 12 reps → -20% → 10-12 reps" :
+                           blockInfo.block === 4 && !isDeload ? "⚡ SUPERSET | 🔥 Myo-reps série 5 : 12 reps → 5s → 4 mini-sets" :
+                           "⚡ SUPERSET | Corde poulie haute, coudes fixes"
+                },
+                {
+                    id: `w${week}_mar_lateral`,
+                    name: "Lateral Raises",
+                    category: "isolation",
+                    muscle: ["épaules"],
+                    sets: 5,
+                    reps: 15,
+                    weight: calculateWeight(8, week, 2.5, 4),
+                    rest: 75,
+                    tempo: isDeload ? "4-1-2" : (week <= 5 ? "3-1-2" : "2-1-2"),
+                    isSuperset: true,
+                    supersetWith: "Extension Triceps Corde",
+                    notes: blockInfo.block === 1 && !isDeload ? "⚡ SUPERSET | Pause 1s bras horizontaux" :
+                           blockInfo.block === 3 && !isDeload ? "⚡ SUPERSET | 🔥 Drop-set série 5 : 15 reps → -25% → 12-15 reps" :
+                           blockInfo.block === 4 && !isDeload ? "⚡ SUPERSET | 🔥 Myo-reps série 5 : 15 reps → 5s → 5 mini-sets" :
+                           "⚡ SUPERSET | Coudes légèrement fléchis, monter à l'horizontal"
+                },
+                {
+                    id: `w${week}_mar_facepull`,
+                    name: "Face Pull",
+                    category: "isolation",
+                    muscle: ["épaules", "dos"],
+                    sets: 5,
+                    reps: 15,
+                    weight: calculateWeight(20, week, 2.5, 3),
+                    rest: 60,
+                    tempo: isDeload ? "4-1-2" : (week <= 5 ? "3-1-2" : "2-1-2"),
+                    notes: blockInfo.block === 1 && !isDeload ? "Pause 1s contraction arrière" :
+                           blockInfo.block === 3 && !isDeload ? "🔥 Myo-reps série 5 : 15 reps → 5s → 5 mini-sets de 5 reps" :
+                           blockInfo.block === 4 && !isDeload ? "🔥 Myo-reps série 5 : 15 reps → 5s → 5 mini-sets de 5 reps" :
+                           "Corde poulie haute, tirer vers visage, rotation externe"
+                },
+                {
+                    id: `w${week}_mar_rowingtight`,
+                    name: "Rowing Machine (prise serrée)",
+                    category: "compound",
+                    muscle: ["dos"],
+                    sets: 4,
+                    reps: 12,
+                    weight: calculateWeight(50, week, 2.5, 2),
+                    rest: 75,
+                    tempo: isDeload ? "4-1-2" : (week <= 5 ? "3-1-2" : "2-1-2"),
+                    notes: "Mains largeur épaules, coudes le long du corps, tirer vers nombril"
+                },
+                {
+                    id: `w${week}_mar_overhead`,
+                    name: "Overhead Extension (corde, assis)",
+                    category: "isolation",
+                    muscle: ["triceps"],
+                    sets: 4,
+                    reps: 12,
+                    weight: calculateWeight(15, week, 2.5, 3),
+                    rest: 60,
+                    tempo: isDeload ? "4-1-2" : (week <= 5 ? "3-1-2" : "2-1-2"),
+                    notes: blockInfo.block === 3 && !isDeload ? "🔥 Myo-reps série 4 : 12 reps → 5s → 4 mini-sets de 4 reps" :
+                           blockInfo.block === 4 && !isDeload ? "🔥 Myo-reps série 4 : 12 reps → 5s → 4 mini-sets de 4 reps" :
+                           "Corde poulie haute, assis, étirement triceps maximal"
+                }
+            ]
+        };
+    }
+
+    generateVendredi(week, blockInfo, isDeload) {
+        return {
+            name: "DOS + JAMBES LÉGÈRES + BRAS + ÉPAULES",
+            duration: 73,
+            totalSets: 33,
+            exercises: [
+                {
+                    id: `w${week}_ven_landrow`,
+                    name: "Landmine Row",
+                    category: "compound",
+                    muscle: ["dos"],
+                    sets: 5,
+                    reps: 10,
+                    weight: calculateWeight(55, week, 2.5, 2),
+                    rest: 105,
+                    tempo: isDeload ? "4-1-2" : (week <= 5 ? "3-1-2" : "2-1-2"),
+                    notes: blockInfo.block === 2 && !isDeload ? "🔥 Rest-Pause série 5 : 10 reps → 20s → 3-4 reps" :
+                           blockInfo.block === 3 && !isDeload ? "🔥 Drop-set série 5 : 10 reps → -20% → 8-10 reps" :
+                           blockInfo.block === 4 && !isDeload ? "🔥 Clusters série 5 : 4 reps → 15s → 3 reps → 15s → 3 reps" :
+                           "Barre calée, une main, tirer vers hanche"
+                },
+                {
+                    id: `w${week}_ven_legcurl`,
+                    name: "Leg Curl",
+                    category: "isolation",
+                    muscle: ["ischios"],
+                    sets: 5,
+                    reps: 12,
+                    weight: calculateWeight(40, week, 5, 3),
+                    rest: 75,
+                    tempo: isDeload ? "4-1-2" : (week <= 5 ? "3-1-2" : "2-1-2"),
+                    isSuperset: true,
+                    supersetWith: "Leg Extension",
+                    notes: blockInfo.block === 3 && !isDeload ? "⚡ SUPERSET | 🔥 Drop-set série 5 : 12 reps → -25% → 10-12 reps" :
+                           blockInfo.block === 4 && !isDeload ? "⚡ SUPERSET | 🔥 Série 5 : 12 reps complètes → 6-8 partials (amplitude haute)" :
+                           "⚡ SUPERSET | Allongé ou assis selon machine"
+                },
+                {
+                    id: `w${week}_ven_legext`,
+                    name: "Leg Extension",
+                    category: "isolation",
+                    muscle: ["quadriceps"],
+                    sets: 4,
+                    reps: 15,
+                    weight: calculateWeight(35, week, 5, 3),
+                    rest: 75,
+                    tempo: isDeload ? "4-1-2" : (week <= 5 ? "3-1-2" : "2-1-2"),
+                    isSuperset: true,
+                    supersetWith: "Leg Curl",
+                    notes: blockInfo.block === 3 && !isDeload ? "⚡ SUPERSET | 🔥 Drop-set série 4 : 15 reps → -25% → 12-15 reps" :
+                           blockInfo.block === 4 && !isDeload ? "⚡ SUPERSET | 🔥 Série 4 : 15 reps complètes → 10 partials (derniers 30°)" :
+                           "⚡ SUPERSET | Extension complète, contraction 1s en haut"
+                },
+                {
+                    id: `w${week}_ven_cablefly`,
+                    name: "Cable Fly",
+                    category: "isolation",
+                    muscle: ["pectoraux"],
+                    sets: 4,
+                    reps: 15,
+                    weight: calculateWeight(10, week, 2.5, 3),
+                    rest: 60,
+                    tempo: isDeload ? "4-1-2" : (week <= 5 ? "3-1-2" : "2-1-2"),
+                    isSuperset: true,
+                    supersetWith: "Dumbbell Fly",
+                    notes: blockInfo.block === 3 && !isDeload ? "⚡ SUPERSET | 🔥 Myo-reps série 4 : 15 reps → 5s → 5 mini-sets" :
+                           blockInfo.block === 4 && !isDeload ? "⚡ SUPERSET | 🔥 Myo-reps série 4 : 15 reps → 5s → 5 mini-sets" :
+                           "⚡ SUPERSET | Poulies moyennes, étirement maximal"
+                },
+                {
+                    id: `w${week}_ven_dbfly`,
+                    name: "Dumbbell Fly",
+                    category: "isolation",
+                    muscle: ["pectoraux"],
+                    sets: 4,
+                    reps: 12,
+                    weight: calculateWeight(10, week, 2.5, 3),
+                    rest: 60,
+                    tempo: isDeload ? "4-1-2" : (week <= 5 ? "3-1-2" : "2-1-2"),
+                    isSuperset: true,
+                    supersetWith: "Cable Fly",
+                    notes: blockInfo.block === 1 && !isDeload ? "⚡ SUPERSET | Pause 2s bras écartés (étirement pecs)" :
+                           blockInfo.block === 3 && !isDeload ? "⚡ SUPERSET | 🔥 Drop-set série 4 : 12 reps → -25% → 10-12 reps" :
+                           blockInfo.block === 4 && !isDeload ? "⚡ SUPERSET | 🔥 Myo-reps série 4 : 12 reps → 5s → 4 mini-sets" :
+                           "⚡ SUPERSET | Banc plat, amplitude complète"
+                },
+                {
+                    id: `w${week}_ven_ezbarcurl`,
+                    name: "EZ Bar Curl",
+                    category: "isolation",
+                    muscle: ["biceps"],
+                    sets: 5,
+                    reps: 12,
+                    weight: calculateWeight(25, week, 2.5, 3),
+                    rest: 75,
+                    tempo: isDeload ? "4-1-2" : (week <= 5 ? "3-1-2" : "2-1-2"),
+                    isSuperset: true,
+                    supersetWith: "Overhead Extension",
+                    notes: blockInfo.block === 1 && !isDeload ? "⚡ SUPERSET | Pause 2s bras tendus (étirement biceps)" :
+                           blockInfo.block === 3 && !isDeload ? "⚡ SUPERSET | 🔥 Myo-reps série 5 : 12 reps → 5s → 4 mini-sets" :
+                           blockInfo.block === 4 && !isDeload ? "⚡ SUPERSET | 🔥 Myo-reps série 5 : 12 reps → 5s → 4 mini-sets" :
+                           "⚡ SUPERSET | Barre EZ, coudes fixes"
+                },
+                {
+                    id: `w${week}_ven_overhead2`,
+                    name: "Overhead Extension",
+                    category: "isolation",
+                    muscle: ["triceps"],
+                    sets: 3,
+                    reps: 12,
+                    weight: calculateWeight(15, week, 2.5, 3),
+                    rest: 75,
+                    tempo: isDeload ? "4-1-2" : (week <= 5 ? "3-1-2" : "2-1-2"),
+                    isSuperset: true,
+                    supersetWith: "EZ Bar Curl",
+                    notes: blockInfo.block === 4 && !isDeload ? "⚡ SUPERSET | 🔥 Myo-reps série 3 : 12 reps → 5s → 4 mini-sets" :
+                           "⚡ SUPERSET | Corde poulie haute, assis, étirement maximal"
+                },
+                {
+                    id: `w${week}_ven_lateral2`,
+                    name: "Lateral Raises",
+                    category: "isolation",
+                    muscle: ["épaules"],
+                    sets: 3,
+                    reps: 15,
+                    weight: calculateWeight(8, week, 2.5, 4),
+                    rest: 60,
+                    tempo: isDeload ? "4-1-2" : (week <= 5 ? "3-1-2" : "2-1-2"),
+                    notes: blockInfo.block === 4 && !isDeload ? "🔥 Myo-reps série 3 : 15 reps → 5s → 5 mini-sets" :
+                           "Coudes légèrement fléchis, monter à l'horizontal"
+                },
+                {
+                    id: `w${week}_ven_wrist`,
+                    name: "Wrist Curl",
+                    category: "isolation",
+                    muscle: ["avant-bras"],
+                    sets: 3,
+                    reps: 20,
+                    weight: calculateWeight(30, week, 2.5, 4),
+                    rest: 45,
+                    tempo: isDeload ? "4-1-2" : (week <= 5 ? "3-1-2" : "2-1-2"),
+                    notes: "Assis, avant-bras sur cuisses, flexion poignets"
+                }
+            ]
+        };
+    }
+
+    generateMaison(week, blockInfo, isDeload) {
+        return {
+            name: "HAMMER CURL MAISON",
+            duration: 5,
+            totalSets: 3,
+            daysPerWeek: ["Mardi soir", "Jeudi soir"],
+            exercises: [
+                {
+                    id: `w${week}_maison_hammer`,
+                    name: "Hammer Curl",
+                    category: "isolation",
+                    muscle: ["biceps", "avant-bras"],
+                    sets: 3,
+                    reps: 12,
+                    weight: calculateWeight(12, week, 2.5, 3),
+                    rest: 60,
+                    tempo: isDeload ? "4-1-2" : (week <= 5 ? "3-1-2" : "2-1-2"),
+                    notes: "À faire à la maison, Mardi ET Jeudi soir, prise marteau (neutre)"
+                }
+            ]
+        };
+    }
+}
+
+// ============================================================================
 // APPLICATION PRINCIPALE
 // ============================================================================
 class App {
     constructor() {
         this.currentWeek = 1;
         this.maxWeeks = 26;
-        this.currentDay = 0;
+        this.currentDay = 'dimanche'; // dimanche, mardi, vendredi
         this.completedSets = new Map();
-        
+        this.programGenerator = new ProgramGenerator();
         this.timerManager = null;
         this.defaultRestTime = 90;
     }
 
     async init() {
-        console.log('🚀 Démarrage de l\'application...');
+        console.log('🚀 Démarrage Hybrid Master 51...');
 
         try {
-            // Initialiser le Timer Manager
             this.timerManager = new TimerManager();
             this.timerManager.init();
             console.log('✅ TimerManager initialisé');
 
-            // Attacher les événements
             this.attachEventListeners();
             console.log('✅ Événements attachés');
 
-            // Afficher la séance
+            this.updateWeekDisplay();
             this.renderCurrentWorkout();
             console.log('✅ Application prête !');
 
@@ -256,7 +693,6 @@ class App {
     }
 
     attachEventListeners() {
-        // Navigation semaine
         const prevBtn = document.getElementById('prev-week');
         const nextBtn = document.getElementById('next-week');
 
@@ -274,7 +710,6 @@ class App {
             });
         }
 
-        // Bouton paramètres
         const settingsBtn = document.querySelector('.btn-icon.btn-secondary');
         if (settingsBtn) {
             settingsBtn.addEventListener('click', (e) => {
@@ -283,7 +718,6 @@ class App {
             });
         }
 
-        // Navigation du bas
         const navItems = document.querySelectorAll('.nav-item');
         navItems.forEach((item, index) => {
             item.addEventListener('click', (e) => {
@@ -292,14 +726,11 @@ class App {
             });
         });
 
-        // Checkboxes
         document.addEventListener('click', (e) => {
             const checkButton = e.target.closest('.serie-check');
             if (!checkButton) return;
-
             e.preventDefault();
             e.stopPropagation();
-
             this.handleSetCompletion(checkButton);
         });
 
@@ -351,7 +782,6 @@ class App {
 
         document.body.appendChild(modal);
 
-        // Styles
         const style = document.createElement('style');
         style.textContent = `
             .timer-settings-modal { position: fixed; top: 0; left: 0; right: 0; bottom: 0; z-index: 1000; display: flex; align-items: center; justify-content: center; }
@@ -384,7 +814,6 @@ class App {
         `;
         document.head.appendChild(style);
 
-        // Event listeners
         const restTimeInput = modal.querySelector('#rest-time');
         const decreaseBtn = modal.querySelector('[data-action="decrease"]');
         const increaseBtn = modal.querySelector('[data-action="increase"]');
@@ -498,13 +927,15 @@ class App {
         const weekDisplay = document.getElementById('week-display');
         if (!weekDisplay) return;
 
-        const bloc = Math.ceil(this.currentWeek / 4);
-        const tempos = ['3-1-2', '2-0-2', '4-0-1', '1-0-1', '3-0-3', '2-1-1'];
-        const tempo = tempos[(bloc - 1) % tempos.length];
+        const blockInfo = getBlockTechnique(this.currentWeek);
+        const isDeload = [6, 12, 18, 24, 26].includes(this.currentWeek);
 
         weekDisplay.innerHTML = `
             <div class="week-current">Semaine ${this.currentWeek}/${this.maxWeeks}</div>
-            <div class="week-date">Bloc ${bloc} • Tempo ${tempo}</div>
+            <div class="week-date">
+                Bloc ${blockInfo.block} • ${blockInfo.technique} 
+                ${isDeload ? '🔵 DELOAD' : ''}
+            </div>
         `;
 
         const prevBtn = document.getElementById('prev-week');
@@ -518,56 +949,137 @@ class App {
         const container = document.getElementById('workout-container');
         if (!container) return;
 
-        const workout = this.getDemoWorkout();
+        const weekData = this.programGenerator.generateWeek(this.currentWeek);
+        const workout = weekData[this.currentDay];
 
-        if (!workout) {
-            container.innerHTML = '<div class="empty-workout"><p>🏖️ Repos aujourd\'hui</p></div>';
+        if (!workout || !workout.exercises || workout.exercises.length === 0) {
+            container.innerHTML = '<div class="empty-workout"><p>🏖️ Jour de repos</p></div>';
             return;
         }
 
-        const html = this.generateWorkoutHTML(workout);
+        // Boutons de sélection de jour
+        const daySelector = `
+            <div class="day-selector" style="display: flex; gap: 8px; margin-bottom: 20px; padding: 16px; background: rgba(255,255,255,0.05); border-radius: 12px; flex-wrap: wrap;">
+                <button class="day-btn ${this.currentDay === 'dimanche' ? 'active' : ''}" data-day="dimanche">
+                    💪 Dimanche<br><small>${weekData.dimanche.name}</small>
+                </button>
+                <button class="day-btn ${this.currentDay === 'mardi' ? 'active' : ''}" data-day="mardi">
+                    🔥 Mardi<br><small>${weekData.mardi.name}</small>
+                </button>
+                <button class="day-btn ${this.currentDay === 'vendredi' ? 'active' : ''}" data-day="vendredi">
+                    ⚡ Vendredi<br><small>${weekData.vendredi.name}</small>
+                </button>
+                <button class="day-btn ${this.currentDay === 'maison' ? 'active' : ''}" data-day="maison" style="flex-basis: 100%; background: rgba(59, 130, 246, 0.1); border-color: rgba(59, 130, 246, 0.3);">
+                    🏠 Maison<br><small>${weekData.maison.name} (Mardi + Jeudi soir)</small>
+                </button>
+            </div>
+            <style>
+                .day-btn { flex: 1; padding: 12px; background: rgba(255,255,255,0.05); border: 2px solid rgba(255,255,255,0.1); border-radius: 8px; color: white; cursor: pointer; transition: all 0.2s; font-size: 14px; font-weight: 600; min-width: 120px; }
+                .day-btn small { font-size: 10px; font-weight: 400; opacity: 0.7; display: block; margin-top: 4px; }
+                .day-btn:hover { background: rgba(255,107,53,0.2); border-color: #ff6b35; }
+                .day-btn.active { background: #ff6b35; border-color: #ff6b35; }
+                .day-btn[data-day="maison"]:hover { background: rgba(59, 130, 246, 0.2); border-color: #3b82f6; }
+                .day-btn[data-day="maison"].active { background: #3b82f6; border-color: #3b82f6; }
+            </style>
+        `;
+
+        const html = daySelector + this.generateWorkoutHTML(workout, weekData.isDeload);
         container.innerHTML = html;
+
+        // Attacher événements boutons jour
+        const dayBtns = container.querySelectorAll('.day-btn');
+        dayBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                this.currentDay = btn.dataset.day;
+                this.renderCurrentWorkout();
+            });
+        });
     }
 
-    generateWorkoutHTML(workout) {
-        return workout.exercises.map(exercise => `
-            <div class="exercise-card slide-up ${exercise.superset ? 'superset' : ''}">
-                <div class="exercise-header strength">
-                    <span class="exercise-icon">💪</span>
-                    <div class="exercise-title">
-                        <h3 class="exercise-name">${exercise.name}</h3>
-                        <div class="exercise-details">
-                            <span>🎯 ${exercise.muscles}</span>
-                        </div>
-                    </div>
+    generateWorkoutHTML(workout, isDeload) {
+        let html = `
+            <div class="workout-info" style="background: ${isDeload ? 'rgba(59, 130, 246, 0.1)' : 'rgba(255,107,53,0.1)'}; padding: 16px; border-radius: 12px; margin-bottom: 20px;">
+                <h2 style="margin: 0 0 8px 0; color: ${isDeload ? '#3b82f6' : '#ff6b35'};">
+                    ${workout.name}
+                </h2>
+                <div style="display: flex; gap: 16px; font-size: 14px; opacity: 0.8;">
+                    <span>⏱️ ${workout.duration} min</span>
+                    <span>📊 ${workout.totalSets} séries</span>
+                    ${isDeload ? '<span>🔵 DELOAD -40%</span>' : ''}
                 </div>
-                
-                <div class="exercise-body">
-                    <div class="exercise-params">
-                        <div class="param-item">
-                            <div class="param-label">SÉRIES</div>
-                            <div class="param-value">${exercise.sets}</div>
-                        </div>
-                        <div class="param-item">
-                            <div class="param-label">REPS</div>
-                            <div class="param-value">${exercise.reps}</div>
-                        </div>
-                        <div class="param-item">
-                            <div class="param-label">POIDS</div>
-                            <div class="param-value">${exercise.weight}kg</div>
-                        </div>
-                        <div class="param-item">
-                            <div class="param-label">REPOS</div>
-                            <div class="param-value">${exercise.rest}s</div>
+            </div>
+        `;
+
+        workout.exercises.forEach((exercise, index) => {
+            const prevExercise = index > 0 ? workout.exercises[index - 1] : null;
+            const isInSuperset = exercise.isSuperset;
+            const startOfSuperset = isInSuperset && (!prevExercise || !prevExercise.isSuperset || prevExercise.supersetWith !== exercise.name);
+
+            if (startOfSuperset) {
+                html += '<div class="superset-group" style="border: 2px solid #ff6b35; border-radius: 12px; padding: 16px; margin-bottom: 20px; background: rgba(255,107,53,0.05);">';
+                html += '<div style="color: #ff6b35; font-weight: bold; margin-bottom: 12px;">⚡ SUPERSET</div>';
+            }
+
+            html += `
+                <div class="exercise-card slide-up" style="margin-bottom: 16px;">
+                    <div class="exercise-header strength">
+                        <span class="exercise-icon">💪</span>
+                        <div class="exercise-title">
+                            <h3 class="exercise-name">${exercise.name}</h3>
+                            <div class="exercise-details">
+                                <span>🎯 ${Array.isArray(exercise.muscle) ? exercise.muscle.join(', ') : exercise.muscle}</span>
+                            </div>
                         </div>
                     </div>
                     
-                    <div class="series-container">
-                        ${this.generateSetsHTML(exercise)}
+                    <div class="exercise-body">
+                        <div class="exercise-params">
+                            <div class="param-item">
+                                <div class="param-label">SÉRIES</div>
+                                <div class="param-value">${exercise.sets}</div>
+                            </div>
+                            <div class="param-item">
+                                <div class="param-label">REPS</div>
+                                <div class="param-value">${exercise.reps}</div>
+                            </div>
+                            <div class="param-item">
+                                <div class="param-label">POIDS</div>
+                                <div class="param-value">${exercise.weight}kg</div>
+                            </div>
+                            <div class="param-item">
+                                <div class="param-label">REPOS</div>
+                                <div class="param-value">${exercise.rest}s</div>
+                            </div>
+                        </div>
+                        
+                        ${exercise.tempo ? `
+                            <div style="margin: 12px 0; padding: 8px; background: rgba(255,255,255,0.05); border-radius: 8px; font-size: 14px;">
+                                <strong>Tempo:</strong> ${exercise.tempo}
+                            </div>
+                        ` : ''}
+                        
+                        ${exercise.notes ? `
+                            <div style="margin: 12px 0; padding: 12px; background: rgba(255,107,53,0.1); border-left: 3px solid #ff6b35; border-radius: 4px; font-size: 14px;">
+                                ${exercise.notes}
+                            </div>
+                        ` : ''}
+                        
+                        <div class="series-container">
+                            ${this.generateSetsHTML(exercise)}
+                        </div>
                     </div>
                 </div>
-            </div>
-        `).join('');
+            `;
+
+            const nextExercise = index < workout.exercises.length - 1 ? workout.exercises[index + 1] : null;
+            const endOfSuperset = isInSuperset && (!nextExercise || !nextExercise.isSuperset || nextExercise.supersetWith !== exercise.supersetWith);
+            
+            if (endOfSuperset) {
+                html += '</div>'; // Ferme superset-group
+            }
+        });
+
+        return html;
     }
 
     generateSetsHTML(exercise) {
@@ -613,65 +1125,224 @@ class App {
                 this.renderCurrentWorkout();
                 break;
             case 1:
-                container.innerHTML = '<div class="empty-workout"><h2>📊 Stats</h2><p>En développement...</p></div>';
+                this.renderStats();
                 break;
             case 2:
-                container.innerHTML = '<div class="empty-workout"><h2>📈 Progrès</h2><p>En développement...</p></div>';
+                this.renderProgress();
                 break;
             case 3:
-                container.innerHTML = '<div class="empty-workout"><h2>👤 Profil</h2><p>En développement...</p></div>';
+                this.renderProfile();
                 break;
         }
 
         console.log(`📱 Onglet ${index}`);
     }
 
-    getDemoWorkout() {
-        return {
-            day: 'Lundi',
-            exercises: [
-                {
-                    id: 'squat',
-                    name: 'Goblet Squat',
-                    muscles: 'Quadriceps, Fessiers',
-                    sets: 4,
-                    reps: 10,
-                    weight: 27.5,
-                    rest: 75,
-                    superset: false
-                },
-                {
-                    id: 'legpress',
-                    name: 'Leg Press',
-                    muscles: 'Quadriceps, Fessiers',
-                    sets: 4,
-                    reps: 10,
-                    weight: 120,
-                    rest: 75,
-                    superset: false
-                },
-                {
-                    id: 'rdl',
-                    name: 'Romanian Deadlift',
-                    muscles: 'Ischio-jambiers',
-                    sets: 3,
-                    reps: 12,
-                    weight: 60,
-                    rest: 60,
-                    superset: true
-                },
-                {
-                    id: 'curls',
-                    name: 'Leg Curl',
-                    muscles: 'Ischio-jambiers',
-                    sets: 3,
-                    reps: 12,
-                    weight: 40,
-                    rest: 60,
-                    superset: true
-                }
-            ]
-        };
+    renderStats() {
+        const container = document.getElementById('workout-container');
+        const weekData = this.programGenerator.generateWeek(this.currentWeek);
+        
+        let totalSets = 0;
+        let totalWeight = 0;
+        
+        ['dimanche', 'mardi', 'vendredi'].forEach(day => {
+            weekData[day].exercises.forEach(ex => {
+                totalSets += ex.sets;
+                const repsNum = typeof ex.reps === 'string' ? parseInt(ex.reps.split('-')[0]) : ex.reps;
+                totalWeight += ex.sets * repsNum * ex.weight;
+            });
+        });
+
+        container.innerHTML = `
+            <div class="stats-container" style="padding: 20px;">
+                <h2 style="color: #ff6b35; margin-bottom: 24px;">📊 Statistiques Semaine ${this.currentWeek}</h2>
+                
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-bottom: 24px;">
+                    <div style="background: rgba(255,255,255,0.05); padding: 20px; border-radius: 12px; text-align: center;">
+                        <div style="font-size: 2rem; font-weight: bold; color: #ff6b35;">${totalSets}</div>
+                        <div style="opacity: 0.7; margin-top: 8px;">Séries totales</div>
+                    </div>
+                    <div style="background: rgba(255,255,255,0.05); padding: 20px; border-radius: 12px; text-align: center;">
+                        <div style="font-size: 2rem; font-weight: bold; color: #ff6b35;">${Math.round(totalWeight)}kg</div>
+                        <div style="opacity: 0.7; margin-top: 8px;">Volume total</div>
+                    </div>
+                </div>
+
+                <div style="background: rgba(255,255,255,0.05); padding: 20px; border-radius: 12px; margin-bottom: 16px;">
+                    <h3 style="margin: 0 0 16px 0;">📅 Séances de la semaine</h3>
+                    <div style="display: flex; flex-direction: column; gap: 12px;">
+                        <div style="padding: 12px; background: rgba(255,107,53,0.1); border-radius: 8px;">
+                            <strong>Dimanche:</strong> ${weekData.dimanche.name}<br>
+                            <small style="opacity: 0.7;">${weekData.dimanche.totalSets} séries • ${weekData.dimanche.duration} min</small>
+                        </div>
+                        <div style="padding: 12px; background: rgba(255,107,53,0.1); border-radius: 8px;">
+                            <strong>Mardi:</strong> ${weekData.mardi.name}<br>
+                            <small style="opacity: 0.7;">${weekData.mardi.totalSets} séries • ${weekData.mardi.duration} min</small>
+                        </div>
+                        <div style="padding: 12px; background: rgba(255,107,53,0.1); border-radius: 8px;">
+                            <strong>Vendredi:</strong> ${weekData.vendredi.name}<br>
+                            <small style="opacity: 0.7;">${weekData.vendredi.totalSets} séries • ${weekData.vendredi.duration} min</small>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="background: rgba(59, 130, 246, 0.1); padding: 20px; border-radius: 12px;">
+                    <h3 style="margin: 0 0 12px 0; color: #3b82f6;">🏠 Travail à domicile</h3>
+                    <p style="margin: 0;">
+                        <strong>Hammer Curl:</strong> ${weekData.maison.exercises[0].sets}×${weekData.maison.exercises[0].reps} @ ${weekData.maison.exercises[0].weight}kg<br>
+                        <small style="opacity: 0.7;">Mardi soir + Jeudi soir</small>
+                    </p>
+                </div>
+            </div>
+        `;
+    }
+
+    renderProgress() {
+        const container = document.getElementById('workout-container');
+        
+        // Calculer progression de quelques exercices clés
+        const exercises = ['Trap Bar Deadlift', 'Dumbbell Press', 'Leg Press'];
+        let progressHTML = '';
+
+        exercises.forEach(exName => {
+            const weekData = [];
+            for (let w = 1; w <= this.currentWeek; w++) {
+                const week = this.programGenerator.generateWeek(w);
+                ['dimanche', 'mardi', 'vendredi'].forEach(day => {
+                    const ex = week[day].exercises.find(e => e.name === exName);
+                    if (ex) {
+                        weekData.push({ week: w, weight: ex.weight, deload: week.isDeload });
+                    }
+                });
+            }
+
+            if (weekData.length > 0) {
+                const startWeight = weekData[0].weight;
+                const currentWeight = weekData[weekData.length - 1].weight;
+                const gain = currentWeight - startWeight;
+                const gainPercent = Math.round((gain / startWeight) * 100);
+
+                progressHTML += `
+                    <div style="background: rgba(255,255,255,0.05); padding: 20px; border-radius: 12px; margin-bottom: 16px;">
+                        <h3 style="margin: 0 0 16px 0;">${exName}</h3>
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 12px;">
+                            <div>
+                                <div style="font-size: 0.85rem; opacity: 0.7;">Semaine 1</div>
+                                <div style="font-size: 1.5rem; font-weight: bold;">${startWeight}kg</div>
+                            </div>
+                            <div style="display: flex; align-items: center;">
+                                <div style="font-size: 1.5rem; color: #22c55e;">→</div>
+                            </div>
+                            <div style="text-align: right;">
+                                <div style="font-size: 0.85rem; opacity: 0.7;">Semaine ${this.currentWeek}</div>
+                                <div style="font-size: 1.5rem; font-weight: bold; color: #ff6b35;">${currentWeight}kg</div>
+                            </div>
+                        </div>
+                        <div style="background: rgba(34, 197, 94, 0.1); padding: 12px; border-radius: 8px; text-align: center;">
+                            <strong style="color: #22c55e;">+${gain}kg (+${gainPercent}%)</strong>
+                        </div>
+                    </div>
+                `;
+            }
+        });
+
+        container.innerHTML = `
+            <div style="padding: 20px;">
+                <h2 style="color: #ff6b35; margin-bottom: 24px;">📈 Progression</h2>
+                ${progressHTML}
+                
+                <div style="background: rgba(255,107,53,0.1); padding: 20px; border-radius: 12px; border-left: 4px solid #ff6b35;">
+                    <h3 style="margin: 0 0 12px 0;">🎯 Objectifs S26</h3>
+                    <ul style="margin: 0; padding-left: 20px; line-height: 1.8;">
+                        <li>Trap Bar DL: 75kg → 120kg (+45kg)</li>
+                        <li>Dumbbell Press: 22kg → 45kg (+23kg)</li>
+                        <li>Leg Press: 110kg → 240kg (+130kg)</li>
+                        <li>Masse maigre: +4.5 à 5.5kg</li>
+                        <li>Tour de bras: +2.5 à 3cm</li>
+                    </ul>
+                </div>
+            </div>
+        `;
+    }
+
+    renderProfile() {
+        const container = document.getElementById('workout-container');
+        const blockInfo = getBlockTechnique(this.currentWeek);
+        
+        container.innerHTML = `
+            <div style="padding: 20px;">
+                <h2 style="color: #ff6b35; margin-bottom: 24px;">👤 Profil</h2>
+                
+                <div style="background: rgba(255,255,255,0.05); padding: 20px; border-radius: 12px; margin-bottom: 16px;">
+                    <h3 style="margin: 0 0 16px 0;">📋 Informations Programme</h3>
+                    <div style="display: grid; gap: 12px;">
+                        <div style="display: flex; justify-content: space-between;">
+                            <span style="opacity: 0.7;">Nom:</span>
+                            <strong>Hybrid Master 51</strong>
+                        </div>
+                        <div style="display: flex; justify-content: space-between;">
+                            <span style="opacity: 0.7;">Durée totale:</span>
+                            <strong>26 semaines</strong>
+                        </div>
+                        <div style="display: flex; justify-content: space-between;">
+                            <span style="opacity: 0.7;">Séances/semaine:</span>
+                            <strong>3 (+ 2 maison)</strong>
+                        </div>
+                        <div style="display: flex; justify-content: space-between;">
+                            <span style="opacity: 0.7;">Objectif:</span>
+                            <strong>Hypertrophie</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="background: rgba(255,107,53,0.1); padding: 20px; border-radius: 12px; margin-bottom: 16px;">
+                    <h3 style="margin: 0 0 16px 0;">📍 Position actuelle</h3>
+                    <div style="display: grid; gap: 12px;">
+                        <div style="display: flex; justify-content: space-between;">
+                            <span style="opacity: 0.7;">Semaine:</span>
+                            <strong>${this.currentWeek}/26</strong>
+                        </div>
+                        <div style="display: flex; justify-content: space-between;">
+                            <span style="opacity: 0.7;">Bloc:</span>
+                            <strong>Bloc ${blockInfo.block}</strong>
+                        </div>
+                        <div style="display: flex; justify-content: space-between;">
+                            <span style="opacity: 0.7;">Technique:</span>
+                            <strong>${blockInfo.technique}</strong>
+                        </div>
+                        <div style="display: flex; justify-content: space-between;">
+                            <span style="opacity: 0.7;">RPE cible:</span>
+                            <strong>${blockInfo.rpe}</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="background: rgba(59, 130, 246, 0.1); padding: 20px; border-radius: 12px;">
+                    <h3 style="margin: 0 0 16px 0; color: #3b82f6;">🔵 Deloads programmés</h3>
+                    <div style="display: flex; flex-wrap: wrap; gap: 8px;">
+                        ${[6, 12, 18, 24, 26].map(w => `
+                            <div style="padding: 8px 16px; background: ${w === this.currentWeek ? '#3b82f6' : 'rgba(59, 130, 246, 0.2)'}; border-radius: 8px; font-weight: 600;">
+                                S${w}
+                            </div>
+                        `).join('')}
+                    </div>
+                    <p style="margin: 16px 0 0 0; font-size: 0.9rem; opacity: 0.8;">
+                        Les deloads réduisent les charges de 40% pour favoriser la récupération
+                    </p>
+                </div>
+
+                <div style="margin-top: 24px; padding: 20px; background: rgba(34, 197, 94, 0.1); border-radius: 12px; border-left: 4px solid #22c55e;">
+                    <h3 style="margin: 0 0 12px 0; color: #22c55e;">💪 Conseils</h3>
+                    <ul style="margin: 0; padding-left: 20px; line-height: 1.8; font-size: 0.95rem;">
+                        <li>Technique parfaite > Charges lourdes</li>
+                        <li>Sommeil 7h30+ non négociable</li>
+                        <li>Protéines: 2g/kg poids corps</li>
+                        <li>Hydratation: 3L/jour minimum</li>
+                        <li>Écouter son corps (douleur = stop)</li>
+                    </ul>
+                </div>
+            </div>
+        `;
     }
 
     showError(message) {
@@ -731,4 +1402,4 @@ if (document.readyState === 'loading') {
     app.init();
 }
 
-console.log('📱 App loaded - Version Standalone');
+console.log('🏆 Hybrid Master 51 - Version Complète Chargée');
