@@ -1,6 +1,6 @@
 /**
- * HYBRID MASTER 51 - WORKOUT MODE STYLES
- * Design moderne et responsive
+ * 06-WORKOUT-MODE.CSS
+ * Design moderne et responsive - corrigé pour thème sombre
  */
 
 /* ============================================
@@ -8,24 +8,24 @@
    ============================================ */
 
 .workout-header {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  padding: 25px;
-  border-radius: 16px;
-  margin-bottom: 25px;
-  box-shadow: 0 8px 20px rgba(102, 126, 234, 0.3);
+  background: var(--gradient-superset);
+  color: var(--text-primary);
+  padding: var(--spacing-lg);
+  border-radius: var(--radius-lg);
+  margin-bottom: var(--spacing-lg);
+  box-shadow: var(--shadow-lg);
 }
 
 .workout-header h2 {
-  font-size: 1.6rem;
-  margin-bottom: 12px;
-  font-weight: 700;
+  font-size: var(--text-xl);
+  margin-bottom: var(--spacing-sm);
+  font-weight: var(--font-bold);
 }
 
 .workout-info {
   display: flex;
-  gap: 20px;
-  font-size: 0.95rem;
+  gap: var(--spacing-md);
+  font-size: var(--text-sm);
   opacity: 0.95;
 }
 
@@ -33,7 +33,7 @@
 .workout-exercises {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: var(--spacing-xs);
 }
 
 /* ============================================
@@ -43,7 +43,7 @@
 .exercises-list {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: var(--spacing-lg);
 }
 
 /* ============================================
@@ -51,37 +51,38 @@
    ============================================ */
 
 .exercise-card {
-  background: white;
-  border-radius: 16px;
-  padding: 20px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  border: 2px solid #e0e0e0;
-  transition: all 0.3s ease;
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  padding: var(--spacing-md);
+  box-shadow: var(--shadow-sm);
+  border: 2px solid var(--border-color);
+  transition: all var(--transition-base);
   position: relative;
+  color: var(--text-primary);
 }
 
 .exercise-card:hover {
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+  box-shadow: var(--shadow-md);
   transform: translateY(-2px);
 }
 
 .exercise-card.superset {
-  border-left: 6px solid #fbbf24;
-  background: linear-gradient(to right, #fffbeb 0%, white 100%);
+  border-left: 6px solid var(--superset-color);
+  background: var(--superset-bg);
 }
 
 .superset-label {
   position: absolute;
   top: -12px;
   left: 20px;
-  background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
-  color: white;
-  padding: 6px 16px;
-  border-radius: 20px;
-  font-size: 0.75rem;
-  font-weight: 700;
+  background: var(--gradient-superset);
+  color: var(--text-primary);
+  padding: var(--spacing-xs) var(--spacing-md);
+  border-radius: var(--radius-full);
+  font-size: var(--text-xs);
+  font-weight: var(--font-bold);
   letter-spacing: 0.5px;
-  box-shadow: 0 4px 8px rgba(251, 191, 36, 0.3);
+  box-shadow: var(--shadow-superset);
 }
 
 /* ============================================
@@ -92,72 +93,72 @@
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  margin-bottom: 18px;
-  gap: 15px;
+  margin-bottom: var(--spacing-md);
+  gap: var(--spacing-md);
 }
 
 .exercise-title {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: var(--spacing-sm);
   flex: 1;
 }
 
 .exercise-number {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+  background: var(--gradient-primary);
+  color: var(--text-primary);
   width: 36px;
   height: 36px;
-  border-radius: 50%;
+  border-radius: var(--radius-full);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-weight: 700;
-  font-size: 1rem;
+  font-weight: var(--font-bold);
+  font-size: var(--text-base);
   flex-shrink: 0;
 }
 
 .exercise-title h3 {
-  font-size: 1.2rem;
-  color: #1a1a1a;
+  font-size: var(--text-lg);
+  color: var(--text-primary);
   margin: 0;
-  font-weight: 600;
-  line-height: 1.3;
+  font-weight: var(--font-semibold);
+  line-height: var(--leading-tight);
 }
 
 .exercise-badges {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px;
+  gap: var(--spacing-xs);
 }
 
 .badge {
-  padding: 5px 12px;
-  border-radius: 20px;
-  font-size: 0.75rem;
-  font-weight: 600;
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--radius-full);
+  font-size: var(--text-xs);
+  font-weight: var(--font-semibold);
   text-transform: uppercase;
   letter-spacing: 0.3px;
 }
 
 .badge-poly {
-  background: #dcfce7;
-  color: #166534;
+  background: var(--set-completed-bg);
+  color: var(--success-color);
 }
 
 .badge-iso {
-  background: #dbeafe;
-  color: #1e40af;
+  background: var(--accent-hover);
+  color: var(--accent-color);
 }
 
 .badge-superset {
-  background: #fef3c7;
-  color: #92400e;
+  background: var(--superset-bg);
+  color: var(--superset-color);
 }
 
 .badge-technique {
-  background: #fee2e2;
-  color: #991b1b;
+  background: var(--set-active-bg);
+  color: var(--primary-color);
 }
 
 /* ============================================
@@ -167,94 +168,74 @@
 .exercise-meta {
   display: flex;
   flex-direction: column;
-  gap: 15px;
-  margin-bottom: 18px;
+  gap: var(--spacing-md);
+  margin-bottom: var(--spacing-md);
 }
 
 .meta-row {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-  gap: 12px;
+  gap: var(--spacing-sm);
 }
 
 .weight-row {
-  background: #f8fafc;
-  padding: 15px;
-  border-radius: 12px;
-}
-
-.meta-item {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
+  background: var(--surface-color);
+  padding: var(--spacing-sm);
+  border-radius: var(--radius-md);
 }
 
 .meta-label {
-  font-size: 0.8rem;
-  color: #64748b;
-  font-weight: 600;
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+  font-weight: var(--font-semibold);
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
 .meta-value {
-  font-size: 1.3rem;
-  font-weight: 700;
-  color: #1a1a1a;
+  font-size: var(--text-lg);
+  font-weight: var(--font-bold);
+  color: var(--text-primary);
 }
 
 /* ============================================
    WEIGHT CONTROL
    ============================================ */
 
-.weight-control {
-  grid-column: 1 / -1;
-}
-
 .weight-input-group {
   display: flex;
   align-items: center;
-  gap: 8px;
-  background: white;
-  border: 2px solid #e2e8f0;
-  border-radius: 12px;
-  padding: 4px;
+  gap: var(--spacing-xs);
+  background: var(--surface-color);
+  border: 2px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-xs);
 }
 
 .weight-btn {
-  width: 44px;
-  height: 44px;
+  width: var(--btn-md);
+  height: var(--btn-md);
   border: none;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  font-size: 1.5rem;
-  font-weight: 700;
-  border-radius: 10px;
+  background: var(--gradient-primary);
+  color: var(--text-primary);
+  font-size: var(--text-lg);
+  font-weight: var(--font-bold);
+  border-radius: var(--radius-sm);
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all var(--transition-fast);
   display: flex;
   align-items: center;
   justify-content: center;
-}
-
-.weight-btn:hover {
-  transform: scale(1.05);
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
-}
-
-.weight-btn:active {
-  transform: scale(0.95);
 }
 
 .weight-input {
   flex: 1;
   border: none;
   background: transparent;
-  font-size: 1.4rem;
-  font-weight: 700;
+  font-size: var(--text-lg);
+  font-weight: var(--font-bold);
   text-align: center;
-  color: #1a1a1a;
-  min-width: 0;
+  color: var(--text-primary);
 }
 
 .weight-input:focus {
@@ -268,63 +249,43 @@
 .exercise-details {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  padding: 15px;
-  background: #f8fafc;
-  border-radius: 12px;
-  margin-bottom: 18px;
-}
-
-.tempo-display {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  flex-wrap: wrap;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-sm);
+  background: var(--surface-color);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--spacing-md);
 }
 
 .tempo-label {
-  font-size: 0.9rem;
-  color: #64748b;
-  font-weight: 600;
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  font-weight: var(--font-semibold);
 }
 
 .tempo-value {
-  font-size: 1.3rem;
-  font-weight: 700;
-  color: #667eea;
-  background: white;
-  padding: 6px 14px;
-  border-radius: 8px;
-  border: 2px solid #e0e7ff;
+  font-size: var(--text-lg);
+  font-weight: var(--font-bold);
+  color: var(--primary-color);
+  background: var(--surface-color);
+  padding: var(--spacing-xs) var(--spacing-sm);
+  border-radius: var(--radius-sm);
+  border: 2px solid var(--border-color);
 }
 
 .tempo-help {
-  font-size: 0.75rem;
-  color: #94a3b8;
+  font-size: var(--text-xs);
+  color: var(--text-muted);
   font-style: italic;
 }
 
-.technique-badge {
-  background: linear-gradient(135deg, #fbbf24 0%, #f59e0b 100%);
-  color: white;
-  padding: 10px 16px;
-  border-radius: 8px;
-  font-size: 0.9rem;
-  font-weight: 600;
-}
-
 .exercise-notes {
-  background: #e0f2fe;
-  color: #075985;
-  padding: 12px;
-  border-radius: 8px;
-  font-size: 0.9rem;
-  line-height: 1.5;
-  border-left: 4px solid #0ea5e9;
-}
-
-.exercise-notes strong {
-  font-weight: 700;
+  background: var(--accent-hover);
+  color: var(--accent-color);
+  padding: var(--spacing-sm);
+  border-radius: var(--radius-sm);
+  font-size: var(--text-sm);
+  line-height: var(--leading-normal);
+  border-left: 4px solid var(--accent-color);
 }
 
 /* ============================================
@@ -332,61 +293,56 @@
    ============================================ */
 
 .sets-tracker {
-  background: #f1f5f9;
-  padding: 18px;
-  border-radius: 12px;
-  margin-bottom: 15px;
+  background: var(--bg-secondary);
+  padding: var(--spacing-md);
+  border-radius: var(--radius-md);
+  margin-bottom: var(--spacing-md);
 }
 
 .sets-tracker-header {
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: #475569;
-  margin-bottom: 12px;
+  font-size: var(--text-xs);
+  font-weight: var(--font-semibold);
+  color: var(--text-muted);
+  margin-bottom: var(--spacing-sm);
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
 
-.sets-checkboxes {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
-  gap: 10px;
-}
-
-.set-checkbox {
+.sets-checkbox {
   display: flex;
   align-items: center;
-  gap: 8px;
-  background: white;
-  padding: 12px;
-  border-radius: 10px;
+  gap: var(--spacing-xs);
+  background: var(--surface-color);
+  padding: var(--spacing-sm);
+  border-radius: var(--radius-sm);
   cursor: pointer;
-  transition: all 0.2s ease;
-  border: 2px solid #e2e8f0;
+  transition: all var(--transition-fast);
+  border: 2px solid var(--border-color);
   user-select: none;
+  color: var(--text-primary);
 }
 
 .set-checkbox:hover {
-  border-color: #667eea;
-  box-shadow: 0 2px 8px rgba(102, 126, 234, 0.2);
+  border-color: var(--primary-color);
+  box-shadow: var(--shadow-primary);
 }
 
 .set-checkbox input[type="checkbox"] {
   width: 20px;
   height: 20px;
   cursor: pointer;
-  accent-color: #667eea;
+  accent-color: var(--primary-color);
 }
 
 .set-checkbox input[type="checkbox"]:checked + .set-label {
-  font-weight: 700;
-  color: #667eea;
+  font-weight: var(--font-bold);
+  color: var(--primary-color);
 }
 
 .set-label {
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: #475569;
+  font-size: var(--text-sm);
+  font-weight: var(--font-semibold);
+  color: var(--text-secondary);
 }
 
 /* ============================================
@@ -395,140 +351,7 @@
 
 .rest-timer-btn {
   width: 100%;
-  background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-  color: white;
+  background: var(--gradient-success);
+  color: var(--text-primary);
   border: none;
-  padding: 16px;
-  border-radius: 12px;
-  font-size: 1rem;
-  font-weight: 700;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
-}
-
-.rest-timer-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(16, 185, 129, 0.4);
-}
-
-.rest-timer-btn:active {
-  transform: translateY(0);
-}
-
-/* ============================================
-   LOADING & ERROR STATES
-   ============================================ */
-
-.loading {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 60px 20px;
-  text-align: center;
-}
-
-.spinner {
-  width: 50px;
-  height: 50px;
-  border: 4px solid rgba(102, 126, 234, 0.2);
-  border-top-color: #667eea;
-  border-radius: 50%;
-  animation: spin 0.8s linear infinite;
-  margin-bottom: 20px;
-}
-
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
-
-.loading p {
-  font-size: 1.1rem;
-  color: #64748b;
-  font-weight: 500;
-}
-
-.error-message {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 60px 20px;
-  text-align: center;
-  background: #fef2f2;
-  border-radius: 16px;
-  border: 2px solid #fecaca;
-}
-
-.error-icon {
-  font-size: 4rem;
-  margin-bottom: 16px;
-}
-
-.error-message h2 {
-  color: #991b1b;
-  margin-bottom: 12px;
-  font-size: 1.5rem;
-}
-
-.error-message p {
-  color: #dc2626;
-  font-size: 1rem;
-  margin-bottom: 20px;
-}
-
-.retry-btn {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  border: none;
-  padding: 12px 24px;
-  border-radius: 8px;
-  font-size: 0.95rem;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.retry-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
-}
-
-/* ============================================
-   RESPONSIVE
-   ============================================ */
-
-@media (max-width: 768px) {
-  .workout-header {
-    padding: 20px;
-  }
-
-  .workout-header h2 {
-    font-size: 1.3rem;
-  }
-
-  .workout-info {
-    font-size: 0.85rem;
-  }
-
-  .exercise-card {
-    padding: 16px;
-  }
-
-  .exercise-title h3 {
-    font-size: 1.1rem;
-  }
-
-  .meta-row {
-    grid-template-columns: 1fr 1fr;
-  }
-
-  .weight-control {
-    grid-column: 1 / -1;
-  }
-
-  .sets-checkboxes {
-    grid-template-columns: repeat(auto-fill, minmax(70px, 1fr));
-  }
-}
+  padding: var(--spacing-md
