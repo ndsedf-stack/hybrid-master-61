@@ -1,58 +1,60 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Hybrid Master 60 - Workout Tracker</title>
-  
-  <!-- CSS - ATTENTION : styles/ pas css/ -->
-  <link rel="stylesheet" href="styles/01-reset.css">
-  <link rel="stylesheet" href="styles/02-variables.css">
-  <link rel="stylesheet" href="styles/03-base.css">
-  <link rel="stylesheet" href="styles/04-layout.css">
-  <link rel="stylesheet" href="styles/05-components.css">
-  <link rel="stylesheet" href="styles/06-series.css">
-  <link rel="stylesheet" href="styles/07-timer.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Hybrid Master 61 — Workout Tracker</title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="styles/01-reset.css" />
+  <link rel="stylesheet" href="styles/02-variables.css" />
+  <link rel="stylesheet" href="styles/03-base.css" />
+  <link rel="stylesheet" href="styles/04-layout.css" />
+  <link rel="stylesheet" href="styles/05-components.css" />
+  <link rel="stylesheet" href="styles/06-series.css" />
+  <link rel="stylesheet" href="styles/06-workout-mode.css" />
+  <link rel="stylesheet" href="styles/07-timer.css" />
+  <link rel="stylesheet" href="styles/08-responsive.css" />
 </head>
 <body>
   <!-- Header -->
-  <header class="app-header">
-    <h1>💪 Hybrid Master 60</h1>
+  <header class="app-header header">
+    <h1>💪 Hybrid Master 61</h1>
+    <div class="header-actions"></div>
   </header>
 
   <!-- Main Container -->
-  <main class="app-container">
-    <div id="workout-container">
-      <!-- Les workouts seront rendus ici par workout-renderer.js -->
-    </div>
+  <main class="app-container container main-content">
+    <div id="workout-container" aria-live="polite" aria-busy="false"></div>
+
+    <!-- Bottom navigation -->
+    <nav class="bottom-nav">
+      <button class="btn" id="nav-prev-week" aria-label="Semaine précédente">←</button>
+      <span id="current-week-label">Semaine 1</span>
+      <button class="btn" id="nav-next-week" aria-label="Semaine suivante">→</button>
+    </nav>
   </main>
 
-  <!-- Timer Widget (en bas de page) -->
-  <div id="timer-widget">
-    <!-- Header du timer -->
+  <!-- Timer Widget -->
+  <div id="timer-widget" aria-hidden="true">
     <div class="timer-header">
       <div class="timer-info">
         <h3 class="timer-exercise-name" id="timer-exercise-name">Exercice</h3>
         <p class="timer-set-number" id="timer-set-number">Set 1/5</p>
       </div>
-      <button class="timer-close-btn" id="timer-close">×</button>
+      <button class="timer-close-btn" id="timer-close" aria-label="Fermer le timer">×</button>
     </div>
 
-    <!-- Affichage circulaire du timer -->
     <div class="timer-display">
       <div class="timer-circle">
         <svg viewBox="0 0 120 120">
-          <!-- Cercle de fond -->
           <circle class="timer-progress-bg" cx="60" cy="60" r="54"></circle>
-          <!-- Cercle de progression -->
           <circle class="timer-progress-circle" cx="60" cy="60" r="54"></circle>
         </svg>
-        <!-- Temps affiché au centre -->
         <div class="timer-time" id="timer-time">1:30</div>
       </div>
     </div>
 
-    <!-- Contrôles du timer -->
     <div class="timer-controls">
       <button id="timer-pause">Pause</button>
       <button id="timer-minus-15">-15s</button>
@@ -62,7 +64,7 @@
     </div>
   </div>
 
-  <!-- JavaScript Modules -->
+  <!-- JavaScript -->
   <script type="module" src="app.js"></script>
 </body>
 </html>
