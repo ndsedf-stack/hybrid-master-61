@@ -3,7 +3,7 @@
  * Gestion centralisée de l'application Hybrid Master 61
  */
 
-import ProgramData from './scripts/program-data.j';
+import ProgramData from './scripts/program-data.js';
 import WorkoutRenderer from './scripts/ui/workout-renderer.js';
 import TimerManager from './scripts/modules/timer-manager.js';
 
