@@ -3,19 +3,66 @@
 ======================================== */
 
 @media screen and (max-width: 768px) {
-  .exercise-card { margin-bottom: 0.75rem; }
-  .exercise-name { font-size: 16px; }
-  .exercise-details { font-size: 11px; }
+  .exercise-card {
+    margin-bottom: var(--spacing-sm);
+    background-color: var(--bg-card) !important;
+    color: var(--text-primary) !important;
+  }
+
+  .exercise-name {
+    font-size: var(--font-size-base);
+  }
+
+  .exercise-details {
+    font-size: var(--font-size-sm);
+  }
+
+  .stat-card,
+  .volume-chart,
+  .summary-card {
+    background-color: var(--bg-card) !important;
+    color: var(--text-primary) !important;
+  }
 }
 
 @media screen and (max-width: 480px) {
-  .exercise-card { margin-bottom: 0.5rem; }
-  .exercise-name { font-size: 15px; }
-  .exercise-details { font-size: 10px; }
-  .param-value { font-size: 16px; }
+  .exercise-card {
+    margin-bottom: var(--spacing-xs);
+  }
+
+  .exercise-name {
+    font-size: var(--font-size-sm);
+  }
+
+  .exercise-details {
+    font-size: var(--font-size-xs);
+  }
+
+  .param-value {
+    font-size: var(--font-size-base);
+  }
 }
 
 @media screen and (max-width: 375px) {
-  .exercise-name { font-size: 14px; }
-  .param-value { font-size: 14px; }
+  .exercise-name {
+    font-size: var(--font-size-xs);
+  }
+
+  .param-value {
+    font-size: var(--font-size-sm);
+  }
+}
+/* 🔒 Filet anti-fond blanc */
+body,
+.exercise-card,
+.weight-input-group,
+.tempo-value,
+.set-checkbox,
+.stat-card,
+.volume-chart,
+.summary-card,
+.muscle-volume-row,
+.completion-item {
+  background-color: var(--bg-card) !important;
+  color: var(--text-primary) !important;
 }
