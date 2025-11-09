@@ -2,97 +2,7 @@
    RESPONSIVE - Ajustements globaux
 ======================================== */
 
-@media screen and (max-width: 768px) {
-  .exercise-card {
-    margin-bottom: 0.75rem;
-    background-color: var(--bg-card) !important;
-    color: var(--text-primary) !important;
-  }
-
-  .exercise-name {
-    font-size: 16px;
-  }
-
-  .exercise-details {
-    font-size: 11px;
-    background-color: var(--surface-color) !important;
-    color: var(--text-secondary) !important;
-  }
-
-  .stat-card,
-  .volume-chart,
-  .summary-card {
-    background-color: var(--bg-card) !important;
-    color: var(--text-primary) !important;
-  }
-}
-
-@media screen and (max-width: 480px) {
-  .exercise-card {
-    margin-bottom: 0.5rem;
-    background-color: var(--bg-card) !important;
-    color: var(--text-primary) !important;
-  }
-
-  .exercise-name {
-    font-size: 15px;
-  }
-
-  .exercise-details {
-    font-size: 10px;
-    background-color: var(--surface-color) !important;
-    color: var(--text-secondary) !important;
-  }
-
-  .param-value {
-    font-size: 16px;
-    color: var(--text-primary) !important;
-  }
-
-  .stat-card,
-  .volume-chart,
-  .summary-card {
-    background-color: var(--bg-card) !important;
-    color: var(--text-primary) !important;
-  }
-}
-
-@media screen and (max-width: 375px) {
-  .exercise-name {
-    font-size: 14px;
-  }
-
-  .param-value {
-    font-size: 14px;
-  }
-
-  .exercise-card,
-  .stat-card,
-  .volume-chart,
-  .summary-card {
-    background-color: var(--bg-card) !important;
-    color: var(--text-primary) !important;
-  }
-}
-
-/* 🔒 Filet anti-fond blanc global */
-body,
-.exercise-card,
-.weight-input-group,
-.tempo-value,
-.set-checkbox,
-.stat-card,
-.volume-chart,
-.summary-card,
-.muscle-volume-row,
-.completion-item {
-  background-color: var(--bg-card) !important;
-  color: var(--text-primary) !important;
-}
-/* ========================================
-   RESPONSIVE - Ajustements globaux
-======================================== */
-
+/* 🔧 Composants spécifiques */
 @media screen and (max-width: 1024px) {
   .exercise-card {
     margin-bottom: 1rem;
@@ -185,11 +95,7 @@ body,
   }
 }
 
-/* ============================================================================
-   FILET ANTI-FOND BLANC GLOBAL
-   ============================================================================ */
-
-body,
+/* ✅ Filet localisé (sans body) */
 .exercise-card,
 .weight-input-group,
 .tempo-value,
@@ -199,7 +105,6 @@ body,
 .summary-card,
 .muscle-volume-row,
 .completion-item {
-  background-color: var(--bg-card) !important;
-  color: var(--text-primary) !important;
+  background-color: var(--bg-card);
+  color: var(--text-primary);
 }
-
