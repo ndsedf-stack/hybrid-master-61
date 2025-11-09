@@ -16,7 +16,7 @@
   background: var(--bg-card);
   border-left: 2px solid var(--border-color);
   border-radius: 12px 0 0 12px;
-  padding: var(--spacing-lg);
+  padding: 1.5rem;
   overflow-y: auto;
   box-shadow: -4px 0 20px var(--shadow-lg);
   transition: transform var(--transition-base);
@@ -28,19 +28,19 @@
 }
 
 .stats-panel h3 {
-  font-size: var(--text-lg);
-  font-weight: var(--font-bold);
+  font-size: 1.2rem;
+  font-weight: 700;
   color: var(--accent-color);
-  margin: 0 0 var(--spacing-lg) 0;
+  margin: 0 0 1.5rem 0;
   display: flex;
   align-items: center;
-  gap: var(--spacing-sm);
+  gap: 0.5rem;
 }
 
 #stats-content {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-lg);
+  gap: 1.5rem;
 }
 
 /* ============================================================================
@@ -50,43 +50,43 @@
 .stat-card {
   background: var(--bg-secondary);
   border: 1px solid var(--border-color);
-  border-radius: var(--radius-md);
-  padding: var(--spacing-md);
+  border-radius: 10px;
+  padding: 1rem;
   transition: all var(--transition-base);
 }
 
 .stat-card:hover {
   border-color: var(--accent-color);
   transform: translateX(-4px);
-  box-shadow: var(--shadow-primary);
+  box-shadow: var(--shadow-sm);
 }
 
 .stat-card-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: var(--spacing-sm);
+  margin-bottom: 0.75rem;
 }
 
 .stat-card-title {
-  font-size: var(--text-sm);
-  font-weight: var(--font-semibold);
+  font-size: 0.85rem;
+  font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.5px;
   color: var(--text-secondary);
 }
 
 .stat-card-value {
-  font-size: var(--text-2xl);
-  font-weight: var(--font-bold);
+  font-size: 2rem;
+  font-weight: 700;
   color: var(--accent-color);
   line-height: 1;
 }
 
 .stat-card-subtitle {
-  font-size: var(--text-sm);
+  font-size: 0.8rem;
   color: var(--text-secondary);
-  margin-top: var(--spacing-xs);
+  margin-top: 0.5rem;
 }
 
 /* ============================================================================
@@ -94,16 +94,16 @@
    ============================================================================ */
 
 .progress-bar-container {
-  margin-top: var(--spacing-sm);
+  margin-top: 0.75rem;
 }
 
 .progress-bar-label {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: var(--text-sm);
+  font-size: 0.85rem;
   color: var(--text-secondary);
-  margin-bottom: var(--spacing-xs);
+  margin-bottom: 0.5rem;
 }
 
 .progress-bar-track {
@@ -134,23 +134,23 @@
    ============================================================================ */
 
 .volume-chart {
-  margin-top: var(--spacing-md);
-  padding: var(--spacing-md);
+  margin-top: 1rem;
+  padding: 1rem;
   background: var(--bg-secondary);
-  border-radius: var(--radius-md);
+  border-radius: 8px;
 }
 
 .volume-chart-title {
-  font-size: var(--text-base);
-  font-weight: var(--font-semibold);
+  font-size: 0.9rem;
+  font-weight: 600;
   color: var(--text-primary);
-  margin-bottom: var(--spacing-md);
+  margin-bottom: 1rem;
 }
 
 .volume-chart-bars {
   display: flex;
   align-items: flex-end;
-  gap: var(--spacing-sm);
+  gap: 0.5rem;
   height: 120px;
 }
 
@@ -159,18 +159,18 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: var(--spacing-xs);
+  gap: 0.5rem;
 }
 
 .volume-chart-bar-fill {
   width: 100%;
-  background: linear-gradient(180deg, var(--accent-color), rgba(0, 212, 170, 0.3));
+  background: linear-gradient(180deg, var(--accent-color), rgba(255, 107, 53, 0.3));
   border-radius: 4px 4px 0 0;
   transition: height 0.5s ease;
 }
 
 .volume-chart-bar-label {
-  font-size: var(--text-xs);
+  font-size: 0.75rem;
   color: var(--text-secondary);
   text-align: center;
 }
@@ -181,14 +181,14 @@
 
 .muscle-volume-table {
   width: 100%;
-  margin-top: var(--spacing-md);
+  margin-top: 1rem;
 }
 
 .muscle-volume-row {
   display: grid;
   grid-template-columns: 1fr auto;
-  gap: var(--spacing-md);
-  padding: var(--spacing-sm) 0;
+  gap: 1rem;
+  padding: 0.75rem 0;
   border-bottom: 1px solid var(--border-subtle);
 }
 
@@ -197,21 +197,21 @@
 }
 
 .muscle-name {
-  font-size: var(--text-base);
+  font-size: 0.9rem;
   color: var(--text-primary);
-  font-weight: var(--font-medium);
+  font-weight: 500;
 }
 
 .muscle-sets {
-  font-size: var(--text-base);
+  font-size: 0.9rem;
   color: var(--accent-color);
-  font-weight: var(--font-bold);
+  font-weight: 700;
 }
 
 .muscle-sets-detail {
-  font-size: var(--text-xs);
+  font-size: 0.75rem;
   color: var(--text-secondary);
-  margin-top: var(--spacing-xs);
+  margin-top: 0.25rem;
 }
 
 /* ============================================================================
@@ -221,11 +221,11 @@
 .workout-completion {
   display: flex;
   flex-direction: column;
-  gap: var(--spacing-sm);
-  padding: var(--spacing-md);
-  background: linear-gradient(135deg, rgba(255, 107, 53, 0.05), rgba(255, 139, 92, 0.05));
-  border: 1px solid var(--set-active-border);
-  border-radius: var(--radius-md);
+  gap: 0.75rem;
+  padding: 1rem;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
 }
 
 .completion-header {
@@ -235,13 +235,13 @@
 }
 
 .completion-percentage {
-  font-size: var(--text-3xl);
-  font-weight: var(--font-bold);
+  font-size: 2.5rem;
+  font-weight: 700;
   color: var(--accent-color);
 }
 
 .completion-label {
-  font-size: var(--text-sm);
+  font-size: 0.85rem;
   color: var(--text-secondary);
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -250,26 +250,26 @@
 .completion-breakdown {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: var(--spacing-sm);
+  gap: 0.5rem;
 }
 
 .completion-item {
   text-align: center;
-  padding: var(--spacing-sm);
+  padding: 0.5rem;
   background: var(--bg-secondary);
-  border-radius: var(--radius-sm);
+  border-radius: 6px;
 }
 
 .completion-item-value {
-  font-size: var(--text-lg);
-  font-weight: var(--font-bold);
+  font-size: 1.3rem;
+  font-weight: 700;
   color: var(--text-primary);
 }
 
 .completion-item-label {
-  font-size: var(--text-xs);
+  font-size: 0.75rem;
   color: var(--text-secondary);
-  margin-top: var(--spacing-xs);
+  margin-top: 0.25rem;
 }
 
 /* ============================================================================
@@ -277,37 +277,37 @@
    ============================================================================ */
 
 .weight-progression {
-  margin-top: var(--spacing-lg);
-  padding: var(--spacing-md);
+  margin-top: 1.5rem;
+  padding: 1rem;
   background: var(--bg-secondary);
-  border-radius: var(--radius-md);
+  border-radius: 10px;
 }
 
 .weight-progression-title {
-  font-size: var(--text-base);
-  font-weight: var(--font-semibold);
+  font-size: 0.95rem;
+  font-weight: 600;
   color: var(--text-primary);
-  margin-bottom: var(--spacing-md);
+  margin-bottom: 1rem;
 }
 
 .exercise-progression-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: var(--spacing-xs);
+  margin-bottom: 0.5rem;
 }
 
 .exercise-progression-name {
-  font-size: var(--text-sm);
+  font-size: 0.85rem;
   color: var(--text-secondary);
 }
 
 .exercise-progression-trend {
   display: flex;
   align-items: center;
-  gap: var(--spacing-xs);
-  font-size: var(--text-sm);
-  font-weight: var(--font-semibold);
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  font-weight: 600;
 }
 
 .trend-up { color: var(--success-color); }
@@ -335,20 +335,96 @@
 .weekly-summary {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: var(--spacing-md);
-  margin-top: var(--spacing-lg);
+  gap: 1rem;
+  margin-top: 1.5rem;
 }
 
 .summary-card {
-  padding: var(--spacing-md);
+  padding: 1rem;
   background: var(--bg-secondary);
   border: 1px solid var(--border-color);
-  border-radius: var(--radius-md);
+  border-radius: 8px;
   text-align: center;
 }
 
 .summary-icon {
-  font-size: var(--text-xl);
-  margin-bottom: var(--spacing-xs);
+  font-size: 1.5rem;
+  margin-bottom: 0.5rem;
 }
 
+.summary-value {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--accent-color);
+  margin-bottom: 0.25rem;
+}
+
+.summary-label {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* ============================================================================
+   TECHNIQUE BADGE IN STATS
+   ============================================================================ */
+
+.technique-info {
+  margin-top: 1rem;
+  padding: 1rem;
+  background: var(--surface-color);
+  border-left: 3px solid var(--accent-color);
+  border-radius: 6px;
+}
+
+.technique-info-title {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--accent-color);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 0.5rem;
+}
+
+.technique-info-description {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+/* ============================================================================
+   RESPONSIVE
+   ============================================================================ */
+
+@media (max-width: 1200px) {
+  .stats-panel {
+    width: 280px;
+  }
+}
+
+@media (max-width: 768px) {
+  .stats-panel {
+    position: relative;
+    width: 100%;
+    max-height: none;
+    top: 0;
+    border-radius: 12px;
+    border-left: none;
+    border-top: 2px solid var(--border-color);
+    margin-top: 2rem;
+    box-shadow: none;
+  }
+
+  .stats-panel.hidden {
+    transform: translateY(100%);
+  }
+
+  .weekly-summary {
+    grid-template-columns: 1fr;
+  }
+
+  .completion-breakdown {
+    grid-template-columns: 1fr;
+  }
+}
