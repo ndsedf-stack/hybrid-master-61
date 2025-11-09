@@ -1,16 +1,14 @@
 // ===============================
 // APP.JS - Hybrid Master 61
-// Gestion des timers classique et immersif
+// Gestion du timer classique uniquement
 // ===============================
 
-// ----------- UTILITAIRE FORMATAGE TEMPS -----------
 function formatTime(sec) {
   const m = Math.floor(sec / 60).toString().padStart(2, "0");
   const s = (sec % 60).toString().padStart(2, "0");
   return `${m}:${s}`;
 }
 
-// ----------- TIMER CLASSIQUE WIDGET -----------
 let classicInterval;
 let classicRemaining = 0;
 
@@ -48,7 +46,7 @@ document.getElementById("timer-pause").addEventListener("click", () => {
 
 document.getElementById("timer-reset").addEventListener("click", () => {
   clearInterval(classicInterval);
-  startClassicTimer(120); // reset à 2 min par défaut
+  startClassicTimer(120); // reset à 2 min
 });
 
 document.getElementById("timer-skip").addEventListener("click", () => {
@@ -69,71 +67,4 @@ document.getElementById("timer-plus-15").addEventListener("click", () => {
 document.getElementById("timer-close").addEventListener("click", () => {
   clearInterval(classicInterval);
   document.getElementById("timer-widget").classList.remove("active");
-});
-
-// ----------- TIMER IMMERSIF YOUJORUS -----------
-let youjorusInterval;
-let youjorusRemaining = 0;
-
-function showYoujorusTimer(duration, label) {
-  const overlay = document.getElementById("youjorus-timer");
-  const timeDisplay = document.getElementById("youjorus-time");
-  const labelDisplay = document.getElementById("youjorus-label");
-
-  overlay.setAttribute("aria-hidden", "false");
-  overlay.style.display = "flex";
-  labelDisplay.textContent = label;
-
-  youjorusRemaining = duration;
-  timeDisplay.textContent = formatTime(youjorusRemaining);
-
-  clearInterval(youjorusInterval);
-  youjorusInterval = setInterval(() => {
-    youjorusRemaining--;
-    timeDisplay.textContent = formatTime(youjorusRemaining);
-    if (youjorusRemaining <= 0) {
-      clearInterval(youjorusInterval);
-      overlay.style.display = "none";
-      overlay.setAttribute("aria-hidden", "true");
-    }
-  }, 1000);
-}
-
-// Boutons immersif
-document.getElementById("youjorus-pause").addEventListener("click", () => {
-  if (youjorusInterval) {
-    clearInterval(youjorusInterval);
-    youjorusInterval = null;
-  } else if (youjorusRemaining > 0) {
-    showYoujorusTimer(youjorusRemaining, document.getElementById("youjorus-label").textContent);
-  }
-});
-
-document.getElementById("youjorus-skip").addEventListener("click", () => {
-  clearInterval(youjorusInterval);
-  document.getElementById("youjorus-timer").style.display = "none";
-  document.getElementById("youjorus-timer").setAttribute("aria-hidden", "true");
-});
-
-// ----------- ÉCOUTE DE L'ÉVÉNEMENT serieDone -----------
-document.addEventListener("serieDone", (e) => {
-  if (e.detail && e.detail.duration) {
-    showYoujorusTimer(e.detail.duration, e.detail.label || "REST");
-  }
-});
-
-// ----------- DÉCLENCHEMENT DU TIMER IMMERSIF SUR COCHAGE -----------
-// ✅ Corrigé : ne déclenche que si l'utilisateur coche une case manuellement
-document.querySelectorAll(".serie-checkbox").forEach(checkbox => {
-  checkbox.addEventListener("change", (e) => {
-    if (e.target.checked && !e.target.dataset.triggered) {
-      e.target.dataset.triggered = "true"; // empêche double déclenchement
-      document.dispatchEvent(new CustomEvent("serieDone", {
-        detail: {
-          duration: 120,
-          label: "REST"
-        }
-      }));
-    }
-  });
 });
