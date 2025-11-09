@@ -55,13 +55,11 @@ class App {
       const setNumber = parseInt(btn.dataset.setNumber);
       console.log(`✅ Série cochée : ${exerciseId} - Set ${setNumber}`);
 
-      // ✅ Correction : appliquer la classe "completed" au parent .set
-      const setDiv = btn.closest('.set');
-      if (setDiv) {
-        setDiv.classList.add('completed');
+      const serieItem = btn.closest('.serie-item');
+      if (serieItem) {
+        serieItem.classList.add('completed');
       }
 
-      // ✅ Afficher le check
       btn.querySelector('.check-icon').textContent = '✓';
       btn.disabled = true;
 
