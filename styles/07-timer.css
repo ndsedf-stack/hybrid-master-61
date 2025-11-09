@@ -4,14 +4,14 @@
    ============================================== */
 
 /* ============== TIMER WIDGET CLASSIQUE ============== */
-/* ... ton style existant du widget classique ici ... */
+/* ... tes styles existants du widget classique ... */
 
 /* ============== TIMER IMMERSIF YOUJORUS STYLE ============== */
 .youjorus-timer-overlay {
   position: fixed;
   inset: 0;
   background: radial-gradient(circle at center, var(--surface-color), var(--bg-primary));
-  display: flex;
+  display: none; /* ✅ correction : caché par défaut */
   flex-direction: column;
   justify-content: center;
   align-items: center;
