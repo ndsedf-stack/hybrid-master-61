@@ -25,14 +25,15 @@
   height: 220px;
 }
 
-.youjorus-timer-circle::before {
+/* ❌ Suppression du pseudo-élément qui créait le disque noir */
+/* .youjorus-timer-circle::before {
   content: "";
   position: absolute;
   inset: 0;
   border-radius: 50%;
   background: var(--surface-color);
   z-index: 0;
-}
+} */
 
 .youjorus-timer-circle svg {
   transform: rotate(-90deg);
