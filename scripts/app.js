@@ -1,6 +1,6 @@
 import ProgramData from './program-data.js';
-import WorkoutRenderer from './scripts/ui/workout-renderer.js';
-import TimerManager from './scripts/modules/timer-manager.js';
+import WorkoutRenderer from './ui/workout-renderer.js';
+import TimerManager from './modules/timer-manager.js';
 
 class App {
   constructor() {
