@@ -1,119 +1,109 @@
 /**
  * APP.JS - FICHIER PRINCIPAL
- * Gestion centralisée de l'application
+ * Gestion centralisée de l'application Hybrid Master 61
  */
 
-import WorkoutSession from './scripts/modules/workout-session.js';
+import ProgramData from './program-data.js';
 import WorkoutRenderer from './scripts/ui/workout-renderer.js';
 import TimerManager from './scripts/modules/timer-manager.js';
 
 class App {
   constructor() {
-    this.workoutSession = null;
-    this.workoutRenderer = null;
-    this.timerManager = null;
-    this.currentWorkout = null;
+    this.renderer = new WorkoutRenderer();
+    this.timer = new TimerManager();
+    this.weekNumber = 1;
+    this.dayName = 'dimanche'; // jour par défaut
   }
 
   async init() {
     try {
-      console.log('🚀 Initialisation de l\'application...');
+      console.log('🚀 Initialisation Hybrid Master 61...');
 
-      // Créer des données de test directement
-      this.currentWorkout = {
-        name: "Séance A - Push",
-        exercises: [
-          {
-            name: "Développé Couché",
-            sets: 4,
-            reps: 8,
-            weight: 80,
-            restTime: 120
-          },
-          {
-            name: "Développé Incliné",
-            sets: 3,
-            reps: 10,
-            weight: 60,
-            restTime: 90
-          },
-          {
-            name: "Dips",
-            sets: 3,
-            reps: 12,
-            weight: 0,
-            restTime: 90
-          }
-        ]
-      };
+      // Initialiser les modules
+      this.renderer.init();
+      this.timer.init();
+      this.renderer.timerManager = this.timer;
 
-      // Initialiser les managers
-      this.workoutSession = new WorkoutSession();
-      this.workoutRenderer = new WorkoutRenderer();
-      this.timerManager = new TimerManager();
-
-      // Initialiser le renderer
-      this.workoutRenderer.init();
-
-      // Initialiser le timer
-      this.timerManager.init();
-
-      // Connecter workoutRenderer au timerManager
-      this.workoutRenderer.timerManager = this.timerManager;
-
-      // Afficher la séance
-      this.workoutRenderer.render(this.currentWorkout);
+      // Afficher la première séance
+      this.renderWorkout();
 
       // Attacher les événements
       this.attachEvents();
 
-      console.log('✅ Application initialisée avec succès !');
-
+      console.log('✅ Application prête !');
     } catch (error) {
-      console.error('❌ Erreur lors de l\'initialisation:', error);
+      console.error('❌ Erreur init:', error);
     }
   }
 
+  renderWorkout() {
+    const week = ProgramData.getWeek(this.weekNumber);
+    const workoutDay = ProgramData.getWorkout(this.weekNumber, this.dayName);
+
+    workoutDay.name = this.capitalize(this.dayName);
+    workoutDay.muscles = this.extractMuscles(workoutDay.exercises);
+
+    this.renderer.render(workoutDay, week);
+
+    const label = document.getElementById('current-week-label');
+    if (label) label.textContent = `Semaine ${this.weekNumber}`;
+  }
+
   attachEvents() {
-    // Événement pour valider une série
+    // Navigation semaine
+    document.getElementById('nav-prev-week')?.addEventListener('click', () => {
+      if (this.weekNumber > 1) {
+        this.weekNumber--;
+        this.renderWorkout();
+      }
+    });
+
+    document.getElementById('nav-next-week')?.addEventListener('click', () => {
+      if (this.weekNumber < 26) {
+        this.weekNumber++;
+        this.renderWorkout();
+      }
+    });
+
+    // Validation série
     document.addEventListener('click', (e) => {
-      if (e.target.classList.contains('validate-set')) {
-        const setRow = e.target.closest('.set-row');
-        const exerciseIndex = parseInt(setRow.dataset.exerciseIndex);
-        const setIndex = parseInt(setRow.dataset.setIndex);
-        
-        this.handleSetValidation(exerciseIndex, setIndex, setRow);
+      const btn = e.target.closest('.serie-check');
+      if (!btn) return;
+
+      const exerciseId = btn.dataset.exerciseId;
+      const setNumber = parseInt(btn.dataset.setNumber);
+
+      btn.classList.add('validated');
+      btn.disabled = true;
+      btn.querySelector('.check-icon').textContent = '✓';
+
+      const exercise = this.findExerciseById(exerciseId);
+      if (exercise) {
+        const restTime = exercise.rest || 90;
+        this.timer.start(restTime, exercise.name, setNumber);
       }
     });
   }
 
-  handleSetValidation(exerciseIndex, setIndex, setRow) {
-    // Récupérer les valeurs
-    const repsInput = setRow.querySelector('.reps-input');
-    const weightInput = setRow.querySelector('.weight-input');
+  findExerciseById(id) {
+    const workout = ProgramData.getWorkout(this.weekNumber, this.dayName);
+    return workout.exercises.find(ex => ex.id === id || ex.name === id);
+  }
 
-    const actualReps = parseInt(repsInput.value) || 0;
-    const actualWeight = parseFloat(weightInput.value) || 0;
+  extractMuscles(exercises) {
+    const muscles = new Set();
+    exercises.forEach(ex => {
+      if (Array.isArray(ex.muscles)) ex.muscles.forEach(m => muscles.add(m));
+    });
+    return Array.from(muscles);
+  }
 
-    // Valider visuellement
-    setRow.classList.add('completed');
-    const button = setRow.querySelector('.validate-set');
-    button.textContent = '✓';
-    button.disabled = true;
-
-    console.log(`✅ Série validée: Ex${exerciseIndex + 1} - Set${setIndex + 1} - ${actualReps}x${actualWeight}kg`);
-
-    // Démarrer le timer automatiquement
-    const exercise = this.currentWorkout.exercises[exerciseIndex];
-    const restTime = exercise.restTime || 90;
-    const exerciseName = exercise.name;
-    const setNumber = setIndex + 1;
-
-    this.timerManager.start(restTime, exerciseName, setNumber);
+  capitalize(str) {
+    return str.charAt(0).toUpperCase() + str.slice(1);
   }
 }
 
-// Initialiser l'application au chargement
+// Initialiser l'application
 document.addEventListener('DOMContentLoaded', () => {
   const app = new App();
   app.init();
