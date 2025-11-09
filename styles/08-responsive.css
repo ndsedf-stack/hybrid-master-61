@@ -1,178 +1,21 @@
-/* ====================================================================
-   08 - RESPONSIVE (style VALIDE) - Mobile-first, iPhone optimized
-   ==================================================================== */
+/* ========================================
+   RESPONSIVE - Ajustements globaux
+======================================== */
 
-/* ============================================================
-   BASE MOBILE-FIRST
-   ============================================================ */
-html {
-  font-size: 16px;
-  -webkit-text-size-adjust: 100%;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  scroll-behavior: smooth;
-}
-body {
-  overscroll-behavior-y: contain;
-  -webkit-overflow-scrolling: touch;
-}
-@media (prefers-reduced-motion: reduce) {
-  html { scroll-behavior: auto; }
+@media screen and (max-width: 768px) {
+  .exercise-card { margin-bottom: 0.75rem; }
+  .exercise-name { font-size: 16px; }
+  .exercise-details { font-size: 11px; }
 }
 
-/* ============================================================
-   CONTAINER PRINCIPAL
-   ============================================================ */
-#app,
-.container {
-  max-width: 430px;
-  margin: 0 auto;
-  padding: 0 var(--spacing-md) var(--spacing-3xl);
-  min-height: 100vh;
-}
-.main-content {
-  padding-top: calc(60px + var(--safe-top));
-  padding-bottom: calc(90px + var(--safe-bottom));
-  min-height: 100vh;
+@media screen and (max-width: 480px) {
+  .exercise-card { margin-bottom: 0.5rem; }
+  .exercise-name { font-size: 15px; }
+  .exercise-details { font-size: 10px; }
+  .param-value { font-size: 16px; }
 }
 
-/* ============================================================
-   SAFE AREA SUPPORT (Notch iPhone)
-   ============================================================ */
-@supports (padding: max(0px)) {
-  body {
-    padding-top: max(0px, var(--safe-top));
-    padding-bottom: max(0px, var(--safe-bottom));
-  }
-  .header { padding-top: max(var(--spacing-sm), var(--safe-top)); }
-  .bottom-nav { padding-bottom: max(var(--spacing-md), var(--safe-bottom)); }
-}
-
-/* ============================================================
-   LAYOUT RESPONSIVE POUR COMPOSANTS
-   ============================================================ */
-.sets-grid { grid-template-columns: repeat(4, 1fr); }
-@media (max-width: 1024px) { .sets-grid { grid-template-columns: repeat(3, 1fr); } }
-@media (max-width: 768px) { .sets-grid { grid-template-columns: repeat(2, 1fr); } }
-
-.day-header { padding: 0.6rem 0.8rem; }
-@media (max-width: 768px) {
-  .day-header h3 { font-size: 1rem; }
-  .badge.technique { font-size: 0.75rem; padding: 0.2rem 0.5rem; }
-}
-
-.exercise-card { padding: 1.25rem; }
-@media (max-width: 768px) { .exercise-card { padding: 1rem; } }
-
-.superset { padding: 0.9rem; }
-@media (max-width: 768px) { .superset { padding: 0.8rem; } }
-
-.action-bar { gap: 0.6rem; }
-.btn { padding: 0.6rem 1rem; }
-@media (max-width: 768px) { .btn { font-size: 0.95rem; } }
-
-/* ============================================================
-   iPHONE 15 PRO MAX (430×932px)
-   ============================================================ */
-@media screen and (max-width: 430px) {
-  :root { --spacing-lg: 20px; --spacing-xl: 28px; }
-  .exercise-header h3 { font-size: 1.05rem; }
-  .sets-count { font-size: 0.75rem; }
-  .set { font-size: 0.95rem; }
-}
-
-/* ============================================================
-   iPHONE 14 PRO / 13 PRO / 12 PRO (390×844px)
-   ============================================================ */
-@media screen and (max-width: 390px) {
-  :root { --spacing-md: 14px; --spacing-lg: 18px; }
-  #app, .container { padding-left: var(--spacing-sm); padding-right: var(--spacing-sm); }
-  .exercise-card { padding: 0.95rem; }
-  .exercise-header h3 { font-size: 1rem; }
-  .meta-item { font-size: 0.8rem; }
-  .set { font-size: 0.9rem; padding: 0.45rem 0.55rem; }
-  .btn { font-size: 0.92rem; }
-}
-
-/* ============================================================
-   iPHONE SE / 13 MINI (375×667px)
-   ============================================================ */
 @media screen and (max-width: 375px) {
-  :root { --spacing-xs: 3px; --spacing-sm: 6px; --spacing-md: 12px; --spacing-lg: 16px; }
-  #app, .container { padding-left: var(--spacing-xs); padding-right: var(--spacing-xs); }
-  .exercise-card { margin-bottom: var(--spacing-md); }
-  .exercise-header h3 { font-size: 0.95rem; }
-  .exercise-meta { gap: var(--spacing-xs); }
-  .meta-item { font-size: 0.78rem; padding: 0.18rem 0.45rem; }
-  .sets-grid { grid-template-columns: repeat(2, 1fr); gap: 0.45rem; }
-  .set { font-size: 0.88rem; }
-  .btn { font-size: 0.9rem; padding: 0.55rem 0.9rem; }
-}
-
-/* ============================================================
-   ORIENTATION PAYSAGE
-   ============================================================ */
-@media screen and (orientation: landscape) and (max-height: 500px) {
-  .exercise-card { margin-bottom: var(--spacing-md); padding: 0.9rem; }
-  .exercise-header { padding: var(--spacing-sm) var(--spacing-md); }
-  .sets-grid { grid-template-columns: repeat(3, 1fr); }
-  .action-bar { position: sticky; bottom: 0; background: var(--bg-primary); padding: 0.5rem 0; }
-}
-
-/* ============================================================
-   FIXES POUR iOS
-   ============================================================ */
-input, select, textarea, button { font-size: 16px !important; }
-button, input[type="button"], input[type="submit"] { -webkit-appearance: none; appearance: none; border-radius: 0; }
-.exercise-icon, .nav-item-icon, .header-icon, .check-icon, .rest-icon {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI Emoji", "Apple Color Emoji", sans-serif;
-  line-height: 1;
-}
-
-/* ============================================================
-   SCROLLBAR PERSONNALISÉE
-   ============================================================ */
-::-webkit-scrollbar { width: var(--scrollbar-width); }
-::-webkit-scrollbar-track { background: var(--scrollbar-track); }
-::-webkit-scrollbar-thumb { background: var(--scrollbar-thumb); border-radius: var(--radius-sm); }
-::-webkit-scrollbar-thumb:hover { background: var(--bg-card-hover); }
-
-/* ============================================================
-   FOCUS VISIBLE
-   ============================================================ */
-:focus-visible { outline: none; box-shadow: var(--focus-ring); outline-offset: var(--focus-ring-offset); }
-button:focus-visible { outline: 2px solid var(--primary-color); outline-offset: 2px; }
-
-/* ============================================================
-   SÉLECTION DE TEXTE
-   ============================================================ */
-::selection { background: var(--primary-color); color: #000; }
-::-moz-selection { background: var(--primary-color); color: #000; }
-
-/* ============================================================
-   PERFORMANCE
-   ============================================================ */
-.exercise-card, .set, .meta-item, .btn {
-  transform: translateZ(0);
-  backface-visibility: hidden;
-  perspective: 1000px;
-}
-
-/* ============================================================
-   DARK MODE NATIF iOS
-   ============================================================ */
-@media (prefers-color-scheme: dark) { :root { color-scheme: dark; } }
-
-/* ============================================================
-   NAVIGATION BOTTOM
-   ============================================================ */
-.bottom-nav { padding-bottom: calc(var(--spacing-md) + var(--safe-bottom)); }
-.header { padding-top: calc(var(--spacing-sm) + var(--safe-top)); }
-
-/* ============================================================
-   PRINT
-   ============================================================ */
-@media print {
-  .bottom-nav, .header-actions { display: none !important; }
-  .exercise-card { break-inside: avoid; page-break-inside: avoid; }
+  .exercise-name { font-size: 14px; }
+  .param-value { font-size: 14px; }
 }
