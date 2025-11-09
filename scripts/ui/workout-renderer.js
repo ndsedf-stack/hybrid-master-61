@@ -16,6 +16,7 @@ export default class WorkoutRenderer {
     this.container.appendChild(header);
 
     workout.exercises.forEach(ex => {
+      console.log('🛠️ Rendu exercice :', ex.name);
       const card = document.createElement('div');
       card.className = 'exercise-card';
 
@@ -59,6 +60,8 @@ export default class WorkoutRenderer {
       ? sets
       : [sets];
 
+    console.log(`📋 Génération séries pour ${exercise.name} :`, seriesArray);
+
     const grid = document.createElement('div');
     grid.className = 'sets-grid';
 
@@ -76,7 +79,6 @@ export default class WorkoutRenderer {
       info.textContent = `${serie.reps} reps • ${serie.weight}kg`;
 
       const button = document.createElement('button');
-      button.className = 'serie-check';
       button.className = 'serie-check';
       button.dataset.exerciseId = exercise.id;
       button.dataset.setNumber = index + 1;
