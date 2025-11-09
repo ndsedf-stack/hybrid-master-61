@@ -130,3 +130,18 @@ document.addEventListener("serieDone", (e) => {
 // document.getElementById("workout-container").addEventListener("click", () => {
 //   showYoujorusTimer(240, "RUN");
 // });
+// ----------- DÉCLENCHEMENT DU TIMER IMMERSIF QUAND UNE SÉRIE EST COCHÉE -----------
+// Ce code écoute les cases à cocher des séries et déclenche le timer immersif uniquement à ce moment-là
+
+document.querySelectorAll(".serie-checkbox").forEach(checkbox => {
+  checkbox.addEventListener("change", () => {
+    if (checkbox.checked) {
+      document.dispatchEvent(new CustomEvent("serieDone", {
+        detail: {
+          duration: 120, // durée du timer en secondes
+          label: "REST"  // texte affiché dans le timer immersif
+        }
+      }));
+    }
+  });
+});
