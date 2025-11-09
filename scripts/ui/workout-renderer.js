@@ -1,175 +1,213 @@
 /**
- * WORKOUT RENDERER - VERSION PREMIUM
- * Affichage texte des reps/poids, validation visuelle
+ * WORKOUT RENDERER - Affichage des séances avec supersets
+ * Génère le HTML pour afficher les exercices avec leurs séries
  */
+
 export default class WorkoutRenderer {
-  constructor() {
-    this.container = null;
-  }
-
-  init() {
-    this.container = document.getElementById('workout-container');
-    if (!this.container) {
-      console.error('❌ Conteneur workout introuvable');
-    }
-  }
-
-  /**
-   * Affiche un workout complet
-   */
-  render(workout) {
-    if (!this.container) {
-      console.error('❌ Container non initialisé');
-      return;
+    constructor() {
+        this.container = null;
     }
 
-    this.container.innerHTML = `
-      <div class="workout-header">
-        <h2>${workout.name}</h2>
-        <p class="workout-date">${new Date(workout.date).toLocaleDateString('fr-FR')}</p>
-      </div>
-      <div class="exercises-list">
-        ${workout.exercises.map((ex, idx) => this.renderExercise(ex, idx)).join('')}
-      </div>
-    `;
-
-    console.log('✅ Workout rendu:', workout.name);
-  }
-
-  /**
-   * Affiche un exercice avec ses séries
-   */
-  renderExercise(exercise, exerciseIndex) {
-    const sets = exercise.sets || [];
-    
-    return `
-      <div class="exercise-card" data-exercise-index="${exerciseIndex}">
-        <div class="exercise-header">
-          <h3>${exercise.name}</h3>
-          <span class="sets-count">${sets.length} série(s)</span>
-        </div>
-        
-        <div class="sets-container">
-          ${sets.map((set, setIndex) => this.renderSet(set, exerciseIndex, setIndex)).join('')}
-        </div>
-
-        <button class="btn-add-set" data-exercise-index="${exerciseIndex}">
-          + Ajouter une série
-        </button>
-      </div>
-    `;
-  }
-
-  /**
-   * Affiche une série individuelle
-   */
-  renderSet(set, exerciseIndex, setIndex) {
-    const isCompleted = set.completed || false;
-    const completedClass = isCompleted ? 'completed' : '';
-    
-    return `
-      <div class="set-row ${completedClass}" 
-           data-exercise-index="${exerciseIndex}" 
-           data-set-index="${setIndex}">
-        
-        <div class="set-number">Set ${setIndex + 1}</div>
-        
-        <div class="set-inputs">
-          <div class="input-group">
-            <label>Reps</label>
-            <input type="number" 
-                   class="input-reps" 
-                   value="${set.reps || ''}" 
-                   placeholder="0"
-                   ${isCompleted ? 'disabled' : ''}>
-          </div>
-          
-          <div class="input-group">
-            <label>Poids (kg)</label>
-            <input type="number" 
-                   class="input-weight" 
-                   value="${set.weight || ''}" 
-                   placeholder="0"
-                   step="0.5"
-                   ${isCompleted ? 'disabled' : ''}>
-          </div>
-        </div>
-
-        <button class="btn-validate-set ${isCompleted ? 'validated' : ''}" 
-                data-exercise-index="${exerciseIndex}" 
-                data-set-index="${setIndex}"
-                ${isCompleted ? 'disabled' : ''}>
-          ${isCompleted ? '✓ Validé' : 'Valider'}
-        </button>
-      </div>
-    `;
-  }
-
-  /**
-   * Met à jour l'affichage d'une série après validation
-   */
-  updateSetDisplay(exerciseIndex, setIndex, setData) {
-    const setRow = document.querySelector(
-      `.set-row[data-exercise-index="${exerciseIndex}"][data-set-index="${setIndex}"]`
-    );
-    
-    if (!setRow) {
-      console.error('❌ Set row introuvable');
-      return;
+    init() {
+        this.container = document.getElementById('workout-container');
+        if (!this.container) {
+            console.error('❌ Container workout-container introuvable');
+        }
     }
 
-    // Ajouter la classe "completed"
-    setRow.classList.add('completed');
+    render(workoutDay, week) {
+        if (!this.container) {
+            console.error('❌ Container non initialisé');
+            return;
+        }
 
-    // Désactiver les inputs
-    const inputs = setRow.querySelectorAll('input');
-    inputs.forEach(input => input.disabled = true);
+        if (!workoutDay || !workoutDay.exercises || workoutDay.exercises.length === 0) {
+            this.container.innerHTML = `
+                <div class="empty-workout">
+                    <p>🏖️ Repos aujourd'hui !</p>
+                </div>
+            `;
+            return;
+        }
 
-    // Mettre à jour le bouton
-    const validateBtn = setRow.querySelector('.btn-validate-set');
-    if (validateBtn) {
-      validateBtn.textContent = '✓ Validé';
-      validateBtn.classList.add('validated');
-      validateBtn.disabled = true;
+        const exercisesWithSupersets = this.detectSupersets(workoutDay.exercises);
+
+        const exercisesHTML = exercisesWithSupersets.map((exercise, index) => 
+            this.renderExercise(exercise, index, week)
+        ).join('');
+
+        this.container.innerHTML = exercisesHTML;
     }
 
-    console.log(`✅ Set ${setIndex + 1} mis à jour visuellement`);
-  }
+    detectSupersets(exercises) {
+        return exercises.map((exercise, index) => {
+            if (exercise.superset || exercise.setGroup) {
+                return { ...exercise, isSuperset: true };
+            }
 
-  /**
-   * Ajoute une nouvelle série à un exercice
-   */
-  addSetToExercise(exerciseIndex) {
-    const exerciseCard = document.querySelector(
-      `.exercise-card[data-exercise-index="${exerciseIndex}"]`
-    );
-    
-    if (!exerciseCard) {
-      console.error('❌ Exercise card introuvable');
-      return;
+            const nextExercise = exercises[index + 1];
+            if (nextExercise && 
+                exercise.category === nextExercise.category && 
+                exercise.rest === nextExercise.rest) {
+                return { ...exercise, isSuperset: true };
+            }
+
+            return exercise;
+        });
     }
 
-    const setsContainer = exerciseCard.querySelector('.sets-container');
-    const currentSetsCount = setsContainer.querySelectorAll('.set-row').length;
-    
-    const newSet = {
-      reps: null,
-      weight: null,
-      completed: false
-    };
+    renderExercise(exercise, index, week) {
+        const {
+            id,
+            name,
+            type,
+            category,
+            muscles,
+            sets,
+            reps,
+            weight,
+            rpe,
+            rest,
+            tempo,
+            notes,
+            isSuperset,
+            progression
+        } = exercise;
 
-    const newSetHTML = this.renderSet(newSet, exerciseIndex, currentSetsCount);
-    setsContainer.insertAdjacentHTML('beforeend', newSetHTML);
+        const icon = type === 'cardio' ? '🔥' : '💪';
+        const typeClass = type === 'cardio' ? 'cardio' : 'strength';
+        const categoryLabel = category || '';
+        const musclesLabel = muscles ? muscles.join(', ') : '';
+        const supersetClass = isSuperset ? 'superset' : '';
 
-    console.log(`✅ Nouvelle série ajoutée à l'exercice ${exerciseIndex}`);
-  }
+        const paramsHTML = this.renderParams(exercise);
+        const seriesHTML = this.renderSeries(exercise, id);
+        const notesHTML = notes ? `
+            <div class="exercise-notes">
+                <div class="notes-title">📝 Notes</div>
+                <div class="notes-content">${notes}</div>
+            </div>
+        ` : '';
+        const progressionHTML = progression ? this.renderProgression(progression) : '';
 
-  /**
-   * Vide le conteneur
-   */
-  clear() {
-    if (this.container) {
-      this.container.innerHTML = '';
+        return `
+            <div class="exercise-card slide-up ${supersetClass}" data-exercise-id="${id}">
+                <div class="exercise-header ${typeClass}">
+                    <span class="exercise-icon">${icon}</span>
+                    <div class="exercise-title">
+                        <h3 class="exercise-name">${name}</h3>
+                        <div class="exercise-details">
+                            ${categoryLabel ? `<span>${categoryLabel}</span>` : ''}
+                            ${musclesLabel ? `<span>🎯 ${musclesLabel}</span>` : ''}
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="exercise-body">
+                    ${paramsHTML}
+                    ${seriesHTML}
+                    ${notesHTML}
+                    ${progressionHTML}
+                </div>
+            </div>
+        `;
     }
-  }
+
+    renderParams(exercise) {
+        const { sets, reps, weight, rpe, rest, tempo } = exercise;
+
+        const params = [];
+
+        if (sets) {
+            const setsLabel = Array.isArray(sets) ? `${sets.length}` : sets;
+            params.push({ label: 'SÉRIES', value: setsLabel });
+        }
+
+        if (reps) params.push({ label: 'REPS', value: reps });
+        if (weight) params.push({ label: 'POIDS', value: `${weight}kg` });
+        if (rpe) params.push({ label: 'RPE', value: rpe });
+        if (rest) params.push({ label: 'REPOS', value: `${rest}s` });
+        if (tempo) params.push({ label: 'TEMPO', value: tempo });
+
+        if (params.length === 0) return '';
+
+        const paramsHTML = params.map(param => `
+            <div class="param-item">
+                <div class="param-label">${param.label}</div>
+                <div class="param-value">${param.value}</div>
+            </div>
+        `).join('');
+
+        return `<div class="exercise-params">${paramsHTML}</div>`;
+    }
+
+    renderSeries(exercise, exerciseId) {
+        const { sets, reps, weight, rest } = exercise;
+
+        if (!sets || sets === 0) return '';
+
+        let seriesArray = [];
+
+        if (Array.isArray(sets)) {
+            seriesArray = sets;
+        } else if (typeof sets === 'number') {
+            seriesArray = Array.from({ length: sets }, () => ({
+                reps,
+                weight,
+                rest
+            }));
+        } else {
+            return '';
+        }
+
+        const seriesHTML = seriesArray.map((set, index) => {
+            const setNumber = index + 1;
+            const isCompleted = false;
+            const completedClass = isCompleted ? 'completed' : '';
+
+            return `
+                <div class="serie-item ${completedClass}" data-set-number="${setNumber}">
+                    <div class="serie-number">${setNumber}</div>
+                    <div class="serie-info">
+                        <div class="serie-reps">${set.reps} reps</div>
+                        ${set.weight ? `<div class="serie-weight">${set.weight}kg</div>` : ''}
+                    </div>
+                    ${set.rest ? `
+                        <div class="serie-rest">
+                            <span class="rest-icon">⏱️</span>
+                            <span class="rest-time">${set.rest}s repos</span>
+                        </div>
+                    ` : ''}
+                    <button 
+                        class="serie-check" 
+                        data-exercise-id="${exerciseId}"
+                        data-set-number="${setNumber}"
+                        aria-label="Compléter la série ${setNumber}"
+                    >
+                        <span class="check-icon">${isCompleted ? '✓' : ''}</span>
+                    </button>
+                </div>
+            `;
+        }).join('');
+
+        return `<div class="series-container">${seriesHTML}</div>`;
+    }
+
+    renderProgression(progression) {
+        const { from, to } = progression;
+
+        return `
+            <div class="progression-card">
+                <div class="progression-label">
+                    <span>☑️</span>
+                    <span>Progression</span>
+                </div>
+                <div class="progression-values">
+                    <span class="progression-from">${from}kg</span>
+                    <span class="progression-arrow">→</span>
+                    <span class="progression-to">${to}kg</span>
+                </div>
+            </div>
+        `;
+    }
 }
