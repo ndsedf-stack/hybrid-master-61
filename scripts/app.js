@@ -1,250 +1,83 @@
-/**
- * HYBRID MASTER 60 - APPLICATION PRINCIPALE
- * Version modulaire avec imports ES6
- * 
- * Architecture:
- * - Importe le programme depuis program-data.js
- * - Utilise TimerManager depuis modules/timer-manager.js
- * - Gère l'UI et la navigation
- */
+import ProgramData from './scripts/program-data.js';
+import WorkoutRenderer from './scripts/ui/workout-renderer.js';
+import TimerManager from './scripts/modules/timer-manager.js';
 
-import programData from './program-data.js';
-import TimerManager from './modules/timer-manager.js';
+class App {
+  constructor() {
+    this.renderer = new WorkoutRenderer();
+    this.timer = new TimerManager();
+    this.weekNumber = 1;
+    this.dayName = 'dimanche';
+  }
 
-// ============================================================
-// ÉTAT DE L'APPLICATION
-// ============================================================
+  async init() {
+    this.renderer.init();
+    this.timer.init();
+    this.renderer.timerManager = this.timer;
+    this.renderWorkout();
+    this.attachEvents();
+  }
 
-const AppState = {
-    currentWeek: 1,
-    currentDay: 'dimanche', // 'dimanche', 'mardi', 'vendredi', 'maison'
-    currentWorkout: null,
-    completedSets: new Set(),
-    timerManager: null
-};
+  renderWorkout() {
+    const week = ProgramData.getWeek(this.weekNumber);
+    const workoutDay = ProgramData.getWorkout(this.weekNumber, this.dayName);
+    workoutDay.name = this.capitalize(this.dayName);
+    workoutDay.muscles = this.extractMuscles(workoutDay.exercises);
+    this.renderer.render(workoutDay, week);
+    const label = document.getElementById('current-week-label');
+    if (label) label.textContent = `Semaine ${this.weekNumber}`;
+  }
 
-// ============================================================
-// INITIALISATION
-// ============================================================
+  attachEvents() {
+    document.getElementById('nav-prev-week')?.addEventListener('click', () => {
+      if (this.weekNumber > 1) {
+        this.weekNumber--;
+        this.renderWorkout();
+      }
+    });
+
+    document.getElementById('nav-next-week')?.addEventListener('click', () => {
+      if (this.weekNumber < 26) {
+        this.weekNumber++;
+        this.renderWorkout();
+      }
+    });
+
+    document.addEventListener('click', (e) => {
+      const btn = e.target.closest('.serie-check');
+      if (!btn) return;
+      const exerciseId = btn.dataset.exerciseId;
+      const setNumber = parseInt(btn.dataset.setNumber);
+      btn.classList.add('validated');
+      btn.disabled = true;
+      btn.querySelector('.check-icon').textContent = '✓';
+      const exercise = this.findExerciseById(exerciseId);
+      if (exercise) {
+        const restTime = exercise.rest || 90;
+        this.timer.start(restTime, exercise.name, setNumber);
+      }
+    });
+  }
+
+  findExerciseById(id) {
+    const workout = ProgramData.getWorkout(this.weekNumber, this.dayName);
+    return workout.exercises.find(ex => ex.id === id || ex.name === id);
+  }
+
+  extractMuscles(exercises) {
+    const muscles = new Set();
+    exercises.forEach(ex => {
+      if (Array.isArray(ex.muscles)) ex.muscles.forEach(m => muscles.add(m));
+    });
+    return Array.from(muscles);
+  }
+
+  capitalize(str) {
+    return str.charAt(0).toUpperCase() + str.slice(1);
+  }
+}
 
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('✅ Application Hybrid Master 60 chargée');
-    console.log('📊 Programme:', programData.info);
-    
-    initializeApp();
+  const app = new App();
+  app.init();
 });
-
-function initializeApp() {
-    // Initialiser le timer manager
-    AppState.timerManager = new TimerManager();
-    
-    // Créer les sélecteurs de semaine et jour
-    createWeekSelector();
-    createDayButtons();
-    
-    // Charger le premier workout (Semaine 1, Dimanche)
-    loadWorkout(1, 'dimanche');
-}
-
-// ============================================================
-// GÉNÉRATEUR UI - SÉLECTEUR SEMAINE
-// ============================================================
-
-function createWeekSelector() {
-    const container = document.getElementById('week-selector');
-    
-    container.innerHTML = `
-        <button id="prev-week" class="week-nav">◀</button>
-        <div id="week-display">
-            <div class="week-number">Semaine 1</div>
-            <div class="week-info">Bloc 1 - Tempo 3-1-2</div>
-        </div>
-        <button id="next-week" class="week-nav">▶</button>
-    `;
-    
-    // Event listeners
-    document.getElementById('prev-week').addEventListener('click', () => changeWeek(-1));
-    document.getElementById('next-week').addEventListener('click', () => changeWeek(1));
-}
-
-function changeWeek(delta) {
-    const newWeek = AppState.currentWeek + delta;
-    
-    if (newWeek < 1 || newWeek > 26) return;
-    
-    AppState.currentWeek = newWeek;
-    updateWeekDisplay();
-    loadWorkout(AppState.currentWeek, AppState.currentDay);
-}
-
-function updateWeekDisplay() {
-    const weekData = programData.getWeek(AppState.currentWeek);
-    const display = document.getElementById('week-display');
-    
-    const deloadBadge = weekData.isDeload ? '<span class="deload-badge">DELOAD</span>' : '';
-    
-    display.innerHTML = `
-        <div class="week-number">Semaine ${AppState.currentWeek} ${deloadBadge}</div>
-        <div class="week-info">Bloc ${weekData.block} - ${weekData.technique}</div>
-    `;
-}
-
-// ============================================================
-// GÉNÉRATEUR UI - BOUTONS JOURS
-// ============================================================
-
-function createDayButtons() {
-    const container = document.getElementById('day-buttons');
-    
-    const days = [
-        { key: 'dimanche', label: '💪 Dimanche', color: '#ff6b6b' },
-        { key: 'mardi', label: '🔥 Mardi', color: '#4ecdc4' },
-        { key: 'vendredi', label: '⚡ Vendredi', color: '#95e1d3' },
-        { key: 'maison', label: '🏠 Maison', color: '#f38181' }
-    ];
-    
-    container.innerHTML = days.map(day => `
-        <button 
-            class="day-button ${day.key === 'dimanche' ? 'active' : ''}" 
-            data-day="${day.key}"
-            style="--day-color: ${day.color}"
-        >
-            ${day.label}
-        </button>
-    `).join('');
-    
-    // Event listeners
-    container.querySelectorAll('.day-button').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            const day = e.currentTarget.dataset.day;
-            selectDay(day);
-        });
-    });
-}
-
-function selectDay(day) {
-    AppState.currentDay = day;
-    
-    // Mettre à jour les boutons actifs
-    document.querySelectorAll('.day-button').forEach(btn => {
-        btn.classList.toggle('active', btn.dataset.day === day);
-    });
-    
-    // Charger le workout
-    loadWorkout(AppState.currentWeek, day);
-}
-
-// ============================================================
-// CHARGEMENT & AFFICHAGE WORKOUT
-// ============================================================
-
-function loadWorkout(weekNumber, day) {
-    const workout = programData.getWorkout(weekNumber, day);
-    AppState.currentWorkout = workout;
-    
-    renderWorkout(workout);
-}
-
-function renderWorkout(workout) {
-    const container = document.getElementById('workout-container');
-    
-    const header = `
-        <div class="workout-header">
-            <h2>${workout.name}</h2>
-            <div class="workout-stats">
-                <span>⏱️ ${workout.duration} min</span>
-                <span>📊 ${workout.totalSets} séries</span>
-            </div>
-        </div>
-    `;
-    
-    const exercises = workout.exercises.map((ex, index) => {
-        const isSuperset = ex.isSuperset;
-        const nextExIsSuperset = workout.exercises[index + 1]?.isSuperset;
-        const prevExIsSuperset = workout.exercises[index - 1]?.isSuperset;
-        
-        // Ajouter header superset si c'est le premier d'un superset
-        const supersetHeader = (isSuperset && !prevExIsSuperset) 
-            ? `<div class="superset-header">🔗 SUPERSET</div>` 
-            : '';
-        
-        const exerciseHtml = `
-            <div class="exercise-card ${isSuperset ? 'superset' : ''}">
-                <div class="exercise-header">
-                    <div class="exercise-title">
-                        <h3>${ex.name}</h3>
-                        <span class="exercise-category">${ex.category === 'compound' ? '💪 Composé' : '🎯 Isolation'}</span>
-                    </div>
-                    <div class="exercise-weight">${ex.weight} kg</div>
-                </div>
-                
-                <div class="exercise-details">
-                    <div class="detail-row">
-                        <span>📋 ${ex.sets} × ${ex.reps} reps</span>
-                        <span>⏱️ ${ex.rest}s repos</span>
-                        <span>🎵 Tempo ${ex.tempo}</span>
-                    </div>
-                    ${ex.notes ? `<div class="exercise-notes">💡 ${ex.notes}</div>` : ''}
-                </div>
-                
-                <div class="sets-tracker">
-                    ${generateSetButtons(ex)}
-                </div>
-            </div>
-        `;
-        
-        return supersetHeader + exerciseHtml;
-    }).join('');
-    
-    container.innerHTML = header + exercises;
-    
-    // Attacher les event listeners pour les séries
-    attachSetListeners();
-}
-
-function generateSetButtons(exercise) {
-    return Array.from({ length: exercise.sets }, (_, i) => {
-        const setNumber = i + 1;
-        const setId = `${exercise.id}_set${setNumber}`;
-        const isCompleted = AppState.completedSets.has(setId);
-        
-        return `
-            <button 
-                class="set-button ${isCompleted ? 'completed' : ''}"
-                data-set-id="${setId}"
-                data-rest="${exercise.rest}"
-            >
-                Série ${setNumber}
-            </button>
-        `;
-    }).join('');
-}
-
-function attachSetListeners() {
-    document.querySelectorAll('.set-button').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            const setId = e.currentTarget.dataset.setId;
-            const rest = parseInt(e.currentTarget.dataset.rest);
-            
-            // Toggle completed
-            if (AppState.completedSets.has(setId)) {
-                AppState.completedSets.delete(setId);
-                e.currentTarget.classList.remove('completed');
-            } else {
-                AppState.completedSets.add(setId);
-                e.currentTarget.classList.add('completed');
-                
-                // Démarrer le timer
-                AppState.timerManager.start(rest);
-            }
-        });
-    });
-}
-
-// ============================================================
-// LOGS & DEBUG
-// ============================================================
-
-console.log('📱 App.js chargé avec succès');
-console.log('🎯 Version modulaire ES6');
-console.log('📦 Modules importés: ProgramData, TimerManager');
