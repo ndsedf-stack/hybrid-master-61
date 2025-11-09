@@ -3,110 +3,114 @@
    Widget de timer de repos entre séries
    ============================================== */
 
-/* ============== TIMER WIDGET CLASSIQUE ============== */
-/* ... tes styles existants du widget classique ... */
-
-/* ============== TIMER IMMERSIF YOUJORUS STYLE ============== */
-.youjorus-timer-overlay {
+#timer-widget {
   position: fixed;
-  inset: 0;
-  background: radial-gradient(circle at center, var(--surface-color), var(--bg-primary));
-  display: none; /* ✅ caché par défaut */
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  z-index: 3000;
-  animation: fadeIn 0.4s ease-in-out;
-}
-
-.youjorus-timer-circle {
-  position: relative;
-  width: 220px;
-  height: 220px;
-}
-
-/* ❌ Suppression du pseudo-élément qui créait le disque noir */
-/* .youjorus-timer-circle::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  border-radius: 50%;
+  bottom: 2rem;
+  right: 2rem;
   background: var(--surface-color);
-  z-index: 0;
-} */
+  border: 2px solid var(--accent-color);
+  border-radius: 12px;
+  padding: 1rem;
+  display: none;
+  z-index: 2000;
+}
 
-.youjorus-timer-circle svg {
-  transform: rotate(-90deg);
+#timer-widget.active {
+  display: block;
+}
+
+.timer-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.timer-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.timer-exercise-name {
+  font-size: 1rem;
+  font-weight: bold;
+  color: var(--text-primary);
+}
+
+.timer-set-number {
+  font-size: 0.9rem;
+  color: var(--text-secondary);
+}
+
+.timer-close-btn {
+  all: unset;
+  cursor: pointer;
+  font-size: 1.25rem;
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+  width: 2rem;
+  height: 2rem;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.timer-display {
+  display: flex;
+  justify-content: center;
+  margin: 1rem 0;
+}
+
+.timer-circle {
+  position: relative;
+  width: 160px;
+  height: 160px;
+}
+
+.timer-circle svg {
   width: 100%;
   height: 100%;
-  position: relative;
-  z-index: 1;
+  transform: rotate(-90deg);
 }
 
-.youjorus-bg {
+.timer-progress-bg {
   fill: none;
   stroke: var(--bg-tertiary);
   stroke-width: 8;
 }
 
-.youjorus-progress {
+.timer-progress-circle {
   fill: none;
   stroke: var(--accent-color);
   stroke-width: 8;
   stroke-linecap: round;
-  transition: stroke-dashoffset 1s linear;
+  transition: stroke-dashoffset 0.5s linear;
 }
 
-.youjorus-time {
+.timer-time {
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  font-size: 3rem;
-  font-weight: 700;
+  font-size: 2rem;
+  font-weight: bold;
   color: var(--text-primary);
-  z-index: 2;
-  font-variant-numeric: tabular-nums;
 }
 
-.youjorus-label {
-  margin-top: 1rem;
-  font-size: 1rem;
-  color: var(--accent-color);
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
-
-.youjorus-controls {
-  margin-top: 2rem;
+.timer-controls {
   display: flex;
-  gap: 1rem;
+  gap: 0.5rem;
+  justify-content: center;
 }
 
-.youjorus-btn {
+.timer-btn {
   all: unset;
-  background-color: var(--accent-color);
+  background: var(--accent-color);
   color: var(--text-primary);
-  padding: 1rem 2rem;
-  font-size: 1rem;
-  font-weight: 600;
-  border-radius: 12px;
+  padding: 0.5rem 1rem;
+  border-radius: 8px;
   cursor: pointer;
-  transition: background 0.3s ease;
-  box-shadow: 0 0 8px rgba(255, 107, 53, 0.3);
+  font-weight: 600;
 }
 
-.youjorus-btn:hover {
-  background-color: var(--accent-hover);
-}
-
-/* Animation */
-@keyframes fadeIn {
-  from { opacity: 0; transform: scale(0.95); }
-  to   { opacity: 1; transform: scale(1); }
-}
-
-/* ✅ Masquage total quand aria-hidden est actif */
-.youjorus-timer-overlay[aria-hidden="true"] {
-  display: none !important;
+.timer-btn:hover {
+  background: var(--accent-hover);
 }
