@@ -116,16 +116,13 @@ document.getElementById("youjorus-skip").addEventListener("click", () => {
 });
 
 // ----------- DECLENCHEMENT SUR ACTION UTILISATEUR -----------
-// Exemple : déclenchement manuel via bouton ou logique de séries
-// Aucun timer n'est lancé automatiquement au démarrage !
+// ⚠️ Aucun timer n'est lancé automatiquement au démarrage !
+// Tu dois déclencher manuellement via showYoujorusTimer() ou via un événement utilisateur.
 
 document.addEventListener("serieDone", (e) => {
   // e.detail.duration = durée du repos en secondes
   // e.detail.label = texte (ex: "REST")
-  showYoujorusTimer(e.detail.duration || 120, e.detail.label || "REST");
+  if (e.detail && e.detail.duration) {
+    showYoujorusTimer(e.detail.duration, e.detail.label || "REST");
+  }
 });
-
-// Exemple de test manuel (à supprimer en prod)
-// document.getElementById("workout-container").addEventListener("click", () => {
-//   showYoujorusTimer(240, "RUN");
-// });
