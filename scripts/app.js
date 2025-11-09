@@ -27,6 +27,7 @@ class App {
     workoutDay.muscles = this.extractMuscles(workoutDay.exercises);
     console.log('📦 Séance chargée :', workoutDay);
     this.renderer.render(workoutDay, week);
+
     const label = document.getElementById('current-week-label');
     if (label) label.textContent = `Semaine ${this.weekNumber}`;
   }
