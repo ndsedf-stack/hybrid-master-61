@@ -1,4 +1,4 @@
-import ProgramData from './scripts/program-data.js';
+import ProgramData from './program-data.js';
 import WorkoutRenderer from './scripts/ui/workout-renderer.js';
 import TimerManager from './scripts/modules/timer-manager.js';
 
