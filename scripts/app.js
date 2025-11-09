@@ -1,95 +1,124 @@
-import ProgramData from './program-data.js';
-import WorkoutRenderer from './ui/workout-renderer.js';
-import TimerManager from './modules/timer-manager.js';
+// ===============================
+// APP.JS - Hybrid Master 61
+// Gestion des timers classique et immersif
+// ===============================
 
-class App {
-  constructor() {
-    this.renderer = new WorkoutRenderer();
-    this.timer = new TimerManager();
-    this.weekNumber = 1;
-    this.dayName = 'dimanche';
-  }
-
-  async init() {
-    console.log('🚀 Initialisation Hybrid Master 61...');
-    this.renderer.init();
-    this.timer.init();
-    this.renderer.timerManager = this.timer;
-    this.renderWorkout();
-    this.attachEvents();
-    console.log('✅ Application prête !');
-  }
-
-  renderWorkout() {
-    const week = ProgramData.getWeek(this.weekNumber);
-    const workoutDay = ProgramData.getWorkout(this.weekNumber, this.dayName);
-    workoutDay.name = this.capitalize(this.dayName);
-    workoutDay.muscles = this.extractMuscles(workoutDay.exercises);
-    console.log('📦 Séance chargée :', workoutDay);
-    this.renderer.render(workoutDay, week);
-
-    const label = document.getElementById('current-week-label');
-    if (label) label.textContent = `Semaine ${this.weekNumber}`;
-  }
-
-  attachEvents() {
-    document.getElementById('nav-prev-week')?.addEventListener('click', () => {
-      if (this.weekNumber > 1) {
-        this.weekNumber--;
-        this.renderWorkout();
-      }
-    });
-
-    document.getElementById('nav-next-week')?.addEventListener('click', () => {
-      if (this.weekNumber < 26) {
-        this.weekNumber++;
-        this.renderWorkout();
-      }
-    });
-
-    document.addEventListener('click', (e) => {
-      const btn = e.target.closest('.serie-check');
-      if (!btn) return;
-
-      const exerciseId = btn.dataset.exerciseId;
-      const setNumber = parseInt(btn.dataset.setNumber);
-      console.log(`✅ Série cochée : ${exerciseId} - Set ${setNumber}`);
-
-      const serieItem = btn.closest('.serie-item');
-      if (serieItem) {
-        serieItem.classList.add('completed');
-      }
-
-      btn.querySelector('.check-icon').textContent = '✓';
-      btn.disabled = true;
-
-      const exercise = this.findExerciseById(exerciseId);
-      if (exercise) {
-        const restTime = exercise.rest || 90;
-        this.timer.start(restTime, exercise.name, setNumber);
-      }
-    });
-  }
-
-  findExerciseById(id) {
-    const workout = ProgramData.getWorkout(this.weekNumber, this.dayName);
-    return workout.exercises.find(ex => ex.id === id || ex.name === id);
-  }
-
-  extractMuscles(exercises) {
-    const muscles = new Set();
-    exercises.forEach(ex => {
-      if (Array.isArray(ex.muscles)) ex.muscles.forEach(m => muscles.add(m));
-    });
-    return Array.from(muscles);
-  }
-
-  capitalize(str) {
-    return str.charAt(0).toUpperCase() + str.slice(1);
-  }
+// ----------- UTILITAIRE FORMATAGE TEMPS -----------
+function formatTime(sec) {
+  const m = Math.floor(sec / 60).toString().padStart(2, "0");
+  const s = (sec % 60).toString().padStart(2, "0");
+  return `${m}:${s}`;
 }
 
-document.addEventListener('DOMContentLoaded', () => {
-  const app = new App();
-  app.init();
+// ----------- TIMER CLASSIQUE WIDGET -----------
+let classicInterval;
+let classicRemaining = 0;
+
+function startClassicTimer(duration) {
+  const widget = document.getElementById("timer-widget");
+  const timeDisplay = document.getElementById("timer-time");
+
+  widget.setAttribute("aria-hidden", "false");
+  widget.classList.add("active");
+
+  classicRemaining = duration;
+  timeDisplay.textContent = formatTime(classicRemaining);
+
+  clearInterval(classicInterval);
+  classicInterval = setInterval(() => {
+    classicRemaining--;
+    timeDisplay.textContent = formatTime(classicRemaining);
+    if (classicRemaining <= 0) {
+      clearInterval(classicInterval);
+      widget.classList.remove("active");
+      widget.setAttribute("aria-hidden", "true");
+    }
+  }, 1000);
+}
+
+// Boutons du widget classique
+document.getElementById("timer-pause").addEventListener("click", () => {
+  if (classicInterval) {
+    clearInterval(classicInterval);
+    classicInterval = null;
+  } else {
+    startClassicTimer(classicRemaining);
+  }
+});
+
+document.getElementById("timer-reset").addEventListener("click", () => {
+  clearInterval(classicInterval);
+  startClassicTimer(120); // reset à 2 min par défaut
+});
+
+document.getElementById("timer-skip").addEventListener("click", () => {
+  clearInterval(classicInterval);
+  document.getElementById("timer-widget").classList.remove("active");
+});
+
+document.getElementById("timer-minus-15").addEventListener("click", () => {
+  classicRemaining = Math.max(0, classicRemaining - 15);
+  document.getElementById("timer-time").textContent = formatTime(classicRemaining);
+});
+
+document.getElementById("timer-plus-15").addEventListener("click", () => {
+  classicRemaining += 15;
+  document.getElementById("timer-time").textContent = formatTime(classicRemaining);
+});
+
+document.getElementById("timer-close").addEventListener("click", () => {
+  clearInterval(classicInterval);
+  document.getElementById("timer-widget").classList.remove("active");
+});
+
+// ----------- TIMER IMMERSIF YOUJORUS -----------
+let youjorusInterval;
+let youjorusRemaining = 0;
+
+function showYoujorusTimer(duration, label) {
+  const overlay = document.getElementById("youjorus-timer");
+  const timeDisplay = document.getElementById("youjorus-time");
+  const labelDisplay = document.getElementById("youjorus-label");
+
+  overlay.setAttribute("aria-hidden", "false");
+  overlay.style.display = "flex";
+  labelDisplay.textContent = label;
+
+  youjorusRemaining = duration;
+  timeDisplay.textContent = formatTime(youjorusRemaining);
+
+  clearInterval(youjorusInterval);
+  youjorusInterval = setInterval(() => {
+    youjorusRemaining--;
+    timeDisplay.textContent = formatTime(youjorusRemaining);
+    if (youjorusRemaining <= 0) {
+      clearInterval(youjorusInterval);
+      overlay.style.display = "none";
+      overlay.setAttribute("aria-hidden", "true");
+    }
+  }, 1000);
+}
+
+// Boutons immersif
+document.getElementById("youjorus-pause").addEventListener("click", () => {
+  if (youjorusInterval) {
+    clearInterval(youjorusInterval);
+    youjorusInterval = null;
+  } else {
+    showYoujorusTimer(youjorusRemaining, document.getElementById("youjorus-label").textContent);
+  }
+});
+
+document.getElementById("youjorus-skip").addEventListener("click", () => {
+  clearInterval(youjorusInterval);
+  document.getElementById("youjorus-timer").style.display = "none";
+});
+
+// ----------- EXEMPLE : déclenchement auto quand une série est cochée -----------
+// Ici tu peux brancher sur ton logique de séries
+// Exemple : quand une série est validée, on lance le timer immersif
+document.addEventListener("serieDone", (e) => {
+  // e.detail.duration = durée du repos en secondes
+  // e.detail.label = texte (ex: "REST")
+  showYoujorusTimer(e.detail.duration || 120, e.detail.label || "REST");
 });
