@@ -1,5 +1,5 @@
 /**
- * 07-STATISTICS.CSS
+ * 09-STATISTICS.CSS
  * Styles pour les graphiques et statistiques
  */
 
@@ -13,13 +13,13 @@
   top: 80px;
   width: 320px;
   max-height: calc(100vh - 100px);
-  background: var(--color-bg-card, rgba(26, 26, 46, 0.95));
-  border-left: 2px solid var(--color-border, rgba(255, 255, 255, 0.1));
+  background: var(--bg-card);
+  border-left: 2px solid var(--border-color);
   border-radius: 12px 0 0 12px;
-  padding: 1.5rem;
+  padding: var(--spacing-lg);
   overflow-y: auto;
-  box-shadow: -4px 0 20px rgba(0, 0, 0, 0.3);
-  transition: transform 0.3s ease;
+  box-shadow: -4px 0 20px var(--shadow-lg);
+  transition: transform var(--transition-base);
   z-index: 100;
 }
 
@@ -28,19 +28,19 @@
 }
 
 .stats-panel h3 {
-  font-size: 1.2rem;
-  font-weight: 700;
-  color: var(--color-primary, #00d4aa);
-  margin: 0 0 1.5rem 0;
+  font-size: var(--text-lg);
+  font-weight: var(--font-bold);
+  color: var(--accent-color);
+  margin: 0 0 var(--spacing-lg) 0;
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: var(--spacing-sm);
 }
 
 #stats-content {
   display: flex;
   flex-direction: column;
-  gap: 1.5rem;
+  gap: var(--spacing-lg);
 }
 
 /* ============================================================================
@@ -48,45 +48,45 @@
    ============================================================================ */
 
 .stat-card {
-  background: var(--color-bg-secondary, rgba(255, 255, 255, 0.03));
-  border: 1px solid var(--color-border, rgba(255, 255, 255, 0.1));
-  border-radius: 10px;
-  padding: 1rem;
-  transition: all 0.3s ease;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  padding: var(--spacing-md);
+  transition: all var(--transition-base);
 }
 
 .stat-card:hover {
-  border-color: var(--color-primary, #00d4aa);
+  border-color: var(--accent-color);
   transform: translateX(-4px);
-  box-shadow: 0 4px 15px rgba(0, 212, 170, 0.15);
+  box-shadow: var(--shadow-primary);
 }
 
 .stat-card-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 0.75rem;
+  margin-bottom: var(--spacing-sm);
 }
 
 .stat-card-title {
-  font-size: 0.85rem;
-  font-weight: 600;
+  font-size: var(--text-sm);
+  font-weight: var(--font-semibold);
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  color: var(--color-text-secondary, rgba(255, 255, 255, 0.6));
+  color: var(--text-secondary);
 }
 
 .stat-card-value {
-  font-size: 2rem;
-  font-weight: 700;
-  color: var(--color-primary, #00d4aa);
+  font-size: var(--text-2xl);
+  font-weight: var(--font-bold);
+  color: var(--accent-color);
   line-height: 1;
 }
 
 .stat-card-subtitle {
-  font-size: 0.8rem;
-  color: var(--color-text-secondary, rgba(255, 255, 255, 0.5));
-  margin-top: 0.5rem;
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  margin-top: var(--spacing-xs);
 }
 
 /* ============================================================================
@@ -94,39 +94,39 @@
    ============================================================================ */
 
 .progress-bar-container {
-  margin-top: 0.75rem;
+  margin-top: var(--spacing-sm);
 }
 
 .progress-bar-label {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  font-size: 0.85rem;
-  color: var(--color-text-secondary, rgba(255, 255, 255, 0.6));
-  margin-bottom: 0.5rem;
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+  margin-bottom: var(--spacing-xs);
 }
 
 .progress-bar-track {
   width: 100%;
   height: 8px;
-  background: var(--color-bg-secondary, rgba(255, 255, 255, 0.05));
+  background: var(--bg-secondary);
   border-radius: 4px;
   overflow: hidden;
 }
 
 .progress-bar-fill {
   height: 100%;
-  background: linear-gradient(90deg, var(--color-primary, #00d4aa), #00a896);
+  background: linear-gradient(90deg, var(--accent-color), var(--accent-hover));
   border-radius: 4px;
   transition: width 0.5s ease;
 }
 
 .progress-bar-fill.warning {
-  background: linear-gradient(90deg, #fbbf24, #f59e0b);
+  background: linear-gradient(90deg, var(--warning-color), #f59e0b);
 }
 
 .progress-bar-fill.danger {
-  background: linear-gradient(90deg, #ff6b6b, #ee5a6f);
+  background: linear-gradient(90deg, var(--danger-color), #ee5a6f);
 }
 
 /* ============================================================================
@@ -134,23 +134,23 @@
    ============================================================================ */
 
 .volume-chart {
-  margin-top: 1rem;
-  padding: 1rem;
-  background: var(--color-bg-secondary, rgba(255, 255, 255, 0.02));
-  border-radius: 8px;
+  margin-top: var(--spacing-md);
+  padding: var(--spacing-md);
+  background: var(--bg-secondary);
+  border-radius: var(--radius-md);
 }
 
 .volume-chart-title {
-  font-size: 0.9rem;
-  font-weight: 600;
-  color: var(--color-text-primary, rgba(255, 255, 255, 0.9));
-  margin-bottom: 1rem;
+  font-size: var(--text-base);
+  font-weight: var(--font-semibold);
+  color: var(--text-primary);
+  margin-bottom: var(--spacing-md);
 }
 
 .volume-chart-bars {
   display: flex;
   align-items: flex-end;
-  gap: 0.5rem;
+  gap: var(--spacing-sm);
   height: 120px;
 }
 
@@ -159,19 +159,19 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 0.5rem;
+  gap: var(--spacing-xs);
 }
 
 .volume-chart-bar-fill {
   width: 100%;
-  background: linear-gradient(180deg, var(--color-primary, #00d4aa), rgba(0, 212, 170, 0.3));
+  background: linear-gradient(180deg, var(--accent-color), rgba(0, 212, 170, 0.3));
   border-radius: 4px 4px 0 0;
   transition: height 0.5s ease;
 }
 
 .volume-chart-bar-label {
-  font-size: 0.75rem;
-  color: var(--color-text-secondary, rgba(255, 255, 255, 0.5));
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
   text-align: center;
 }
 
@@ -181,15 +181,15 @@
 
 .muscle-volume-table {
   width: 100%;
-  margin-top: 1rem;
+  margin-top: var(--spacing-md);
 }
 
 .muscle-volume-row {
   display: grid;
   grid-template-columns: 1fr auto;
-  gap: 1rem;
-  padding: 0.75rem 0;
-  border-bottom: 1px solid var(--color-border, rgba(255, 255, 255, 0.05));
+  gap: var(--spacing-md);
+  padding: var(--spacing-sm) 0;
+  border-bottom: 1px solid var(--border-subtle);
 }
 
 .muscle-volume-row:last-child {
@@ -197,21 +197,21 @@
 }
 
 .muscle-name {
-  font-size: 0.9rem;
-  color: var(--color-text-primary, rgba(255, 255, 255, 0.9));
-  font-weight: 500;
+  font-size: var(--text-base);
+  color: var(--text-primary);
+  font-weight: var(--font-medium);
 }
 
 .muscle-sets {
-  font-size: 0.9rem;
-  color: var(--color-primary, #00d4aa);
-  font-weight: 700;
+  font-size: var(--text-base);
+  color: var(--accent-color);
+  font-weight: var(--font-bold);
 }
 
 .muscle-sets-detail {
-  font-size: 0.75rem;
-  color: var(--color-text-secondary, rgba(255, 255, 255, 0.5));
-  margin-top: 0.25rem;
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+  margin-top: var(--spacing-xs);
 }
 
 /* ============================================================================
@@ -221,11 +221,11 @@
 .workout-completion {
   display: flex;
   flex-direction: column;
-  gap: 0.75rem;
-  padding: 1rem;
-  background: linear-gradient(135deg, rgba(0, 212, 170, 0.05), rgba(0, 168, 150, 0.05));
-  border: 1px solid rgba(0, 212, 170, 0.2);
-  border-radius: 10px;
+  gap: var(--spacing-sm);
+  padding: var(--spacing-md);
+  background: linear-gradient(135deg, rgba(255, 107, 53, 0.05), rgba(255, 139, 92, 0.05));
+  border: 1px solid var(--set-active-border);
+  border-radius: var(--radius-md);
 }
 
 .completion-header {
@@ -235,14 +235,14 @@
 }
 
 .completion-percentage {
-  font-size: 2.5rem;
-  font-weight: 700;
-  color: var(--color-primary, #00d4aa);
+  font-size: var(--text-3xl);
+  font-weight: var(--font-bold);
+  color: var(--accent-color);
 }
 
 .completion-label {
-  font-size: 0.85rem;
-  color: var(--color-text-secondary, rgba(255, 255, 255, 0.6));
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
   text-transform: uppercase;
   letter-spacing: 0.5px;
 }
@@ -250,26 +250,26 @@
 .completion-breakdown {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 0.5rem;
+  gap: var(--spacing-sm);
 }
 
 .completion-item {
   text-align: center;
-  padding: 0.5rem;
-  background: var(--color-bg-secondary, rgba(255, 255, 255, 0.02));
-  border-radius: 6px;
+  padding: var(--spacing-sm);
+  background: var(--bg-secondary);
+  border-radius: var(--radius-sm);
 }
 
 .completion-item-value {
-  font-size: 1.3rem;
-  font-weight: 700;
-  color: var(--color-text-primary, #ffffff);
+  font-size: var(--text-lg);
+  font-weight: var(--font-bold);
+  color: var(--text-primary);
 }
 
 .completion-item-label {
-  font-size: 0.75rem;
-  color: var(--color-text-secondary, rgba(255, 255, 255, 0.5));
-  margin-top: 0.25rem;
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+  margin-top: var(--spacing-xs);
 }
 
 /* ============================================================================
@@ -277,69 +277,53 @@
    ============================================================================ */
 
 .weight-progression {
-  margin-top: 1.5rem;
-  padding: 1rem;
-  background: var(--color-bg-secondary, rgba(255, 255, 255, 0.02));
-  border-radius: 10px;
+  margin-top: var(--spacing-lg);
+  padding: var(--spacing-md);
+  background: var(--bg-secondary);
+  border-radius: var(--radius-md);
 }
 
 .weight-progression-title {
-  font-size: 0.95rem;
-  font-weight: 600;
-  color: var(--color-text-primary, rgba(255, 255, 255, 0.9));
-  margin-bottom: 1rem;
-}
-
-.weight-progression-exercise {
-  margin-bottom: 1.5rem;
-}
-
-.weight-progression-exercise:last-child {
-  margin-bottom: 0;
+  font-size: var(--text-base);
+  font-weight: var(--font-semibold);
+  color: var(--text-primary);
+  margin-bottom: var(--spacing-md);
 }
 
 .exercise-progression-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 0.5rem;
+  margin-bottom: var(--spacing-xs);
 }
 
 .exercise-progression-name {
-  font-size: 0.85rem;
-  color: var(--color-text-secondary, rgba(255, 255, 255, 0.7));
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
 }
 
 .exercise-progression-trend {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  font-size: 0.85rem;
-  font-weight: 600;
+  gap: var(--spacing-xs);
+  font-size: var(--text-sm);
+  font-weight: var(--font-semibold);
 }
 
-.trend-up {
-  color: #4ade80;
-}
-
-.trend-down {
-  color: #ff6b6b;
-}
-
-.trend-stable {
-  color: #fbbf24;
-}
+.trend-up { color: var(--success-color); }
+.trend-down { color: var(--danger-color); }
+.trend-stable { color: var(--warning-color); }
 
 .exercise-progression-bar {
   height: 6px;
-  background: var(--color-bg-secondary, rgba(255, 255, 255, 0.05));
+  background: var(--bg-secondary);
   border-radius: 3px;
   overflow: hidden;
 }
 
 .exercise-progression-fill {
   height: 100%;
-  background: linear-gradient(90deg, var(--color-primary, #00d4aa), #00a896);
+  background: linear-gradient(90deg, var(--accent-color), var(--accent-hover));
   border-radius: 3px;
   transition: width 0.5s ease;
 }
@@ -351,96 +335,20 @@
 .weekly-summary {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
-  gap: 1rem;
-  margin-top: 1.5rem;
+  gap: var(--spacing-md);
+  margin-top: var(--spacing-lg);
 }
 
 .summary-card {
-  padding: 1rem;
-  background: var(--color-bg-secondary, rgba(255, 255, 255, 0.03));
-  border: 1px solid var(--color-border, rgba(255, 255, 255, 0.1));
-  border-radius: 8px;
+  padding: var(--spacing-md);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
   text-align: center;
 }
 
 .summary-icon {
-  font-size: 1.5rem;
-  margin-bottom: 0.5rem;
+  font-size: var(--text-xl);
+  margin-bottom: var(--spacing-xs);
 }
 
-.summary-value {
-  font-size: 1.5rem;
-  font-weight: 700;
-  color: var(--color-primary, #00d4aa);
-  margin-bottom: 0.25rem;
-}
-
-.summary-label {
-  font-size: 0.75rem;
-  color: var(--color-text-secondary, rgba(255, 255, 255, 0.5));
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-/* ============================================================================
-   TECHNIQUE BADGE IN STATS
-   ============================================================================ */
-
-.technique-info {
-  margin-top: 1rem;
-  padding: 1rem;
-  background: linear-gradient(135deg, rgba(102, 126, 234, 0.1), rgba(118, 75, 162, 0.1));
-  border-left: 3px solid #667eea;
-  border-radius: 6px;
-}
-
-.technique-info-title {
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: #667eea;
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  margin-bottom: 0.5rem;
-}
-
-.technique-info-description {
-  font-size: 0.85rem;
-  color: var(--color-text-secondary, rgba(255, 255, 255, 0.7));
-  line-height: 1.5;
-}
-
-/* ============================================================================
-   RESPONSIVE
-   ============================================================================ */
-
-@media (max-width: 1200px) {
-  .stats-panel {
-    width: 280px;
-  }
-}
-
-@media (max-width: 768px) {
-  .stats-panel {
-    position: relative;
-    width: 100%;
-    max-height: none;
-    top: 0;
-    border-radius: 12px;
-    border-left: none;
-    border-top: 2px solid var(--color-border, rgba(255, 255, 255, 0.1));
-    margin-top: 2rem;
-    box-shadow: none;
-  }
-
-  .stats-panel.hidden {
-    transform: translateY(100%);
-  }
-
-  .weekly-summary {
-    grid-template-columns: 1fr;
-  }
-
-  .completion-breakdown {
-    grid-template-columns: 1fr;
-  }
-}
