@@ -1,5 +1,5 @@
 /* ====================================================================
-   RESPONSIVE - Optimisé iPhone 15 Pro Max (430×932px)
+   08 - RESPONSIVE (style VALIDE) - Mobile-first, iPhone optimized
    ==================================================================== */
 
 /* ============================================================
@@ -10,11 +10,14 @@ html {
   -webkit-text-size-adjust: 100%;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  scroll-behavior: smooth;
 }
-
 body {
   overscroll-behavior-y: contain;
   -webkit-overflow-scrolling: touch;
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
 }
 
 /* ============================================================
@@ -24,10 +27,9 @@ body {
 .container {
   max-width: 430px;
   margin: 0 auto;
-  padding: 0 var(--spacing-md) var(--spacing-3xl) var(--spacing-md);
+  padding: 0 var(--spacing-md) var(--spacing-3xl);
   min-height: 100vh;
 }
-
 .main-content {
   padding-top: calc(60px + var(--safe-top));
   padding-bottom: calc(90px + var(--safe-bottom));
@@ -42,352 +44,135 @@ body {
     padding-top: max(0px, var(--safe-top));
     padding-bottom: max(0px, var(--safe-bottom));
   }
-  
-  .header {
-    padding-top: max(var(--spacing-sm), var(--safe-top));
-  }
-  
-  .bottom-nav {
-    padding-bottom: max(var(--spacing-md), var(--safe-bottom));
-  }
+  .header { padding-top: max(var(--spacing-sm), var(--safe-top)); }
+  .bottom-nav { padding-bottom: max(var(--spacing-md), var(--safe-bottom)); }
 }
 
 /* ============================================================
-   iPHONE 15 PRO MAX (430×932px) - OPTIMISÉ
+   LAYOUT RESPONSIVE POUR COMPOSANTS
+   ============================================================ */
+.sets-grid { grid-template-columns: repeat(4, 1fr); }
+@media (max-width: 1024px) { .sets-grid { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 768px) { .sets-grid { grid-template-columns: repeat(2, 1fr); } }
+
+.day-header { padding: 0.6rem 0.8rem; }
+@media (max-width: 768px) {
+  .day-header h3 { font-size: 1rem; }
+  .badge.technique { font-size: 0.75rem; padding: 0.2rem 0.5rem; }
+}
+
+.exercise-card { padding: 1.25rem; }
+@media (max-width: 768px) { .exercise-card { padding: 1rem; } }
+
+.superset { padding: 0.9rem; }
+@media (max-width: 768px) { .superset { padding: 0.8rem; } }
+
+.action-bar { gap: 0.6rem; }
+.btn { padding: 0.6rem 1rem; }
+@media (max-width: 768px) { .btn { font-size: 0.95rem; } }
+
+/* ============================================================
+   iPHONE 15 PRO MAX (430×932px)
    ============================================================ */
 @media screen and (max-width: 430px) {
-  :root {
-    /* Ajuster légèrement les espacements */
-    --spacing-lg: 20px;
-    --spacing-xl: 28px;
-  }
-  
-  /* Headers */
-  .exercise-name {
-    font-size: var(--text-lg);
-  }
-  
-  .exercise-icon {
-    font-size: 28px;
-  }
-  
-  /* Params */
-  .param-value {
-    font-size: var(--text-xl);
-  }
-  
-  /* Séries */
-  .serie-number {
-    width: 40px;
-    height: 40px;
-    font-size: var(--text-base);
-  }
-  
-  .serie-check {
-    width: 48px;
-    height: 48px;
-  }
-  
-  .check-icon {
-    font-size: var(--text-xl);
-  }
+  :root { --spacing-lg: 20px; --spacing-xl: 28px; }
+  .exercise-header h3 { font-size: 1.05rem; }
+  .sets-count { font-size: 0.75rem; }
+  .set { font-size: 0.95rem; }
 }
 
 /* ============================================================
    iPHONE 14 PRO / 13 PRO / 12 PRO (390×844px)
    ============================================================ */
 @media screen and (max-width: 390px) {
-  :root {
-    --spacing-md: 14px;
-    --spacing-lg: 18px;
-  }
-  
-  #app,
-  .container {
-    padding-left: var(--spacing-sm);
-    padding-right: var(--spacing-sm);
-  }
-  
-  .exercise-header {
-    padding: var(--spacing-md);
-    gap: var(--spacing-sm);
-  }
-  
-  .exercise-name {
-    font-size: var(--text-base);
-  }
-  
-  .exercise-icon {
-    font-size: 24px;
-  }
-  
-  .param-item {
-    padding: var(--spacing-sm);
-  }
-  
-  .param-value {
-    font-size: var(--text-lg);
-  }
-  
-  .serie-item {
-    padding: var(--spacing-sm) var(--spacing-md);
-    gap: var(--spacing-sm);
-  }
+  :root { --spacing-md: 14px; --spacing-lg: 18px; }
+  #app, .container { padding-left: var(--spacing-sm); padding-right: var(--spacing-sm); }
+  .exercise-card { padding: 0.95rem; }
+  .exercise-header h3 { font-size: 1rem; }
+  .meta-item { font-size: 0.8rem; }
+  .set { font-size: 0.9rem; padding: 0.45rem 0.55rem; }
+  .btn { font-size: 0.92rem; }
 }
 
 /* ============================================================
    iPHONE SE / 13 MINI (375×667px)
    ============================================================ */
 @media screen and (max-width: 375px) {
-  :root {
-    --spacing-xs: 3px;
-    --spacing-sm: 6px;
-    --spacing-md: 12px;
-    --spacing-lg: 16px;
-  }
-  
-  #app,
-  .container {
-    padding-left: var(--spacing-xs);
-    padding-right: var(--spacing-xs);
-  }
-  
-  .exercise-card {
-    margin-bottom: var(--spacing-md);
-  }
-  
-  .exercise-header {
-    padding: var(--spacing-sm) var(--spacing-md);
-    gap: var(--spacing-sm);
-  }
-  
-  .exercise-name {
-    font-size: var(--text-sm);
-  }
-  
-  .exercise-icon {
-    font-size: 20px;
-  }
-  
-  .exercise-details {
-    font-size: var(--text-xs);
-    gap: var(--spacing-xs);
-  }
-  
-  .exercise-body {
-    padding: var(--spacing-md);
-  }
-  
-  .exercise-params {
-    grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
-    gap: var(--spacing-sm);
-  }
-  
-  .param-label {
-    font-size: 10px;
-  }
-  
-  .param-value {
-    font-size: var(--text-base);
-  }
-  
-  .serie-number {
-    width: 36px;
-    height: 36px;
-    font-size: var(--text-sm);
-  }
-  
-  .serie-reps {
-    font-size: var(--text-base);
-  }
-  
-  .serie-weight {
-    font-size: var(--text-sm);
-  }
-  
-  .serie-check {
-    width: 44px;
-    height: 44px;
-  }
-  
-  .check-icon {
-    font-size: var(--text-lg);
-  }
-  
-  .serie-rest {
-    font-size: var(--text-xs);
-    padding: 4px 8px;
-  }
+  :root { --spacing-xs: 3px; --spacing-sm: 6px; --spacing-md: 12px; --spacing-lg: 16px; }
+  #app, .container { padding-left: var(--spacing-xs); padding-right: var(--spacing-xs); }
+  .exercise-card { margin-bottom: var(--spacing-md); }
+  .exercise-header h3 { font-size: 0.95rem; }
+  .exercise-meta { gap: var(--spacing-xs); }
+  .meta-item { font-size: 0.78rem; padding: 0.18rem 0.45rem; }
+  .sets-grid { grid-template-columns: repeat(2, 1fr); gap: 0.45rem; }
+  .set { font-size: 0.88rem; }
+  .btn { font-size: 0.9rem; padding: 0.55rem 0.9rem; }
 }
 
 /* ============================================================
    ORIENTATION PAYSAGE
    ============================================================ */
 @media screen and (orientation: landscape) and (max-height: 500px) {
-  .exercise-card {
-    margin-bottom: var(--spacing-md);
-  }
-  
-  .exercise-header {
-    padding: var(--spacing-sm) var(--spacing-md);
-  }
-  
-  .exercise-body {
-    padding: var(--spacing-md);
-  }
-  
-  .serie-item {
-    padding: var(--spacing-sm) var(--spacing-md);
-  }
+  .exercise-card { margin-bottom: var(--spacing-md); padding: 0.9rem; }
+  .exercise-header { padding: var(--spacing-sm) var(--spacing-md); }
+  .sets-grid { grid-template-columns: repeat(3, 1fr); }
+  .action-bar { position: sticky; bottom: 0; background: var(--bg-primary); padding: 0.5rem 0; }
 }
 
 /* ============================================================
    FIXES POUR iOS
    ============================================================ */
-
-/* Empêcher le zoom sur les inputs */
-input,
-select,
-textarea,
-button {
-  font-size: 16px !important;
-}
-
-/* Reset apparence boutons iOS */
-button,
-input[type="button"],
-input[type="submit"] {
-  -webkit-appearance: none;
-  appearance: none;
-  border-radius: 0;
-}
-
-/* Amélioration emojis */
-.exercise-icon,
-.nav-item-icon,
-.header-icon,
-.check-icon,
-.rest-icon {
+input, select, textarea, button { font-size: 16px !important; }
+button, input[type="button"], input[type="submit"] { -webkit-appearance: none; appearance: none; border-radius: 0; }
+.exercise-icon, .nav-item-icon, .header-icon, .check-icon, .rest-icon {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI Emoji", "Apple Color Emoji", sans-serif;
   line-height: 1;
-}
-
-/* Scroll smooth */
-html {
-  scroll-behavior: smooth;
-}
-
-@media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
-  }
 }
 
 /* ============================================================
    SCROLLBAR PERSONNALISÉE
    ============================================================ */
-::-webkit-scrollbar {
-  width: var(--scrollbar-width);
-}
-
-::-webkit-scrollbar-track {
-  background: var(--scrollbar-track);
-}
-
-::-webkit-scrollbar-thumb {
-  background: var(--scrollbar-thumb);
-  border-radius: var(--radius-sm);
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: var(--bg-card-hover);
-}
+::-webkit-scrollbar { width: var(--scrollbar-width); }
+::-webkit-scrollbar-track { background: var(--scrollbar-track); }
+::-webkit-scrollbar-thumb { background: var(--scrollbar-thumb); border-radius: var(--radius-sm); }
+::-webkit-scrollbar-thumb:hover { background: var(--bg-card-hover); }
 
 /* ============================================================
-   FOCUS VISIBLE (Accessibilité)
+   FOCUS VISIBLE
    ============================================================ */
-:focus-visible {
-  outline: none;
-  box-shadow: var(--focus-ring);
-  outline-offset: var(--focus-ring-offset);
-}
-
-button:focus-visible,
-.serie-check:focus-visible {
-  outline: 2px solid var(--primary-color);
-  outline-offset: 2px;
-}
+:focus-visible { outline: none; box-shadow: var(--focus-ring); outline-offset: var(--focus-ring-offset); }
+button:focus-visible { outline: 2px solid var(--primary-color); outline-offset: 2px; }
 
 /* ============================================================
    SÉLECTION DE TEXTE
    ============================================================ */
-::selection {
-  background: var(--primary-color);
-  color: #000000;
-}
-
-::-moz-selection {
-  background: var(--primary-color);
-  color: #000000;
-}
+::selection { background: var(--primary-color); color: #000; }
+::-moz-selection { background: var(--primary-color); color: #000; }
 
 /* ============================================================
-   PERFORMANCE - Hardware Acceleration
+   PERFORMANCE
    ============================================================ */
-.exercise-card,
-.serie-item,
-.serie-check,
-.param-item {
+.exercise-card, .set, .meta-item, .btn {
   transform: translateZ(0);
   backface-visibility: hidden;
   perspective: 1000px;
 }
 
 /* ============================================================
-   DARK MODE NATIF iOS (Auto)
+   DARK MODE NATIF iOS
    ============================================================ */
-@media (prefers-color-scheme: dark) {
-  :root {
-    color-scheme: dark;
-  }
-}
+@media (prefers-color-scheme: dark) { :root { color-scheme: dark; } }
 
 /* ============================================================
-   NAVIGATION BOTTOM - iPhone Safe Area
+   NAVIGATION BOTTOM
    ============================================================ */
-.bottom-nav {
-  padding-bottom: calc(var(--spacing-md) + var(--safe-bottom));
-}
-
-.header {
-  padding-top: calc(var(--spacing-sm) + var(--safe-top));
-}
+.bottom-nav { padding-bottom: calc(var(--spacing-md) + var(--safe-bottom)); }
+.header { padding-top: calc(var(--spacing-sm) + var(--safe-top)); }
 
 /* ============================================================
-   OPTIMISATIONS PERFORMANCE
-   ============================================================ */
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-  }
-}
-
-/* ============================================================
-   PRINT (Bonus)
+   PRINT
    ============================================================ */
 @media print {
-  .bottom-nav,
-  .header-actions,
-  .serie-check {
-    display: none !important;
-  }
-  
-  .exercise-card {
-    break-inside: avoid;
-    page-break-inside: avoid;
-  }
+  .bottom-nav, .header-actions { display: none !important; }
+  .exercise-card { break-inside: avoid; page-break-inside: avoid; }
 }
