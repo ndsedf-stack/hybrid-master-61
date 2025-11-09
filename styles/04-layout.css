@@ -1,4 +1,4 @@
-/* ======y========================================================== */
+/* ================================================================ */
 /* 04-LAYOUT.CSS - Grilles et Layouts */
 /* ================================================================ */
 
@@ -23,11 +23,11 @@
 /* ================================================================ */
 
 .main-header {
-  background: var(--color-secondary);
+  background: var(--bg-secondary);
   padding: var(--spacing-xl) 0;
   margin-bottom: var(--spacing-xl);
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
-  border-bottom: 3px solid var(--color-primary);
+  border-bottom: 3px solid var(--primary-color);
 }
 
 .header-content {
@@ -37,7 +37,7 @@
 .logo {
   font-size: 2.5rem;
   font-weight: 900;
-  color: var(--color-primary);
+  color: var(--primary-color);
   text-transform: uppercase;
   letter-spacing: 3px;
   margin-bottom: var(--spacing-xs);
@@ -45,8 +45,8 @@
 }
 
 .tagline {
-  color: var(--color-text-muted);
-  font-size: var(--font-size-base);
+  color: var(--text-muted);
+  font-size: var(--text-base);
   margin: 0;
 }
 
@@ -66,7 +66,7 @@
 /* ================================================================ */
 
 .week-navigation {
-  background: var(--color-bg-card);
+  background: var(--bg-card);
   padding: var(--spacing-lg);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-lg);
@@ -93,9 +93,9 @@
 }
 
 .week-info h1 {
-  font-size: var(--font-size-2xl);
+  font-size: var(--text-2xl);
   margin-bottom: var(--spacing-sm);
-  color: var(--color-primary);
+  color: var(--primary-color);
 }
 
 .week-meta {
@@ -107,8 +107,8 @@
 }
 
 .block-name {
-  color: var(--color-text-muted);
-  font-size: var(--font-size-lg);
+  color: var(--text-muted);
+  font-size: var(--text-lg);
   font-weight: 600;
 }
 
@@ -133,7 +133,7 @@
 /* ================================================================ */
 
 .workout-header {
-  background: linear-gradient(135deg, var(--color-bg-card) 0%, rgba(30, 30, 63, 0.8) 100%);
+  background: linear-gradient(135deg, var(--bg-card) 0%, rgba(30, 30, 63, 0.8) 100%);
   padding: var(--spacing-xl);
   border-radius: var(--radius-lg);
   margin-bottom: var(--spacing-xl);
@@ -142,9 +142,9 @@
 }
 
 .workout-header h2 {
-  font-size: var(--font-size-2xl);
+  font-size: var(--text-2xl);
   margin-bottom: var(--spacing-md);
-  color: var(--color-primary);
+  color: var(--primary-color);
   text-transform: uppercase;
   letter-spacing: 2px;
 }
@@ -163,8 +163,8 @@
 }
 
 .meta-item strong {
-  font-size: var(--font-size-xl);
-  color: var(--color-primary);
+  font-size: var(--text-xl);
+  color: var(--primary-color);
 }
 
 /* ================================================================ */
@@ -233,7 +233,7 @@
 
 .error-message {
   background: rgba(255, 68, 68, 0.1);
-  border: 2px solid var(--color-danger);
+  border: 2px solid var(--danger-color);
   border-radius: var(--radius-md);
   padding: var(--spacing-xl);
   text-align: center;
@@ -241,6 +241,6 @@
 }
 
 .error-message h3 {
-  color: var(--color-danger);
+  color: var(--danger-color);
   margin-bottom: var(--spacing-sm);
 }
