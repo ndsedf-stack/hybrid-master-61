@@ -83,7 +83,7 @@
   height: 160px;
 }
 
-/* ✅ Fond clair derrière le texte */
+/* ✅ Fond clair derrière le cercle */
 .timer-circle::before {
   content: "";
   position: absolute;
@@ -149,9 +149,7 @@
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s ease;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
+  text-align: center;
 }
 
 .timer-controls button:hover {
@@ -253,7 +251,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  z-index: 2000; /* ✅ corrigé */
+  z-index: 2000;
   color: var(--accent-color);
   font-size: 5rem;
   font-weight: var(--font-bold);
@@ -321,6 +319,6 @@
 
 @media (max-width: 480px) {
   .rest-timer-time {
-    font-size: 4rem; /* ✅ corrigé */
+    font-size: 4rem;
   }
 }
