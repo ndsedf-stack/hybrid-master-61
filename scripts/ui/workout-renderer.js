@@ -1,213 +1,96 @@
-/**
- * WORKOUT RENDERER - Affichage des séances avec supersets
- * Génère le HTML pour afficher les exercices avec leurs séries
- */
-
 export default class WorkoutRenderer {
-    constructor() {
-        this.container = null;
-    }
+  constructor() {
+    this.container = document.getElementById('workout-container');
+    this.timerManager = null;
+  }
 
-    init() {
-        this.container = document.getElementById('workout-container');
-        if (!this.container) {
-            console.error('❌ Container workout-container introuvable');
-        }
-    }
+  init() {
+    this.container.innerHTML = '';
+  }
 
-    render(workoutDay, week) {
-        if (!this.container) {
-            console.error('❌ Container non initialisé');
-            return;
-        }
+  render(workout, week) {
+    this.container.innerHTML = '';
 
-        if (!workoutDay || !workoutDay.exercises || workoutDay.exercises.length === 0) {
-            this.container.innerHTML = `
-                <div class="empty-workout">
-                    <p>🏖️ Repos aujourd'hui !</p>
-                </div>
-            `;
-            return;
-        }
+    const header = document.createElement('h2');
+    header.textContent = `${workout.name} - BLOCK ${week.block} - ${week.technique}`;
+    this.container.appendChild(header);
 
-        const exercisesWithSupersets = this.detectSupersets(workoutDay.exercises);
+    workout.exercises.forEach(ex => {
+      const card = document.createElement('div');
+      card.className = 'exercise-card';
 
-        const exercisesHTML = exercisesWithSupersets.map((exercise, index) => 
-            this.renderExercise(exercise, index, week)
-        ).join('');
+      const title = document.createElement('h3');
+      title.textContent = ex.name;
+      card.appendChild(title);
 
-        this.container.innerHTML = exercisesHTML;
-    }
+      const meta = document.createElement('div');
+      meta.className = 'meta';
 
-    detectSupersets(exercises) {
-        return exercises.map((exercise, index) => {
-            if (exercise.superset || exercise.setGroup) {
-                return { ...exercise, isSuperset: true };
-            }
+      const metaItems = [
+        `Séries: ${ex.sets}`,
+        `Reps: ${ex.reps}`,
+        `Poids: ${ex.weight}kg`,
+        `Tempo: ${ex.tempo}`,
+        `RPE: ${ex.rpe}`
+      ];
 
-            const nextExercise = exercises[index + 1];
-            if (nextExercise && 
-                exercise.category === nextExercise.category && 
-                exercise.rest === nextExercise.rest) {
-                return { ...exercise, isSuperset: true };
-            }
+      metaItems.forEach(text => {
+        const span = document.createElement('span');
+        span.className = 'meta-item';
+        span.textContent = text;
+        meta.appendChild(span);
+      });
 
-            return exercise;
-        });
-    }
+      card.appendChild(meta);
+      this.renderSeries(ex, card);
+      this.container.appendChild(card);
+    });
+  }
 
-    renderExercise(exercise, index, week) {
-        const {
-            id,
-            name,
-            type,
-            category,
-            muscles,
-            sets,
-            reps,
-            weight,
-            rpe,
-            rest,
-            tempo,
-            notes,
-            isSuperset,
-            progression
-        } = exercise;
+  renderSeries(exercise, container) {
+    const sets = exercise.sets;
+    const reps = exercise.reps;
+    const weight = exercise.weight;
+    const rest = exercise.rest;
 
-        const icon = type === 'cardio' ? '🔥' : '💪';
-        const typeClass = type === 'cardio' ? 'cardio' : 'strength';
-        const categoryLabel = category || '';
-        const musclesLabel = muscles ? muscles.join(', ') : '';
-        const supersetClass = isSuperset ? 'superset' : '';
+    const seriesArray = typeof sets === 'number'
+      ? Array.from({ length: sets }, () => ({ reps, weight, rest }))
+      : Array.isArray(sets)
+      ? sets
+      : [sets];
 
-        const paramsHTML = this.renderParams(exercise);
-        const seriesHTML = this.renderSeries(exercise, id);
-        const notesHTML = notes ? `
-            <div class="exercise-notes">
-                <div class="notes-title">📝 Notes</div>
-                <div class="notes-content">${notes}</div>
-            </div>
-        ` : '';
-        const progressionHTML = progression ? this.renderProgression(progression) : '';
+    const grid = document.createElement('div');
+    grid.className = 'sets-grid';
 
-        return `
-            <div class="exercise-card slide-up ${supersetClass}" data-exercise-id="${id}">
-                <div class="exercise-header ${typeClass}">
-                    <span class="exercise-icon">${icon}</span>
-                    <div class="exercise-title">
-                        <h3 class="exercise-name">${name}</h3>
-                        <div class="exercise-details">
-                            ${categoryLabel ? `<span>${categoryLabel}</span>` : ''}
-                            ${musclesLabel ? `<span>🎯 ${musclesLabel}</span>` : ''}
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="exercise-body">
-                    ${paramsHTML}
-                    ${seriesHTML}
-                    ${notesHTML}
-                    ${progressionHTML}
-                </div>
-            </div>
-        `;
-    }
+    seriesArray.forEach((serie, index) => {
+      const setDiv = document.createElement('div');
+      setDiv.className = 'set pending';
+      setDiv.dataset.exerciseId = exercise.id;
 
-    renderParams(exercise) {
-        const { sets, reps, weight, rpe, rest, tempo } = exercise;
+      const label = document.createElement('span');
+      label.className = 'set-label';
+      label.textContent = `Série ${index + 1}`;
 
-        const params = [];
+      const info = document.createElement('span');
+      info.className = 'set-info';
+      info.textContent = `${serie.reps} reps • ${serie.weight}kg`;
 
-        if (sets) {
-            const setsLabel = Array.isArray(sets) ? `${sets.length}` : sets;
-            params.push({ label: 'SÉRIES', value: setsLabel });
-        }
+      const button = document.createElement('button');
+      button.className = 'serie-check';
+      button.className = 'serie-check';
+      button.dataset.exerciseId = exercise.id;
+      button.dataset.setNumber = index + 1;
 
-        if (reps) params.push({ label: 'REPS', value: reps });
-        if (weight) params.push({ label: 'POIDS', value: `${weight}kg` });
-        if (rpe) params.push({ label: 'RPE', value: rpe });
-        if (rest) params.push({ label: 'REPOS', value: `${rest}s` });
-        if (tempo) params.push({ label: 'TEMPO', value: tempo });
+      const icon = document.createElement('span');
+      icon.className = 'check-icon';
+      button.appendChild(icon);
 
-        if (params.length === 0) return '';
+      setDiv.appendChild(label);
+      setDiv.appendChild(info);
+      setDiv.appendChild(button);
+      grid.appendChild(setDiv);
+    });
 
-        const paramsHTML = params.map(param => `
-            <div class="param-item">
-                <div class="param-label">${param.label}</div>
-                <div class="param-value">${param.value}</div>
-            </div>
-        `).join('');
-
-        return `<div class="exercise-params">${paramsHTML}</div>`;
-    }
-
-    renderSeries(exercise, exerciseId) {
-        const { sets, reps, weight, rest } = exercise;
-
-        if (!sets || sets === 0) return '';
-
-        let seriesArray = [];
-
-        if (Array.isArray(sets)) {
-            seriesArray = sets;
-        } else if (typeof sets === 'number') {
-            seriesArray = Array.from({ length: sets }, () => ({
-                reps,
-                weight,
-                rest
-            }));
-        } else {
-            return '';
-        }
-
-        const seriesHTML = seriesArray.map((set, index) => {
-            const setNumber = index + 1;
-            const isCompleted = false;
-            const completedClass = isCompleted ? 'completed' : '';
-
-            return `
-                <div class="serie-item ${completedClass}" data-set-number="${setNumber}">
-                    <div class="serie-number">${setNumber}</div>
-                    <div class="serie-info">
-                        <div class="serie-reps">${set.reps} reps</div>
-                        ${set.weight ? `<div class="serie-weight">${set.weight}kg</div>` : ''}
-                    </div>
-                    ${set.rest ? `
-                        <div class="serie-rest">
-                            <span class="rest-icon">⏱️</span>
-                            <span class="rest-time">${set.rest}s repos</span>
-                        </div>
-                    ` : ''}
-                    <button 
-                        class="serie-check" 
-                        data-exercise-id="${exerciseId}"
-                        data-set-number="${setNumber}"
-                        aria-label="Compléter la série ${setNumber}"
-                    >
-                        <span class="check-icon">${isCompleted ? '✓' : ''}</span>
-                    </button>
-                </div>
-            `;
-        }).join('');
-
-        return `<div class="series-container">${seriesHTML}</div>`;
-    }
-
-    renderProgression(progression) {
-        const { from, to } = progression;
-
-        return `
-            <div class="progression-card">
-                <div class="progression-label">
-                    <span>☑️</span>
-                    <span>Progression</span>
-                </div>
-                <div class="progression-values">
-                    <span class="progression-from">${from}kg</span>
-                    <span class="progression-arrow">→</span>
-                    <span class="progression-to">${to}kg</span>
-                </div>
-            </div>
-        `;
-    }
+    container.appendChild(grid);
+  }
 }
