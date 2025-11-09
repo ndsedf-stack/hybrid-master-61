@@ -89,3 +89,117 @@ body,
   background-color: var(--bg-card) !important;
   color: var(--text-primary) !important;
 }
+/* ========================================
+   RESPONSIVE - Ajustements globaux
+======================================== */
+
+@media screen and (max-width: 1024px) {
+  .exercise-card {
+    margin-bottom: 1rem;
+    background: linear-gradient(145deg, var(--bg-card), var(--surface-color));
+    color: var(--text-primary);
+  }
+
+  .exercise-title h3 {
+    font-size: var(--font-size-lg);
+  }
+
+  .stat-card,
+  .volume-chart,
+  .summary-card {
+    background-color: var(--bg-card);
+    color: var(--text-primary);
+  }
+}
+
+@media screen and (max-width: 768px) {
+  .exercise-card {
+    margin-bottom: 0.75rem;
+    background: linear-gradient(145deg, var(--bg-card), var(--surface-color));
+    color: var(--text-primary);
+  }
+
+  .exercise-name {
+    font-size: var(--font-size-base);
+  }
+
+  .exercise-details {
+    font-size: var(--font-size-sm);
+    background-color: var(--surface-color);
+    color: var(--text-secondary);
+  }
+
+  .stat-card,
+  .volume-chart,
+  .summary-card {
+    background-color: var(--bg-card);
+    color: var(--text-primary);
+  }
+}
+
+@media screen and (max-width: 480px) {
+  .exercise-card {
+    margin-bottom: 0.5rem;
+    background: linear-gradient(145deg, var(--bg-card), var(--surface-color));
+    color: var(--text-primary);
+  }
+
+  .exercise-name {
+    font-size: var(--font-size-sm);
+  }
+
+  .exercise-details {
+    font-size: var(--font-size-xs);
+    background-color: var(--surface-color);
+    color: var(--text-secondary);
+  }
+
+  .param-value {
+    font-size: var(--font-size-base);
+    color: var(--text-primary);
+  }
+
+  .stat-card,
+  .volume-chart,
+  .summary-card {
+    background-color: var(--bg-card);
+    color: var(--text-primary);
+  }
+}
+
+@media screen and (max-width: 375px) {
+  .exercise-name {
+    font-size: var(--font-size-xs);
+  }
+
+  .param-value {
+    font-size: var(--font-size-sm);
+  }
+
+  .exercise-card,
+  .stat-card,
+  .volume-chart,
+  .summary-card {
+    background-color: var(--bg-card);
+    color: var(--text-primary);
+  }
+}
+
+/* ============================================================================
+   FILET ANTI-FOND BLANC GLOBAL
+   ============================================================================ */
+
+body,
+.exercise-card,
+.weight-input-group,
+.tempo-value,
+.set-checkbox,
+.stat-card,
+.volume-chart,
+.summary-card,
+.muscle-volume-row,
+.completion-item {
+  background-color: var(--bg-card) !important;
+  color: var(--text-primary) !important;
+}
+
