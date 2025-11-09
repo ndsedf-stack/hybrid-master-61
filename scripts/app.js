@@ -41,7 +41,7 @@ document.getElementById("timer-pause").addEventListener("click", () => {
   if (classicInterval) {
     clearInterval(classicInterval);
     classicInterval = null;
-  } else {
+  } else if (classicRemaining > 0) {
     startClassicTimer(classicRemaining);
   }
 });
@@ -104,7 +104,7 @@ document.getElementById("youjorus-pause").addEventListener("click", () => {
   if (youjorusInterval) {
     clearInterval(youjorusInterval);
     youjorusInterval = null;
-  } else {
+  } else if (youjorusRemaining > 0) {
     showYoujorusTimer(youjorusRemaining, document.getElementById("youjorus-label").textContent);
   }
 });
@@ -112,13 +112,20 @@ document.getElementById("youjorus-pause").addEventListener("click", () => {
 document.getElementById("youjorus-skip").addEventListener("click", () => {
   clearInterval(youjorusInterval);
   document.getElementById("youjorus-timer").style.display = "none";
+  document.getElementById("youjorus-timer").setAttribute("aria-hidden", "true");
 });
 
-// ----------- EXEMPLE : déclenchement auto quand une série est cochée -----------
-// Ici tu peux brancher sur ton logique de séries
-// Exemple : quand une série est validée, on lance le timer immersif
+// ----------- DECLENCHEMENT SUR ACTION UTILISATEUR -----------
+// Exemple : déclenchement manuel via bouton ou logique de séries
+// Aucun timer n'est lancé automatiquement au démarrage !
+
 document.addEventListener("serieDone", (e) => {
   // e.detail.duration = durée du repos en secondes
   // e.detail.label = texte (ex: "REST")
   showYoujorusTimer(e.detail.duration || 120, e.detail.label || "REST");
 });
+
+// Exemple de test manuel (à supprimer en prod)
+// document.getElementById("workout-container").addEventListener("click", () => {
+//   showYoujorusTimer(240, "RUN");
+// });
