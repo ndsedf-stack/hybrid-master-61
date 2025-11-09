@@ -115,31 +115,23 @@ document.getElementById("youjorus-skip").addEventListener("click", () => {
   document.getElementById("youjorus-timer").setAttribute("aria-hidden", "true");
 });
 
-// ----------- DECLENCHEMENT SUR ACTION UTILISATEUR -----------
-// ⚠️ Aucun timer n'est lancé automatiquement au démarrage !
-// Tu dois déclencher manuellement via showYoujorusTimer() ou via un événement utilisateur.
-
-// Exemple : déclenchement quand une série est cochée
+// ----------- ÉCOUTE DE L'ÉVÉNEMENT serieDone -----------
 document.addEventListener("serieDone", (e) => {
   if (e.detail && e.detail.duration) {
     showYoujorusTimer(e.detail.duration, e.detail.label || "REST");
   }
 });
 
-// Exemple de déclenchement manuel (pour test uniquement)
-// document.getElementById("workout-container").addEventListener("click", () => {
-//   showYoujorusTimer(240, "RUN");
-// });
-// ----------- DÉCLENCHEMENT DU TIMER IMMERSIF QUAND UNE SÉRIE EST COCHÉE -----------
-// Ce code écoute les cases à cocher des séries et déclenche le timer immersif uniquement à ce moment-là
-
+// ----------- DÉCLENCHEMENT DU TIMER IMMERSIF SUR COCHAGE -----------
+// ✅ Corrigé : ne déclenche que si l'utilisateur coche une case manuellement
 document.querySelectorAll(".serie-checkbox").forEach(checkbox => {
-  checkbox.addEventListener("change", () => {
-    if (checkbox.checked) {
+  checkbox.addEventListener("change", (e) => {
+    if (e.target.checked && !e.target.dataset.triggered) {
+      e.target.dataset.triggered = "true"; // empêche double déclenchement
       document.dispatchEvent(new CustomEvent("serieDone", {
         detail: {
-          duration: 120, // durée du timer en secondes
-          label: "REST"  // texte affiché dans le timer immersif
+          duration: 120,
+          label: "REST"
         }
       }));
     }
