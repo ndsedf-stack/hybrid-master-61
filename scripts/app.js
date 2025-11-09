@@ -119,10 +119,14 @@ document.getElementById("youjorus-skip").addEventListener("click", () => {
 // ⚠️ Aucun timer n'est lancé automatiquement au démarrage !
 // Tu dois déclencher manuellement via showYoujorusTimer() ou via un événement utilisateur.
 
+// Exemple : déclenchement quand une série est cochée
 document.addEventListener("serieDone", (e) => {
-  // e.detail.duration = durée du repos en secondes
-  // e.detail.label = texte (ex: "REST")
   if (e.detail && e.detail.duration) {
     showYoujorusTimer(e.detail.duration, e.detail.label || "REST");
   }
 });
+
+// Exemple de déclenchement manuel (pour test uniquement)
+// document.getElementById("workout-container").addEventListener("click", () => {
+//   showYoujorusTimer(240, "RUN");
+// });
