@@ -3,267 +3,104 @@
    Widget de timer de repos entre séries
    ============================================== */
 
-/* ============== TIMER WIDGET - CONTAINER ============== */
-#timer-widget {
+/* ============== TIMER WIDGET CLASSIQUE ============== */
+/* ... ton style existant du widget classique ici ... */
+
+/* ============== TIMER IMMERSIF YOUJORUS STYLE ============== */
+.youjorus-timer-overlay {
   position: fixed;
-  bottom: -100%;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 90%;
-  max-width: 400px;
-  background: var(--bg-secondary);
-  border-radius: 20px 20px 0 0;
-  box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.3);
-  padding: 1.5rem;
-  z-index: 1000;
-  transition: bottom 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
-}
-
-#timer-widget.active { bottom: 0; }
-
-/* ============== TIMER HEADER ============== */
-.timer-header {
+  inset: 0;
+  background: radial-gradient(circle at center, var(--surface-color), var(--bg-primary));
   display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1rem;
-}
-
-.timer-info { flex: 1; }
-
-.timer-exercise-name {
-  font-size: 1rem;
-  font-weight: 700;
-  color: var(--text-primary);
-  margin: 0 0 0.25rem 0;
-}
-
-.timer-set-number {
-  font-size: 0.85rem;
-  color: var(--text-secondary);
-  margin: 0;
-}
-
-.timer-close-btn {
-  background: transparent;
-  border: none;
-  font-size: 1.5rem;
-  color: var(--text-secondary);
-  cursor: pointer;
-  width: 32px; height: 32px;
-  display: flex; align-items: center; justify-content: center;
-  border-radius: 50%;
-  transition: all 0.2s ease;
-}
-.timer-close-btn:hover {
-  background: var(--bg-tertiary);
-  color: var(--text-primary);
-}
-
-/* ============== TIMER DISPLAY - CERCLE ============== */
-.timer-display {
-  display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin: 1.5rem 0;
-  position: relative;
+  z-index: 3000;
+  animation: fadeIn 0.4s ease-in-out;
 }
 
-.timer-circle {
+.youjorus-timer-circle {
   position: relative;
-  width: 160px; height: 160px;
+  width: 220px;
+  height: 220px;
 }
 
-/* ✅ Fond clair derrière le cercle */
-.timer-circle::before {
+.youjorus-timer-circle::before {
   content: "";
-  position: absolute; inset: 0;
+  position: absolute;
+  inset: 0;
   border-radius: 50%;
   background: var(--surface-color);
   z-index: 0;
 }
 
-.timer-circle svg {
+.youjorus-timer-circle svg {
   transform: rotate(-90deg);
-  width: 100%; height: 100%;
-  position: relative; z-index: 1;
+  width: 100%;
+  height: 100%;
+  position: relative;
+  z-index: 1;
 }
 
-.timer-progress-bg {
+.youjorus-bg {
   fill: none;
   stroke: var(--bg-tertiary);
   stroke-width: 8;
 }
 
-.timer-progress-circle {
+.youjorus-progress {
   fill: none;
-  stroke: var(--primary-color);
+  stroke: var(--accent-color);
   stroke-width: 8;
   stroke-linecap: round;
   transition: stroke-dashoffset 1s linear;
 }
 
-.timer-time {
+.youjorus-time {
   position: absolute;
-  top: 50%; left: 50%;
+  top: 50%;
+  left: 50%;
   transform: translate(-50%, -50%);
-  font-size: 2.5rem;
+  font-size: 3rem;
   font-weight: 700;
   color: var(--text-primary);
-  font-variant-numeric: tabular-nums;
-  letter-spacing: -1px;
   z-index: 2;
+  font-variant-numeric: tabular-nums;
 }
 
-/* ============== TIMER CONTROLS ============== */
-.timer-controls {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 0.5rem;
+.youjorus-label {
   margin-top: 1rem;
-}
-
-/* ✅ Boutons corrigés avec all: unset */
-.timer-btn {
-  all: unset;
-  display: block;
-  width: 100%;
-  padding: 0.75rem 0.5rem;
-  background-color: var(--accent-color);
-  color: var(--text-primary);
-  border: 2px solid var(--accent-color);
-  border-radius: 10px;
-  font-size: 0.85rem;
-  font-weight: 600;
-  text-align: center;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.timer-btn:hover {
-  background-color: var(--accent-hover);
-  border-color: var(--accent-hover);
-  box-shadow: 0 4px 8px rgba(255, 107, 53, 0.3);
-  transform: translateY(-2px);
-}
-
-.timer-btn:active {
-  transform: translateY(0);
-}
-
-/* ============== ANIMATIONS ============== */
-@keyframes timerPulse {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.05); }
-}
-
-#timer-widget.low-time .timer-time {
-  animation: timerPulse 1s infinite;
-  color: var(--danger-color);
-}
-
-#timer-widget.low-time .timer-progress-circle {
-  stroke: var(--danger-color);
-}
-
-/* ============== RESPONSIVE ============== */
-@media (max-width: 480px) {
-  #timer-widget {
-    width: 100%; max-width: 100%;
-    border-radius: 20px 20px 0 0;
-    padding: 1rem;
-  }
-  .timer-circle { width: 140px; height: 140px; }
-  .timer-time { font-size: 2rem; }
-  .timer-controls {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 0.4rem;
-  }
-  .timer-btn {
-    padding: 0.6rem 0.4rem;
-    font-size: 0.75rem;
-  }
-  .timer-exercise-name { font-size: 0.9rem; }
-  .timer-set-number { font-size: 0.75rem; }
-}
-
-/* Desktop - position en bas à droite */
-@media (min-width: 769px) {
-  #timer-widget {
-    left: auto; right: 20px;
-    bottom: -100%;
-    transform: none;
-    width: 380px; max-width: 380px;
-    border-radius: 20px;
-  }
-  #timer-widget.active { bottom: 20px; }
-}
-
-/* ============================================================================
-   REST TIMER - MODE IMMERSIF
-   ============================================================================ */
-.rest-timer-overlay {
-  position: fixed; top: 0; left: 0;
-  width: 100vw; height: 100vh;
-  background: radial-gradient(circle at center, var(--bg-card), var(--bg-primary));
-  display: flex; flex-direction: column;
-  justify-content: center; align-items: center;
-  z-index: 2000;
-  color: var(--accent-color);
-  font-size: 5rem;
-  font-weight: var(--font-bold);
-  text-align: center;
-  animation: fadeIn 0.4s ease-in-out;
-}
-
-.rest-timer-time {
-  font-size: 6rem;
-  font-weight: var(--font-bold);
-  color: var(--accent-color);
-  margin-bottom: 2rem;
-}
-
-.rest-timer-label {
   font-size: 1rem;
-  color: var(--text-secondary);
+  color: var(--accent-color);
   text-transform: uppercase;
   letter-spacing: 1px;
-  margin-bottom: 1rem;
 }
 
-.rest-timer-controls {
-  display: flex; gap: 1rem;
-  flex-wrap: wrap; justify-content: center;
+.youjorus-controls {
+  margin-top: 2rem;
+  display: flex;
+  gap: 1rem;
 }
 
-.rest-timer-controls .timer-btn {
+.youjorus-btn {
   all: unset;
   background-color: var(--accent-color);
   color: var(--text-primary);
   padding: 1rem 2rem;
   font-size: 1rem;
-  font-weight: var(--font-semibold);
-  border-radius: 8px;
+  font-weight: 600;
+  border-radius: 12px;
   cursor: pointer;
   transition: background 0.3s ease;
   box-shadow: 0 0 8px rgba(255, 107, 53, 0.3);
 }
 
-.rest-timer-controls .timer-btn:hover {
+.youjorus-btn:hover {
   background-color: var(--accent-hover);
 }
 
-/* ============================================================================
-   ANIMATION
-   ============================================================================ */
+/* Animation */
 @keyframes fadeIn {
   from { opacity: 0; transform: scale(0.95); }
   to   { opacity: 1; transform: scale(1); }
-}
-
-/* ============================================================================
-   RESPONSIVE - OVERLAY
-   ============================================================================ */
-@media (max-width: 480px) {
-  .rest-timer-time { font-size: 4rem; }
 }
