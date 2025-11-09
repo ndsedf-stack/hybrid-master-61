@@ -714,46 +714,54 @@ export class ProgramData {
     this.info = PROGRAM_INFO;
     this.currentWeek = 1;
   }
-  
+
   getWeek(weekNumber) {
     if (weekNumber < 1 || weekNumber > 26) {
       throw new Error(`Semaine invalide : ${weekNumber}`);
     }
     return this.program[`week${weekNumber}`];
   }
-  
+
   getWorkout(weekNumber, day) {
     const week = this.getWeek(weekNumber);
     const validDays = ['dimanche', 'mardi', 'vendredi', 'maison'];
-    
     if (!validDays.includes(day.toLowerCase())) {
       throw new Error(`Jour invalide : ${day}`);
     }
-    
     return week[day.toLowerCase()];
   }
-  
+
   getWorkoutExercises(weekNumber, day) {
     const workout = this.getWorkout(weekNumber, day);
     return workout.exercises;
   }
-  
+
+  // ✅ sets toujours transformé en tableau
   getExerciseProgression(exerciseName) {
     const progression = [];
-    
     for (let week = 1; week <= 26; week++) {
       const weekData = this.getWeek(week);
-      
       ['dimanche', 'mardi', 'vendredi', 'maison'].forEach(day => {
         const workout = weekData[day];
         const exercise = workout.exercises.find(ex => ex.name === exerciseName);
-        
         if (exercise) {
+          let setsData;
+          if (Array.isArray(exercise.sets)) {
+            setsData = exercise.sets;
+          } else if (typeof exercise.sets === "number") {
+            setsData = Array.from({ length: exercise.sets }, () => ({
+              reps: exercise.reps,
+              weight: exercise.weight,
+              rest: exercise.rest
+            }));
+          } else if (typeof exercise.sets === "object") {
+            setsData = [exercise.sets];
+          }
           progression.push({
-            week: week,
-            day: day,
+            week,
+            day,
             weight: exercise.weight,
-            sets: exercise.sets,
+            sets: setsData,
             reps: exercise.reps,
             technique: weekData.technique,
             isDeload: weekData.isDeload
@@ -761,42 +769,44 @@ export class ProgramData {
         }
       });
     }
-    
     return progression;
   }
-  
+
   getAllExercises() {
     const exercisesSet = new Set();
-    
     for (let week = 1; week <= 26; week++) {
       const weekData = this.getWeek(week);
-      
       ['dimanche', 'mardi', 'vendredi', 'maison'].forEach(day => {
         weekData[day].exercises.forEach(ex => {
           exercisesSet.add(ex.name);
         });
       });
     }
-    
     return Array.from(exercisesSet).sort();
   }
-  
+
+  // ✅ sets toujours compté correctement
   getWeekVolume(weekNumber) {
     const week = this.getWeek(weekNumber);
     let totalSets = 0;
     let totalReps = 0;
     let totalWeight = 0;
-    
     ['dimanche', 'mardi', 'vendredi', 'maison'].forEach(day => {
       week[day].exercises.forEach(ex => {
-        totalSets += ex.sets;
-        const repsNum = typeof ex.reps === 'string' ? 
-          parseInt(ex.reps.split('-')[0]) : ex.reps;
-        totalReps += ex.sets * repsNum;
-        totalWeight += ex.sets * repsNum * ex.weight;
+        let setsCount = 0;
+        if (Array.isArray(ex.sets)) {
+          setsCount = ex.sets.length;
+        } else if (typeof ex.sets === "number") {
+          setsCount = ex.sets;
+        } else if (typeof ex.sets === "object") {
+          setsCount = 1;
+        }
+        totalSets += setsCount;
+        const repsNum = typeof ex.reps === 'string' ? parseInt(ex.reps.split('-')[0]) : ex.reps;
+        totalReps += setsCount * repsNum;
+        totalWeight += setsCount * repsNum * ex.weight;
       });
     });
-    
     return {
       totalSets,
       totalReps,
@@ -804,7 +814,7 @@ export class ProgramData {
       weekNumber
     };
   }
-  
+
   getAllWeeks() {
     const weeks = [];
     for (let i = 1; i <= 26; i++) {
@@ -812,28 +822,28 @@ export class ProgramData {
     }
     return weeks;
   }
-  
+
   isDeloadWeek(weekNumber) {
     return [6, 12, 18, 24, 26].includes(weekNumber);
   }
-  
+
   getBlock(weekNumber) {
     const week = this.getWeek(weekNumber);
     return week.block;
   }
-  
+
   getTechnique(weekNumber) {
     const week = this.getWeek(weekNumber);
     return week.technique;
   }
-  
+
   exportToJSON() {
     return JSON.stringify({
       program: this.program,
       info: this.info
     }, null, 2);
   }
-  
+
   importFromJSON(jsonString) {
     try {
       const data = JSON.parse(jsonString);
@@ -845,18 +855,15 @@ export class ProgramData {
       return false;
     }
   }
-  
+
   validateProgram() {
     const errors = [];
-    
     if (Object.keys(this.program).length !== 26) {
       errors.push(`Nombre semaines incorrect : ${Object.keys(this.program).length}`);
     }
-    
     for (let week = 1; week <= 26; week++) {
       try {
         const weekData = this.getWeek(week);
-        
         ['dimanche', 'mardi', 'vendredi', 'maison'].forEach(day => {
           if (!weekData[day]) {
             errors.push(`S${week} : jour ${day} manquant`);
@@ -864,18 +871,15 @@ export class ProgramData {
             errors.push(`S${week} ${day} : aucun exercice`);
           }
         });
-        
         if (!weekData.block) errors.push(`S${week} : 'block' manquant`);
         if (!weekData.technique) errors.push(`S${week} : 'technique' manquant`);
-        
       } catch (error) {
         errors.push(`S${week} : ${error.message}`);
       }
     }
-    
     return {
       isValid: errors.length === 0,
-      errors: errors,
+      errors,
       totalWeeks: Object.keys(this.program).length,
       totalExercises: this.getAllExercises().length
     };
