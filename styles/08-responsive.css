@@ -4,17 +4,19 @@
 
 @media screen and (max-width: 768px) {
   .exercise-card {
-    margin-bottom: var(--spacing-sm);
+    margin-bottom: 0.75rem;
     background-color: var(--bg-card) !important;
     color: var(--text-primary) !important;
   }
 
   .exercise-name {
-    font-size: var(--font-size-base);
+    font-size: 16px;
   }
 
   .exercise-details {
-    font-size: var(--font-size-sm);
+    font-size: 11px;
+    background-color: var(--surface-color) !important;
+    color: var(--text-secondary) !important;
   }
 
   .stat-card,
@@ -27,32 +29,53 @@
 
 @media screen and (max-width: 480px) {
   .exercise-card {
-    margin-bottom: var(--spacing-xs);
+    margin-bottom: 0.5rem;
+    background-color: var(--bg-card) !important;
+    color: var(--text-primary) !important;
   }
 
   .exercise-name {
-    font-size: var(--font-size-sm);
+    font-size: 15px;
   }
 
   .exercise-details {
-    font-size: var(--font-size-xs);
+    font-size: 10px;
+    background-color: var(--surface-color) !important;
+    color: var(--text-secondary) !important;
   }
 
   .param-value {
-    font-size: var(--font-size-base);
+    font-size: 16px;
+    color: var(--text-primary) !important;
+  }
+
+  .stat-card,
+  .volume-chart,
+  .summary-card {
+    background-color: var(--bg-card) !important;
+    color: var(--text-primary) !important;
   }
 }
 
 @media screen and (max-width: 375px) {
   .exercise-name {
-    font-size: var(--font-size-xs);
+    font-size: 14px;
   }
 
   .param-value {
-    font-size: var(--font-size-sm);
+    font-size: 14px;
+  }
+
+  .exercise-card,
+  .stat-card,
+  .volume-chart,
+  .summary-card {
+    background-color: var(--bg-card) !important;
+    color: var(--text-primary) !important;
   }
 }
-/* 🔒 Filet anti-fond blanc */
+
+/* 🔒 Filet anti-fond blanc global */
 body,
 .exercise-card,
 .weight-input-group,
