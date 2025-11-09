@@ -1,260 +1,85 @@
-/* ====================================================================
-   VARIABLES CSS - Palette Orange Énergique + Mode Sombre Optimisé
-   ==================================================================== */
-
 :root {
-  /* ============================================================
-     COULEURS PRINCIPALES - Thème Sombre Premium
-     ============================================================ */
+  /* === COULEURS PRINCIPALES === */
   --bg-primary: #0A0E14;
   --bg-secondary: #151921;
   --bg-card: #1A1F2E;
   --bg-card-hover: #222938;
   --surface-color: #1A1F2E;
   --surface-elevated: #222938;
-  
-  /* ============================================================
-     COULEURS DE TEXTE
-     ============================================================ */
+
+  /* === COULEURS DE TEXTE === */
   --text-primary: #FFFFFF;
   --text-secondary: #94A3B8;
   --text-tertiary: #64748B;
   --text-muted: #475569;
-  
-  /* ============================================================
-     COULEURS D'ACCENT - PALETTE ORANGE ÉNERGIQUE 🔥
-     ============================================================ */
-  --primary-color: #FF6B35;        /* Orange principal */
-  --primary-hover: #FF8B5C;        /* Orange hover */
-  --primary-dark: #E55527;         /* Orange foncé */
-  
-  --accent-color: #00D4FF;         /* Cyan électrique */
+
+  /* === COULEURS D'ACCENT === */
+  --primary-color: #FF6B35;
+  --primary-hover: #FF8B5C;
+  --primary-dark: #E55527;
+
+  --accent-color: #00D4FF;
   --accent-hover: #33DDFF;
-  
-  --success-color: #00FF88;        /* Vert néon */
+
+  --success-color: #00FF88;
   --success-hover: #33FF9F;
-  
+
   --danger-color: #FF3B30;
   --warning-color: #FFD60A;
   --info-color: #00D4FF;
-  
-  /* ============================================================
-     SUPERSETS - Violet éclatant 🔗
-     ============================================================ */
-  --superset-color: #9D4EDD;
-  --superset-glow: rgba(157, 78, 221, 0.4);
-  --superset-bg: rgba(157, 78, 221, 0.12);
-  --superset-border: rgba(157, 78, 221, 0.5);
-  
-  /* ============================================================
-     BORDURES & SÉPARATEURS
-     ============================================================ */
+
+  /* === ALIAS POUR COMPATIBILITÉ AVEC 09-statistics.css === */
+  --color-bg-card: var(--bg-card);
+  --color-bg-secondary: var(--bg-secondary);
+  --color-border: var(--border-color);
+  --color-primary: var(--accent-color); /* ou var(--primary-color) selon ton style */
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+
+  /* === BORDURES === */
   --border-color: rgba(255, 255, 255, 0.08);
   --border-subtle: rgba(255, 255, 255, 0.05);
   --border-medium: rgba(255, 255, 255, 0.12);
   --border-strong: rgba(255, 255, 255, 0.2);
-  
-  /* ============================================================
-     OMBRES - Plus prononcées pour mode sombre
-     ============================================================ */
+
+  /* === OMBRES === */
   --shadow-xs: 0 1px 2px rgba(0, 0, 0, 0.3);
   --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.4);
   --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.5);
   --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.6);
   --shadow-xl: 0 16px 48px rgba(0, 0, 0, 0.7);
-  
-  /* Ombres colorées */
-  --shadow-primary: 0 8px 24px rgba(255, 107, 53, 0.3);
-  --shadow-success: 0 8px 24px rgba(0, 255, 136, 0.3);
-  --shadow-superset: 0 8px 24px rgba(157, 78, 221, 0.4);
-  
-  /* ============================================================
-     ESPACEMENTS
-     ============================================================ */
+
+  /* === TYPOGRAPHIE === */
+  --font-family-primary: 'Segoe UI', sans-serif;
+  --font-family-mono: 'Courier New', monospace;
+
+  --font-size-base: 16px;
+  --font-size-sm: 14px;
+  --font-size-lg: 18px;
+  --font-size-xl: 20px;
+  --font-size-2xl: 24px;
+  --font-size-3xl: 30px;
+  --font-size-4xl: 36px;
+
+  --font-weight-medium: 500;
+  --font-weight-semibold: 600;
+  --font-weight-bold: 700;
+
+  --line-height-normal: 1.5;
+  --line-height-tight: 1.25;
+
+  /* === ESPACEMENTS === */
   --spacing-xs: 4px;
   --spacing-sm: 8px;
   --spacing-md: 16px;
   --spacing-lg: 24px;
   --spacing-xl: 32px;
-  --spacing-2xl: 48px;
-  --spacing-3xl: 64px;
-  
-  /* ============================================================
-     RAYONS DE BORDURE
-     ============================================================ */
-  --radius-xs: 6px;
+
+  /* === RAYONS === */
   --radius-sm: 8px;
   --radius-md: 12px;
   --radius-lg: 16px;
-  --radius-xl: 20px;
-  --radius-2xl: 24px;
-  --radius-full: 9999px;
-  
-  /* ============================================================
-     TRANSITIONS & ANIMATIONS
-     ============================================================ */
-  --transition-fastest: 100ms ease;
-  --transition-fast: 150ms ease;
+
+  /* === TRANSITIONS === */
   --transition-base: 250ms ease;
-  --transition-slow: 350ms ease;
-  --transition-slowest: 500ms ease;
-  
-  /* Easings avancés */
-  --ease-in-out-cubic: cubic-bezier(0.4, 0, 0.2, 1);
-  --ease-out-expo: cubic-bezier(0.19, 1, 0.22, 1);
-  --ease-spring: cubic-bezier(0.68, -0.55, 0.265, 1.55);
-  --ease-bounce: cubic-bezier(0.68, -0.6, 0.32, 1.6);
-  
-  /* ============================================================
-     Z-INDEX
-     ============================================================ */
-  --z-base: 1;
-  --z-dropdown: 100;
-  --z-sticky: 200;
-  --z-fixed: 300;
-  --z-modal: 400;
-  --z-toast: 500;
-  --z-tooltip: 600;
-  
-  /* ============================================================
-     TYPOGRAPHIE
-     ============================================================ */
-  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif;
-  --font-mono: "SF Mono", Monaco, "Cascadia Code", "Roboto Mono", Consolas, monospace;
-  
-  /* Tailles de police */
-  --text-xs: 11px;
-  --text-sm: 13px;
-  --text-base: 15px;
-  --text-lg: 17px;
-  --text-xl: 20px;
-  --text-2xl: 24px;
-  --text-3xl: 30px;
-  --text-4xl: 36px;
-  --text-5xl: 48px;
-  
-  /* Poids de police */
-  --font-normal: 400;
-  --font-medium: 500;
-  --font-semibold: 600;
-  --font-bold: 700;
-  --font-extrabold: 800;
-  --font-black: 900;
-  
-  /* Hauteurs de ligne */
-  --leading-none: 1;
-  --leading-tight: 1.2;
-  --leading-snug: 1.375;
-  --leading-normal: 1.5;
-  --leading-relaxed: 1.75;
-  --leading-loose: 2;
-  
-  /* ============================================================
-     SAFE AREA INSETS (iPhone Notch)
-     ============================================================ */
-  --safe-top: env(safe-area-inset-top);
-  --safe-bottom: env(safe-area-inset-bottom);
-  --safe-left: env(safe-area-inset-left);
-  --safe-right: env(safe-area-inset-right);
-  
-  /* ============================================================
-     COULEURS SPÉCIFIQUES AUX EXERCICES
-     ============================================================ */
-  --exercise-compound: #FF6B35;    /* Orange - Composés */
-  --exercise-isolation: #00D4FF;   /* Cyan - Isolation */
-  --exercise-cardio: #FF3B30;      /* Rouge - Cardio */
-  --exercise-mobility: #9D4EDD;    /* Violet - Mobilité */
-  
-  /* ============================================================
-     ÉTATS DES SÉRIES
-     ============================================================ */
-  --set-default-bg: rgba(255, 255, 255, 0.04);
-  --set-default-border: rgba(255, 255, 255, 0.08);
-  
-  --set-active-bg: rgba(255, 107, 53, 0.12);
-  --set-active-border: rgba(255, 107, 53, 0.3);
-  
-  --set-completed-bg: rgba(0, 255, 136, 0.12);
-  --set-completed-border: #00FF88;
-  
-  /* ============================================================
-     OVERLAY & BACKDROP
-     ============================================================ */
-  --overlay-dark: rgba(0, 0, 0, 0.8);
-  --overlay-medium: rgba(0, 0, 0, 0.6);
-  --overlay-light: rgba(0, 0, 0, 0.4);
-  --backdrop-blur: blur(12px);
-  
-  /* ============================================================
-     GRADIENTS
-     ============================================================ */
-  --gradient-primary: linear-gradient(135deg, #FF6B35 0%, #FF8B5C 100%);
-  --gradient-success: linear-gradient(135deg, #00FF88 0%, #33FF9F 100%);
-  --gradient-superset: linear-gradient(135deg, #9D4EDD 0%, #B67CE6 100%);
-  --gradient-dark: linear-gradient(135deg, #1A1F2E 0%, #151921 100%);
-  
-  /* ============================================================
-     TAILLES DE BOUTONS & COMPOSANTS
-     ============================================================ */
-  --btn-sm: 36px;
-  --btn-md: 44px;
-  --btn-lg: 52px;
-  --btn-xl: 60px;
-  
-  --icon-sm: 20px;
-  --icon-md: 24px;
-  --icon-lg: 32px;
-  --icon-xl: 40px;
-}
-
-/* ============================================================
-   THÈME CLAIR (Optionnel, désactivé par défaut)
-   ============================================================ */
-[data-theme="light"] {
-  --bg-primary: #FFFFFF;
-  --bg-secondary: #F8F9FA;
-  --bg-card: #FFFFFF;
-  --surface-color: #FFFFFF;
-  
-  --text-primary: #1A1A1A;
-  --text-secondary: #6C757D;
-  --text-tertiary: #ADB5BD;
-  
-  --border-color: rgba(0, 0, 0, 0.08);
-  --border-subtle: rgba(0, 0, 0, 0.05);
-  
-  --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.08);
-  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.1);
-  --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.12);
-}
-
-/* ============================================================
-   PRÉFÉRENCES SYSTÈME
-   ============================================================ */
-@media (prefers-color-scheme: dark) {
-  :root {
-    color-scheme: dark;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  :root {
-    --transition-fast: 0ms;
-    --transition-base: 0ms;
-    --transition-slow: 0ms;
-  }
-}
-
-/* ============================================================
-   UTILITAIRES CSS
-   ============================================================ */
-:root {
-  /* Scrollbar */
-  --scrollbar-width: 8px;
-  --scrollbar-thumb: var(--bg-card-hover);
-  --scrollbar-track: var(--bg-primary);
-  
-  /* Focus ring */
-  --focus-ring: 0 0 0 3px rgba(255, 107, 53, 0.3);
-  --focus-ring-offset: 2px;
 }
