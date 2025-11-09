@@ -63,20 +63,44 @@ export default class WorkoutRenderer {
     console.log(`📋 Génération séries pour ${exercise.name} :`, seriesArray);
 
     const grid = document.createElement('div');
-    grid.className = 'sets-grid';
+    grid.className = 'series-container';
 
     seriesArray.forEach((serie, index) => {
-      const setDiv = document.createElement('div');
-      setDiv.className = 'set pending';
-      setDiv.dataset.exerciseId = exercise.id;
+      const serieItem = document.createElement('div');
+      serieItem.className = 'serie-item';
+      serieItem.dataset.exerciseId = exercise.id;
 
-      const label = document.createElement('span');
-      label.className = 'set-label';
-      label.textContent = `Série ${index + 1}`;
+      const number = document.createElement('div');
+      number.className = 'serie-number';
+      number.textContent = index + 1;
 
-      const info = document.createElement('span');
-      info.className = 'set-info';
-      info.textContent = `${serie.reps} reps • ${serie.weight}kg`;
+      const info = document.createElement('div');
+      info.className = 'serie-info';
+
+      const repsSpan = document.createElement('div');
+      repsSpan.className = 'serie-reps';
+      repsSpan.textContent = `${serie.reps} reps`;
+
+      const weightSpan = document.createElement('div');
+      weightSpan.className = 'serie-weight';
+      weightSpan.textContent = `${serie.weight}kg`;
+
+      info.appendChild(repsSpan);
+      info.appendChild(weightSpan);
+
+      const restDiv = document.createElement('div');
+      restDiv.className = 'serie-rest';
+
+      const restIcon = document.createElement('span');
+      restIcon.className = 'rest-icon';
+      restIcon.textContent = '🕒';
+
+      const restTime = document.createElement('span');
+      restTime.className = 'rest-time';
+      restTime.textContent = `${serie.rest}s`;
+
+      restDiv.appendChild(restIcon);
+      restDiv.appendChild(restTime);
 
       const button = document.createElement('button');
       button.className = 'serie-check';
@@ -87,10 +111,11 @@ export default class WorkoutRenderer {
       icon.className = 'check-icon';
       button.appendChild(icon);
 
-      setDiv.appendChild(label);
-      setDiv.appendChild(info);
-      setDiv.appendChild(button);
-      grid.appendChild(setDiv);
+      serieItem.appendChild(number);
+      serieItem.appendChild(info);
+      serieItem.appendChild(restDiv);
+      serieItem.appendChild(button);
+      grid.appendChild(serieItem);
     });
 
     container.appendChild(grid);
