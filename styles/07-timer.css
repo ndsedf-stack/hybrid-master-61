@@ -1,9 +1,7 @@
 /* ==============================================
    07 - TIMER CSS
-   Widget de timer de repos entre séries
    ============================================== */
 
-/* ============== TIMER WIDGET - CONTAINER ============== */
 #timer-widget {
   position: fixed;
   bottom: -100%;
@@ -19,233 +17,41 @@
   transition: bottom 0.4s cubic-bezier(0.68, -0.55, 0.27, 1.55);
 }
 
-#timer-widget.active {
-  bottom: 0;
-}
+#timer-widget.active { bottom: 0; }
 
-/* ============== TIMER HEADER ============== */
-.timer-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 1rem;
-}
-
-.timer-info {
-  flex: 1;
-}
-
-.timer-exercise-name {
-  font-size: 1rem;
-  font-weight: 700;
-  color: var(--text-primary);
-  margin: 0 0 0.25rem 0;
-}
-
-.timer-set-number {
-  font-size: 0.85rem;
-  color: var(--text-secondary);
-  margin: 0;
-}
-
-.timer-close-btn {
-  background: transparent;
-  border: none;
-  font-size: 1.5rem;
-  color: var(--text-secondary);
-  cursor: pointer;
-  width: 32px;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-  transition: all 0.2s ease;
-}
-
-.timer-close-btn:hover {
-  background: var(--bg-tertiary);
-  color: var(--text-primary);
-}
-
-/* ============== TIMER DISPLAY - CERCLE ============== */
-.timer-display {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  margin: 1.5rem 0;
-  position: relative;
-}
-
-.timer-circle {
-  position: relative;
-  width: 160px;
-  height: 160px;
-}
-
-.timer-circle svg {
-  transform: rotate(-90deg);
-  width: 100%;
-  height: 100%;
-}
-
-.timer-progress-bg {
-  fill: none;
-  stroke: var(--bg-tertiary);
-  stroke-width: 8;
-}
-
-.timer-progress-circle {
-  fill: none;
-  stroke: var(--primary-color);
-  stroke-width: 8;
-  stroke-linecap: round;
-  transition: stroke-dashoffset 1s linear;
-}
-
+/* Timer display */
 .timer-time {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
   font-size: 2.5rem;
   font-weight: 700;
   color: var(--text-primary);
-  font-variant-numeric: tabular-nums;
-  letter-spacing: -1px;
 }
 
-/* ============== TIMER CONTROLS ============== */
-.timer-controls {
-  display: grid;
-  grid-template-columns: repeat(5, 1fr);
-  gap: 0.5rem;
-  margin-top: 1rem;
-}
-
+/* Controls homogénéisés */
 .timer-controls button {
-  padding: 0.75rem 0.5rem;
   background: var(--accent-color);
   color: var(--text-primary);
   border: 2px solid var(--accent-color);
   border-radius: 10px;
-  font-size: 0.85rem;
   font-weight: 600;
-  cursor: pointer;
   transition: all 0.2s ease;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
 }
 
 .timer-controls button:hover {
   background: var(--accent-hover);
-  color: var(--text-primary);
   border-color: var(--accent-hover);
-  transform: translateY(-2px);
   box-shadow: 0 4px 8px rgba(255, 107, 53, 0.3);
 }
 
-.timer-controls button:active {
-  transform: translateY(0);
-}
-
-/* ============== ANIMATIONS ============== */
-
-/* Pulse animation quand le temps est faible */
-@keyframes timerPulse {
-  0%, 100% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.05);
-  }
-}
-
-#timer-widget.low-time .timer-time {
-  animation: timerPulse 1s infinite;
-  color: var(--danger-color);
-}
-
-#timer-widget.low-time .timer-progress-circle {
-  stroke: var(--danger-color);
-}
-
-/* ============== RESPONSIVE ============== */
-
-@media (max-width: 480px) {
-  #timer-widget {
-    width: 100%;
-    max-width: 100%;
-    border-radius: 20px 20px 0 0;
-    padding: 1rem;
-  }
-
-  .timer-circle {
-    width: 140px;
-    height: 140px;
-  }
-
-  .timer-time {
-    font-size: 2rem;
-  }
-
-  .timer-controls {
-    grid-template-columns: repeat(3, 1fr);
-    gap: 0.4rem;
-  }
-
-  .timer-controls button {
-    padding: 0.6rem 0.4rem;
-    font-size: 0.75rem;
-  }
-
-  .timer-exercise-name {
-    font-size: 0.9rem;
-  }
-
-  .timer-set-number {
-    font-size: 0.75rem;
-  }
-}
-
-/* Desktop - Positionner en bas à droite */
-@media (min-width: 769px) {
-  #timer-widget {
-    left: auto;
-    right: 20px;
-    bottom: -100%;
-    transform: none;
-    width: 380px;
-    max-width: 380px;
-    border-radius: 20px;
-  }
-
-  #timer-widget.active {
-    bottom: 20px;
-  }
-}
-
-/* ============================================================================
-   REST TIMER - MODE IMMERSIF
-   ============================================================================ */
-
+/* Mode immersif */
 .rest-timer-overlay {
   position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
+  top: 0; left: 0;
+  width: 100vw; height: 100vh;
   background: radial-gradient(circle at center, var(--bg-card), var(--bg-primary));
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  z-index: 2000; /* ✅ corrigé */
+  display: flex; flex-direction: column;
+  justify-content: center; align-items: center;
+  z-index: 2000; /* corrigé */
   color: var(--accent-color);
-  font-size: 5rem;
-  font-weight: var(--font-bold);
-  text-align: center;
   animation: fadeIn 0.4s ease-in-out;
 }
 
@@ -256,59 +62,6 @@
   margin-bottom: 2rem;
 }
 
-.rest-timer-label {
-  font-size: 1rem;
-  color: var(--text-secondary);
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  margin-bottom: 1rem;
-}
-
-.rest-timer-controls {
-  display: flex;
-  gap: 1rem;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-
-.rest-timer-controls button {
-  background: var(--accent-color);
-  color: var(--text-primary);
-  border: none;
-  padding: 1rem 2rem;
-  font-size: 1rem;
-  font-weight: var(--font-semibold);
-  border-radius: 8px;
-  cursor: pointer;
-  transition: background 0.3s ease;
-  box-shadow: 0 0 8px rgba(255, 107, 53, 0.3);
-}
-
-.rest-timer-controls button:hover {
-  background: var(--accent-hover);
-}
-
-/* ============================================================================
-   ANIMATION
-   ============================================================================ */
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
-    transform: scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
-
-/* ============================================================================
-   RESPONSIVE - OVERLAY
-   ============================================================================ */
-
 @media (max-width: 480px) {
-  .rest-timer-time {
-    font-size: 4rem; /* ✅ corrigé */
-  }
+  .rest-timer-time { font-size: 4rem; } /* corrigé */
 }
