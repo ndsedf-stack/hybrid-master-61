@@ -15,9 +15,6 @@ export default class WorkoutRenderer {
         }
     }
 
-    /**
-     * Rend un workout complet
-     */
     render(workoutDay, week) {
         if (!this.container) {
             console.error('❌ Container non initialisé');
@@ -33,10 +30,8 @@ export default class WorkoutRenderer {
             return;
         }
 
-        // Détecter les supersets
         const exercisesWithSupersets = this.detectSupersets(workoutDay.exercises);
 
-        // Générer le HTML pour tous les exercices
         const exercisesHTML = exercisesWithSupersets.map((exercise, index) => 
             this.renderExercise(exercise, index, week)
         ).join('');
@@ -44,17 +39,12 @@ export default class WorkoutRenderer {
         this.container.innerHTML = exercisesHTML;
     }
 
-    /**
-     * Détecter les supersets (exercices avec même numéro de série)
-     */
     detectSupersets(exercises) {
         return exercises.map((exercise, index) => {
-            // Si l'exercice a une propriété "superset" ou "setGroup"
             if (exercise.superset || exercise.setGroup) {
                 return { ...exercise, isSuperset: true };
             }
 
-            // Détection automatique : exercices consécutifs de même catégorie
             const nextExercise = exercises[index + 1];
             if (nextExercise && 
                 exercise.category === nextExercise.category && 
@@ -66,9 +56,6 @@ export default class WorkoutRenderer {
         });
     }
 
-    /**
-     * Rend un exercice avec ses séries
-     */
     renderExercise(exercise, index, week) {
         const {
             id,
@@ -87,28 +74,20 @@ export default class WorkoutRenderer {
             progression
         } = exercise;
 
-        // Déterminer l'icône et la classe selon le type
         const icon = type === 'cardio' ? '🔥' : '💪';
         const typeClass = type === 'cardio' ? 'cardio' : 'strength';
         const categoryLabel = category || '';
         const musclesLabel = muscles ? muscles.join(', ') : '';
         const supersetClass = isSuperset ? 'superset' : '';
 
-        // Génération des paramètres principaux
         const paramsHTML = this.renderParams(exercise);
-
-        // Génération des séries
         const seriesHTML = this.renderSeries(exercise, id);
-
-        // Notes si présentes
         const notesHTML = notes ? `
             <div class="exercise-notes">
                 <div class="notes-title">📝 Notes</div>
                 <div class="notes-content">${notes}</div>
             </div>
         ` : '';
-
-        // Progression si présente
         const progressionHTML = progression ? this.renderProgression(progression) : '';
 
         return `
@@ -134,55 +113,21 @@ export default class WorkoutRenderer {
         `;
     }
 
-    /**
-     * Rend les paramètres principaux
-     */
     renderParams(exercise) {
         const { sets, reps, weight, rpe, rest, tempo } = exercise;
 
         const params = [];
 
         if (sets) {
-            params.push({
-                label: 'SÉRIES',
-                value: sets
-            });
+            const setsLabel = Array.isArray(sets) ? `${sets.length}` : sets;
+            params.push({ label: 'SÉRIES', value: setsLabel });
         }
 
-        if (reps) {
-            params.push({
-                label: 'REPS',
-                value: reps
-            });
-        }
-
-        if (weight) {
-            params.push({
-                label: 'POIDS',
-                value: `${weight}kg`
-            });
-        }
-
-        if (rpe) {
-            params.push({
-                label: 'RPE',
-                value: rpe
-            });
-        }
-
-        if (rest) {
-            params.push({
-                label: 'REPOS',
-                value: `${rest}s`
-            });
-        }
-
-        if (tempo) {
-            params.push({
-                label: 'TEMPO',
-                value: tempo
-            });
-        }
+        if (reps) params.push({ label: 'REPS', value: reps });
+        if (weight) params.push({ label: 'POIDS', value: `${weight}kg` });
+        if (rpe) params.push({ label: 'RPE', value: rpe });
+        if (rest) params.push({ label: 'REPOS', value: `${rest}s` });
+        if (tempo) params.push({ label: 'TEMPO', value: tempo });
 
         if (params.length === 0) return '';
 
@@ -193,25 +138,30 @@ export default class WorkoutRenderer {
             </div>
         `).join('');
 
-        return `
-            <div class="exercise-params">
-                ${paramsHTML}
-            </div>
-        `;
+        return `<div class="exercise-params">${paramsHTML}</div>`;
     }
 
-    /**
-     * Rend les séries individuelles avec checkboxes
-     */
     renderSeries(exercise, exerciseId) {
         const { sets, reps, weight, rest } = exercise;
 
         if (!sets || sets === 0) return '';
 
-        const seriesArray = Array.from({ length: sets }, (_, i) => i + 1);
+        let seriesArray = [];
 
-        const seriesHTML = seriesArray.map(setNumber => {
-            // Récupérer l'état depuis le storage (TODO)
+        if (Array.isArray(sets)) {
+            seriesArray = sets;
+        } else if (typeof sets === 'number') {
+            seriesArray = Array.from({ length: sets }, () => ({
+                reps,
+                weight,
+                rest
+            }));
+        } else {
+            return '';
+        }
+
+        const seriesHTML = seriesArray.map((set, index) => {
+            const setNumber = index + 1;
             const isCompleted = false;
             const completedClass = isCompleted ? 'completed' : '';
 
@@ -219,13 +169,13 @@ export default class WorkoutRenderer {
                 <div class="serie-item ${completedClass}" data-set-number="${setNumber}">
                     <div class="serie-number">${setNumber}</div>
                     <div class="serie-info">
-                        <div class="serie-reps">${reps} reps</div>
-                        ${weight ? `<div class="serie-weight">${weight}kg</div>` : ''}
+                        <div class="serie-reps">${set.reps} reps</div>
+                        ${set.weight ? `<div class="serie-weight">${set.weight}kg</div>` : ''}
                     </div>
-                    ${rest ? `
+                    ${set.rest ? `
                         <div class="serie-rest">
                             <span class="rest-icon">⏱️</span>
-                            <span class="rest-time">${rest}s repos</span>
+                            <span class="rest-time">${set.rest}s repos</span>
                         </div>
                     ` : ''}
                     <button 
@@ -240,16 +190,9 @@ export default class WorkoutRenderer {
             `;
         }).join('');
 
-        return `
-            <div class="series-container">
-                ${seriesHTML}
-            </div>
-        `;
+        return `<div class="series-container">${seriesHTML}</div>`;
     }
 
-    /**
-     * Rend la carte de progression
-     */
     renderProgression(progression) {
         const { from, to } = progression;
 
